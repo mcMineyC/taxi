@@ -1,3 +1,5 @@
-body{
-    background: red;
-}
+/* @import url("icons.css"); */
+@import url("styles/theme.css");
+
+@import url("styles/bottom/all.css");
+@import url("styles/sidebar/sidebar.css");
