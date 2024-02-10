@@ -1,0 +1,53 @@
+.playercontrols-bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    background: green;
+}
+
+.playercontrols-box{
+    align-self: center;
+    width: 100%;
+}
+
+.playercontrols-box > div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* justify-content: none; */
+    /* width: calc(100%-16px); */
+    padding-left: 8px;
+    padding-right: 8px;
+    overflow: auto;
+}
+
+.playercontrols-spacer{
+    height: 10px;
+}
+
+div[progress="1"] > md-linear-progress{
+    --md-linear-progress-track-height: 8px;
+    --md-linear-progress-track-shape:  8px;
+    --md-linear-progress-active-indicator-height: 8px;
+    width: 100%;
+}
+
+div[progress="0"] > md-filled-tonal-button{
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+div[progress="0"] > md-filled-tonal-button > button > span > slot > md-icon{
+    width: 24px;
+    height: 24px;
+}
