@@ -3,6 +3,7 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined:wght@200,opsz,FILL,GRAD@20");
 @import url("styles/theme.css");
 
+@import url("styles/snackbar.css");
 @import url("styles/cards/cards.css");
 @import url("styles/bottom/playercontrols.css");
 @import url("styles/sidebar/sidebar.css");

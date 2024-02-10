@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Music Player</title>
+    <script src="components/snackbar.js"></script>
+    <script src="scripts/playercontrols.js"></script>
 </head>
 <body>
-    <m3-sidebar></m3-sidebar>
+    <m3-sidebar onclick="showSnackbar('Not Implemented')"></m3-sidebar>
     <m3-playercontrols-bottom></m3-playercontrols-bottom>
     <div id="content">
         <m3-mediacard image="placeholder.jpg" text="Big Giant Circles" onclick="alert('hello')"></m3-mediacard>
     </div>
+    <div id="snackbar">Not Implemented</div>
 </body>
 </html>
