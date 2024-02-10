@@ -48,7 +48,8 @@ div[progress="0"] > md-filled-tonal-button{
     margin-right: 4px;
 }
 
-div[progress="0"] > md-filled-tonal-button > button > span > slot > md-icon{
+md-icon{
+    font-size: 24px;
     width: 24px;
     height: 24px;
 }

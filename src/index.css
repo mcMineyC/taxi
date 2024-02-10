@@ -1,5 +1,6 @@
 /* @import url("icons.css"); */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined:wght@200,opsz,FILL,GRAD@20");
 @import url("styles/theme.css");
 
 @import url("styles/bottom/playercontrols.css");
@@ -17,4 +18,5 @@
 }
 body{
     background-color: #191F1E;
+    --md-icon-font: "Material Symbols Outlined";
 }
