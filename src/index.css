@@ -1,5 +1,20 @@
 /* @import url("icons.css"); */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 @import url("styles/theme.css");
 
 @import url("styles/bottom/playercontrols.css");
 @import url("styles/sidebar/sidebar.css");
+
+#long-thing{
+    padding-bottom: 16px;
+}
+#content{
+    padding-left: 64px;
+    padding-bottom: 96px;
+    background-color: #191F1E;
+    color: #AD9375;
+    font-family: "Poppins";
+}
+body{
+    background-color: #191F1E;
+}

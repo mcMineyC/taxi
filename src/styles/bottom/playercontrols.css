@@ -10,7 +10,8 @@
     left: 0;
     padding-top: 16px;
     padding-bottom: 16px;
-    background: green;
+    background: #00000000;
+    backdrop-filter: blur(16px);
 }
 
 .playercontrols-box{
