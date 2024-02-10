@@ -17,20 +17,38 @@ module.exports = {
     compress: true,
     port: 8000,
   },
-  target: "web",
 
   plugins: [
     new HtmlWebpackPlugin({
-        template: 'src/index.html',
-        filename: 'index.html',
-        inject: false
-    })
+      filename: "index.html",
+      // favicon: "favicon.ico",
+      template: "src/index.html",
+    }),
   ],
+
   module: {
     rules: [
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      {
+        test: /\.html$/i,
+        loader: "html-loader",
+        options: {
+          sources: {
+            urlFilter: (a, v, p) => {
+              if (v == "bundle.js"){
+                return false;
+              }
+              return true
+            }
+          }
+        }
       },
     ],
   },

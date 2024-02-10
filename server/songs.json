@@ -1,0 +1,62 @@
+{
+    "circles": {
+        "displayName": "Big Giant Circles",
+        "albums":{
+            "circles_glorydays": {
+                "displayName": "The Glory Days",
+                "songs": [
+                    {
+                        "title": "The Glory Days",
+                        "file": "circles/glorydays/glory_days.mp3"
+                    }
+                ]
+            }
+        }
+    },
+    "2mello": {
+        "displayName": "2 Mello",
+        "albums":{
+            "2mello_superliminallofi": {
+                "displayName": "Superliminal: The LoFi Mix",
+                "songs": [
+                    {
+                        "title": "3AM Radio",
+                        "file": "superliminal/3am_radio.mp3"
+                    },
+                    {
+                        "title": "Afternoon Storm",
+                        "file": "superliminal/afternoon_storm.mp3"
+                    },
+                    {
+                        "title": "Come Closer",
+                        "file": "superliminal/come_closer.mp3"
+                    },
+                    {
+                        "title": "Garden Vibes",
+                        "file": "superliminal/garden_vibes.mp3"
+                    },
+                    {
+                        "title": "Rainy Season",
+                        "file": "superliminal/rainy_season.mp3"
+                    },
+                    {
+                        "title": "See U Next Time",
+                        "file": "superliminal/see_u_next_time.mp3"
+                    },
+                    {
+                        "title": "Shared Memory",
+                        "file": "superliminal/shared_memory.mp3"
+                    },
+                    {
+                        "title": "Summer Walk",
+                        "file": "superliminal/summer_walk.mp3"
+                    },
+                    {
+                        "title": "Swimming Lights",
+                        "file": "superliminal/swimming_lights.mp3"
+                    }
+                ]
+            }
+        }
+    }
+}
