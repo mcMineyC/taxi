@@ -3,6 +3,10 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const jsmt = require('jsmediatags');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+const axios = require('axios');
+
 
 const app = express();
 const port = 3000;
@@ -277,6 +281,74 @@ app.get('/info/albums/:id/image', function (req, res) {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+app.get('/info/artists/:id/image', async function (req, res) {
+    if(!(fs.existsSync(path.join(__dirname, "images", "artists", req.params.id+".png")))){
+        var js = JSON.parse(fs.readFileSync(path.join(__dirname, "artists.json"), 'utf-8'))["artists"];
+        var name = ""
+        for (var x = 0; x < js.length; x++) {
+            if (js[x]["id"] == req.params.id){
+                name = js[x]["displayName"]
+            }
+        }
+        console.log(name)
+        console.log("File doesn't exist, downloading...");
+        const { stdout, stderr } = await exec('python3 find_artist_profile_url.py '+name)
+        console.log(stdout)
+        data = JSON.parse(stdout);
+        url = data["url"];
+        console.log(data["q"])
+        await downloadFile(url, path.join(__dirname, "images", "artists", req.params.id+".png"));
+    }
+
+    //Send image or placeholder if it fails
+    if(fs.existsSync(path.join(__dirname, "images", "artists", req.params.id+".png"))){
+        res.sendFile(path.join(__dirname, "images", "artists", req.params.id+".png"));
+    } else{
+        console.log("Still couldn't conjure image for "+req.params.id+".  Sending placeholder")
+        res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
+    }
 })
+
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`)
+})
+
+
+// This is just all the random
+// functions that I need to move
+// to seperate files but haven't
+// yet because modules and requiring
+// is annoying so I probably
+// won't move them anytime soon
+
+
+async function downloadFile(fileUrl, outputLocationPath) {
+    const writer = fs.createWriteStream(outputLocationPath);
+  
+    return axios({
+      method: 'get',
+      url: fileUrl,
+      responseType: 'stream',
+    }).then(response => {
+  
+      //ensure that the user can call `then()` only when the file has
+      //been downloaded entirely.
+  
+      return new Promise((resolve, reject) => {
+        response.data.pipe(writer);
+        let error = null;
+        writer.on('error', err => {
+          error = err;
+          writer.close();
+          reject(err);
+        });
+        writer.on('close', () => {
+          if (!error) {
+            resolve(true);
+          }
+          //no need to call the reject here, as it will have been called in the
+          //'error' stream;
+        });
+      });
+    });
+  }
