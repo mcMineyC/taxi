@@ -24,6 +24,16 @@ module.exports = {
       // favicon: "favicon.ico",
       template: "src/index.html",
     }),
+    new HtmlWebpackPlugin({
+      filename: "artists.html",
+      // favicon: "favicon.ico",
+      template: "src/artists.html",
+    }),
+    new HtmlWebpackPlugin({
+      filename: "songs.html",
+      // favicon: "favicon.ico",
+      template: "src/songs.html",
+    }),
   ],
 
   module: {
