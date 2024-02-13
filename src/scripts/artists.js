@@ -5,7 +5,7 @@ axios.get('http://localhost:3000/info/artists')
         var artists = data["artists"];
         for (var x = 0; x < artists.length; x++) {
             console.log(artists[x]["displayName"]);
-            document.getElementById("content").innerHTML += '<m3-mediacard image="placeholder.jpg" text="' + artists[x]["displayName"] + '" onclick="showSnackbar(\'' + artists[x]["id"] + '\')"></m3-mediacard>';
+            document.getElementById("content").innerHTML += '<m3-mediacard image="http://localhost:3000/info/artists/' + artists[x]["id"] + '/image" text="' + artists[x]["displayName"] + '" onclick="showSnackbar(\'' + artists[x]["id"] + '\')"></m3-mediacard>';
         }                
     })
     .catch(function (error){
