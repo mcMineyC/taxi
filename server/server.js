@@ -152,7 +152,7 @@ app.get('/info/songs/:id/image', function (req, res) {
         }
     }
     //Attempt to extract image from metadata
-    if(!(fs.existsSync(path.join(__dirname, "images", req.params.id+".png")))){
+    if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
         console.log("File doesn't exist, creating...");
         jsmt.read(fs.readFileSync(path.join(__dirname, "music", file)), {
             onSuccess: function(resu) {
@@ -165,7 +165,7 @@ app.get('/info/songs/:id/image', function (req, res) {
                 for (var i = 0; i < data.length; i++) {
                     base64String += String.fromCharCode(data[i]);
                 }
-                fs.writeFileSync(path.join(__dirname, "images", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
             },
             onError: function(err) {
                 console.log("Error on "+req.params.id+".")
@@ -174,7 +174,7 @@ app.get('/info/songs/:id/image', function (req, res) {
         })
     }
     //Attempt to infer image based on other songs in album
-    if(!(fs.existsSync(path.join(__dirname, "images", req.params.id+".png")))){
+    if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
         console.log("File still doesn't exist, trying to infer based on other songs in album...");
         var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
         data = JSON.parse(data);
@@ -192,7 +192,7 @@ app.get('/info/songs/:id/image', function (req, res) {
                 file = data["songs"][x]["file"];
 
                 //Attempt to extract image from metadata
-                if(!(fs.existsSync(path.join(__dirname, "images", req.params.id+".png")))){
+                if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
                     jsmt.read(fs.readFileSync(path.join(__dirname, "music", file)), {
                         onSuccess: function(resu) {
                             if(typeof(resu.tags.picture) == "undefined"){
@@ -204,7 +204,7 @@ app.get('/info/songs/:id/image', function (req, res) {
                             for (var i = 0; i < data.length; i++) {
                                 base64String += String.fromCharCode(data[i]);
                             }
-                            fs.writeFileSync(path.join(__dirname, "images", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                            fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
                         },
                         onError: function(err) {
                             console.log("Error on "+req.params.id+".")
@@ -214,13 +214,63 @@ app.get('/info/songs/:id/image', function (req, res) {
                 }
             }
         }
-
-
     }
 
     //Send image or placeholder if it fails
-    if(fs.existsSync(path.join(__dirname, "images", req.params.id+".png"))){
-        res.sendFile(path.join(__dirname, "images", req.params.id+".png"));
+    if(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png"))){
+        res.sendFile(path.join(__dirname, "images", "songs", req.params.id+".png"));
+    } else{
+        console.log("Still couldn't conjure image for "+req.params.id+".  Sending placeholder")
+        res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
+    }
+});
+app.get('/info/albums/:id/image', function (req, res) {
+    if(!(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png")))){
+        console.log("File still doesn't exist, extracting...");
+        var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+        data = JSON.parse(data);
+        var albumid = "";
+        //Get album id
+        albumid = req.params.id
+        //Try to extract image again
+        for(var x = 0; x < data["songs"].length; x++) {
+            //Find first song that is in the album
+            if((data["songs"][x]["albumId"] == req.params.id)){
+                file = data["songs"][x]["file"];
+                var success = false
+                //Attempt to extract image from metadata
+                if(!(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png")))){
+                    jsmt.read(fs.readFileSync(path.join(__dirname, "music", file)), {
+                        onSuccess: function(resu) {
+                            if(typeof(resu.tags.picture) == "undefined"){
+                                console.log("No picture in metadata for "+file)
+                                return
+                            }
+                            const { data, format } = resu.tags.picture;
+                            let base64String = "";
+                            for (var i = 0; i < data.length; i++) {
+                                base64String += String.fromCharCode(data[i]);
+                            }
+                            fs.writeFileSync(path.join(__dirname, "images", "albums", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                            success = true
+                        },
+                        onError: function(err) {
+                            console.log("Error on "+req.params.id+".")
+                            console.log(err);
+                        }
+                    })
+                }
+                if (success){
+                    return
+                }else{
+                    console.log("Trying again")
+                }
+            }
+        }
+    }
+    //Send image or placeholder if it fails
+    if(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png"))){
+        res.sendFile(path.join(__dirname, "images", "albums", req.params.id+".png"));
     } else{
         console.log("Still couldn't conjure image for "+req.params.id+".  Sending placeholder")
         res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
