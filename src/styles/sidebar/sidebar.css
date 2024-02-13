@@ -5,8 +5,8 @@
     top: 0;
     left: 0;
     background-color: #373B41;
-    overflow-x: hidden;
     padding-top: 0px;
+    z-index: 99999;
 }
 
 .sidebar-align-center{
@@ -16,7 +16,7 @@
     align-items: center;
 }
 
-.sidebar > * > md-fab{
+.sidebar > * > *{
     margin-top: 4px;
     margin-bottom: 4px;
 }

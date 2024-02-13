@@ -12,6 +12,7 @@
     padding-bottom: 16px;
     background: #00000000;
     backdrop-filter: blur(16px);
+    z-index: 99999999999999999999;
 }
 
 .playercontrols-box{

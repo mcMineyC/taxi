@@ -1,4 +1,3 @@
-/* @import url("icons.css"); */
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined:wght@200,opsz,FILL,GRAD@20");
 @import url("styles/theme.css");
@@ -8,17 +7,17 @@
 @import url("styles/bottom/playercontrols.css");
 @import url("styles/sidebar/sidebar.css");
 
-#long-thing{
-    padding-bottom: 16px;
-}
 #content{
-    padding-left: 64px;
+    margin-left: 64px;
+    margin-top: 16px;
+    padding-left: 16px;
+    padding-right: 0px;
     padding-bottom: 96px;
-    background-color: #191F1E00;
-    color: #AD9375;
-    font-family: "Poppins";
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
-body{
-    background-color: #191F1E;
-    --md-icon-font: "Material Symbols Outlined";
+
+#content > * {
+    margin-right: 16px;
 }
