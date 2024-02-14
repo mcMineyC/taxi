@@ -1,23 +1,19 @@
 #content{
     color: #AD9375;
     font-family: "Poppins";
+    margin-top: 0px !important;
+    padding-top: 16px;
 }
 body{
     background: url("../bg.jpg");
     --md-icon-font: "Material Symbols Outlined";
     margin: 0px;
 }
-#blur-overlay{
-    z-index: -99999999999999999999;
+.blur-overlay {
     backdrop-filter: blur(32px);
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: transparent;
+}
+#blur-container{
+    overflow: hidden;
 }
 .playercontrols-bottom{
     border-top: #2D6790 2px solid;
