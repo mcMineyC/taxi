@@ -7,6 +7,7 @@ setInterval(function() {
 }, 1000);
 
 window.setProgress = setProgress
+document.getElementById("playercontrols-bottom").onwheel = handleScroll
 
 function handleSongClick(id) {
     if(typeof(window.howlerInstance) == "undefined"){
@@ -29,6 +30,10 @@ function handleSongClick(id) {
     })
     song.on('pause', function() {
         window.localPlaying.set(false);
+    })
+    song.on('end', function() {
+        window.localPlaying.set(false)
+        setProgress(0)
     })
     song.once('load', function() {
         window.duration = song.duration();

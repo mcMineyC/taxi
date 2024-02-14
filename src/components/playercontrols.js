@@ -17,7 +17,7 @@ class playercontrols_bottom extends HTMLElement {
                 </div>
                 <div class="playercontrols-spacer"></div>
                 <div progress="1">
-                    <md-linear-progress value="0.69" id="playercontrols-bottom-progress"></md-linear-progress>
+                    <md-linear-progress value="0" id="playercontrols-bottom-progress"></md-linear-progress>
                 </div>
             </div>
         </div>
