@@ -1,4 +1,5 @@
 class playercontrols_bottom extends HTMLElement {
+    static observedAttributes = ["value", "playing"];
     connectedCallback() {
       this.innerHTML = `
         <div class="playercontrols-bottom">
@@ -8,7 +9,7 @@ class playercontrols_bottom extends HTMLElement {
                         <md-icon>skip_previous</md-icon>
                     </md-filled-tonal-button>
                     <md-filled-tonal-button id="playercontrols-bottom-play" onclick="handlePause()">
-                        <md-icon>play_circle</md-icon>
+                        <md-icon id="playercontrols-bottom-icon">play_circle</md-icon>
                     </md-filled-tonal-button>
                     <md-filled-tonal-button id="playercontrols-bottom-next" onclick="handleNext()">
                         <md-icon>skip_next</md-icon>
@@ -21,6 +22,18 @@ class playercontrols_bottom extends HTMLElement {
             </div>
         </div>
       `;
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if(name == "value"){
+            this.getElementsByTagName("md-linear-progress")[0].setAttribute("value", newValue);
+        }
+        if(name == "playing"){
+            if (this.getElementsByTagName("md-icon").length == 0){
+                return
+            }
+            var playing = newValue
+            this.getElementsByTagName("md-icon")[1].innerHTML = (playing == "true" ? "pause_circle" : "play_circle");
+        }
     }
   }
 

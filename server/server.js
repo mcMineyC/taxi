@@ -309,6 +309,25 @@ app.get('/info/artists/:id/image', async function (req, res) {
     }
 })
 
+app.get('/info/songs/:id/audio', function (req, res) {
+    var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    data = JSON.parse(data);
+    var file = "";
+
+    //Find file
+    for (var x = 0; x < (data["songs"].length); x++) {
+        if (data["songs"][x]["id"] == req.params.id) {
+            file = "music/"+data["songs"][x]["file"];
+        }
+    }
+    console.log(path.join(__dirname, file))
+    if(fs.existsSync(path.join(__dirname, file))){
+        res.sendFile(path.join(__dirname, file));
+    } else{
+        res.send("error");
+    }
+})
+
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 })
