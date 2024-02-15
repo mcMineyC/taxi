@@ -6,16 +6,23 @@
     <title>Music Player</title>
     <script src="components/snackbar.js"></script>
     <script src="scripts/playercontrols.js"></script>
+    <script src="scripts/theme.js" type="module"></script>
 </head>
 <body>
-    <m3-sidebar class="sidebar" onclick="showSnackbar('Not Implemented')"></m3-sidebar>
+    <m3-sidebar id="sidebar" home="true" class="sidebar"></m3-sidebar>
     <m3-playercontrols-bottom id="playercontrols-bottom" playing="false"></m3-playercontrols-bottom>
     <div id="content">
     </div>
     <div id="blur-overlay"></div>
     <div id="snackbar">Not Implemented</div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="scripts/artists.js"></script>
+    <script src="scripts/albums.js"></script>
     <script src="scripts/songs.js"></script>
+    <script src="scripts/navigation.js"></script>
     <script src="scripts/main.js"></script>
+    <script>
+        getHome()
+    </script>
 </body>
 </html>

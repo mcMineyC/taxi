@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material/material-color-utilities": "^0.2.7",
     "@material/snackbar": "^14.0.0",
     "@material/web": "^1.2.0",
     "howler": "^2.2.4",

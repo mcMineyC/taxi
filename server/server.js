@@ -113,6 +113,7 @@ app.get('/info/songs', function (req, res) {
         for(var x = 0; x < (all["entries"].length); x++){
             artist = all["entries"][x]
             console.log(artist["displayName"]); //artist
+            var artistId = artist["id"]
             for (var album in artist["albums"]) {
                 var albumid = album;
                 var album = artist["albums"][album];
@@ -125,6 +126,7 @@ app.get('/info/songs', function (req, res) {
                         "id": v["id"],
                         "displayName": v["title"],
                         "albumId": albumid,
+                        "artistId": artistId,
                         "file": v["file"]
                     }
                     albums_arr.push(warr)
@@ -228,6 +230,7 @@ app.get('/info/songs/:id/image', function (req, res) {
         res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
     }
 });
+
 app.get('/info/albums/:id/image', function (req, res) {
     if(!(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png")))){
         console.log("File still doesn't exist, extracting...");
@@ -326,6 +329,210 @@ app.get('/info/songs/:id/audio', function (req, res) {
     } else{
         res.send("error");
     }
+})
+
+app.get('/info/albums/by/artist/:id', function(req, res){
+
+    var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    data = JSON.parse(data);
+    all = JSON.parse(all);
+    var albums_data = {
+        "last_updated": all,
+    }
+    var albums_arr = [];
+
+    //This is only needed if the file changed
+    if((JSON.stringify(data["last_updated"]) != JSON.stringify(all))){
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                var warr = {
+                    "id": albumid,
+                    "displayName": album["displayName"],
+                    "artist": artist["displayName"],
+                    "artistId": artist["id"]
+                }
+            }
+        }
+        albums_data["albums"] = albums_arr
+        console.log("\n\n")
+        console.log(albums_data)
+        fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+        data = albums_data
+    }
+    for(var x = 0; x < data["albums"].length; x++){
+        var album = data["albums"][x];
+        if(album["artistId"] == req.params.id){
+            albums_arr.push(album)
+        }
+    }
+    res.send(albums_arr);
+})
+
+app.get('/info/albums/:id', function(req, res){
+
+    var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    data = JSON.parse(data);
+    all = JSON.parse(all);
+    var albums_data = {
+        "last_updated": all,
+    }
+    var albums_arr = [];
+
+    //This is only needed if the file changed
+    if((JSON.stringify(data["last_updated"]) != JSON.stringify(all))){
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                var warr = {
+                    "id": albumid,
+                    "displayName": album["displayName"],
+                    "artist": artist["displayName"],
+                    "artistId": artist["id"]
+                }
+            }
+        }
+        albums_data["albums"] = albums_arr
+        console.log("\n\n")
+        console.log(albums_data)
+        fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+        data = albums_data
+    }
+    for(var x = 0; x < data["albums"].length; x++){
+        var album = data["albums"][x];
+        if(album["id"] == req.params.id){
+            albums_arr.push(album)
+        }
+    }
+    res.send(albums_arr);
+})
+
+app.get('/info/songs/by/album/:id', function(req, res){
+
+    var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    data = JSON.parse(data);
+    all = JSON.parse(all);
+    var songs_data = {
+        "last_updated": all,
+    }
+    var songs_arr = [];
+
+    //This is only needed if the file changed
+    if((JSON.stringify(data["last_updated"]) != JSON.stringify(all))){
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                Object.entries(album["songs"]).forEach((song) => {
+                    var [key, v] = song;
+                    console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
+                
+                    var warr = {
+                        "id": v["id"],
+                        "displayName": v["title"],
+                        "albumId": albumid,
+                        "file": v["file"]
+                    }
+                    songs_arr.push(warr)
+                });
+            }
+        }
+        songs_data["songs"] = songs_arr
+        console.log("\n\n")
+        console.log(songs_data)
+        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+        data = songs_data
+    }
+    for(var x = 0; x < data["songs"].length; x++){
+        var song = data["songs"][x];
+        if(song["albumId"] == req.params.id){
+            songs_arr.push(song)
+        }
+    }
+    res.send(songs_arr);
+})
+
+app.get('/info/songs/by/artist/:id', function(req, res){
+
+    var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    data = JSON.parse(data);
+    all = JSON.parse(all);
+    var songs_data = {
+        "last_updated": all,
+    }
+    var songs_arr = [];
+
+    //This is only needed if the file changed
+    if((JSON.stringify(data["last_updated"]) != JSON.stringify(all))){
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                Object.entries(album["songs"]).forEach((song) => {
+                    var [key, v] = song;
+                    console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
+                
+                    var warr = {
+                        "id": v["id"],
+                        "displayName": v["title"],
+                        "albumId": albumid,
+                        "file": v["file"]
+                    }
+                    songs_arr.push(warr)
+                });
+            }
+        }
+        songs_data["songs"] = songs_arr
+        console.log("\n\n")
+        console.log(songs_data)
+        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+        data = songs_data
+    }
+    for(var x = 0; x < data["songs"].length; x++){
+        var song = data["songs"][x];
+        if(song["artistId"] == req.params.id){
+            songs_arr.push(song)
+        }
+    }
+    res.send(songs_arr);
 })
 
 app.listen(port, () => {

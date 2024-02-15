@@ -20,3 +20,8 @@
     margin-top: 4px;
     margin-bottom: 4px;
 }
+
+.sidebar-back-button, md-filled-icon-button, md-icon-button {
+    --md-icon-button-icon-color: var(--icon-button-color);
+    --md-icon-button-hover-icon-color: var(--icon-button-hover-color);
+}

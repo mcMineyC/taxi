@@ -1,13 +1,23 @@
+html{
+    --icon-button-color: #ad9375;
+    --icon-button-hover-color: #d3b28b;
+}
+
+
+
+
 #content{
     color: #AD9375;
     font-family: "Poppins";
     margin-top: 0px !important;
     padding-top: 16px;
 }
+
 body{
     --md-icon-font: "Material Symbols Outlined";
     margin: 0px;
 }
+
 #blur-overlay{
     height: 100vh;
     position: absolute;
@@ -18,10 +28,12 @@ body{
     z-index: -99999999;
     backdrop-filter: blur(32px);
 }
+
 html{
     height: 100vh;
     background: url("../bg.jpg");
 }
+
 .playercontrols-bottom{
     border-top: #2D6790 2px solid;
     /* border-radius: 16px; */

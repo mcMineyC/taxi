@@ -9,12 +9,19 @@
 </head>
 <body>
     <m3-sidebar class="sidebar" onclick="showSnackbar('Not Implemented')"></m3-sidebar>
-    <m3-playercontrols-bottom></m3-playercontrols-bottom>
-
+    <m3-playercontrols-bottom id="playercontrols-bottom" playing="false"></m3-playercontrols-bottom>
+    <div id="blur-overlay"></div>
     <div id="content">
     </div>
     <div id="snackbar">Not Implemented</div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="scripts/artists.js"></script>
+    <script src="scripts/albums.js"></script>
+    <script src="scripts/songs.js"></script>
+    <script src="scripts/navigation.js"></script>
+    <script src="scripts/main.js"></script>
+    <script>
+        getArtists();
+    </script>
 </body>
 </html>

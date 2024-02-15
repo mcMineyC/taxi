@@ -1,20 +1,16 @@
-import '@material/web/all';
-import {Howl, Howler} from 'howler';
-import css from "./index.css";
-import "./components/all.js"
-import placeholder from "./placeholder.jpg";
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
 
-var themeColor = "#17496C"
 // Get the theme from a hex color
-const theme = themeFromSourceColor(argbFromHex(themeColor), [
+const theme = themeFromSourceColor(argbFromHex('#f82506'), [
   {
     name: "custom-1",
-    value: argbFromHex(themeColor),
+    value: argbFromHex("#1F4981"),
     blend: true,
   },
 ]);
 
+// Print out the theme as JSON
+console.log(JSON.stringify(theme, null, 2));
 
 // Check if the user has dark mode turned on
 const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
