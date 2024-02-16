@@ -94,8 +94,13 @@ function albumClick(id){
     })
 }
 
-function getHome() {
-    var homeScreen = "albums"
+function getHome(place) {
+    if(typeof(place) == "undefined"){
+        place = localStorage.getItem("configuredHomeScreen")
+    }else{
+        localStorage.setItem("configuredHomeScreen", place)
+    }
+    var homeScreen = place
 
     window.navigationInfo = new Location()
     window.navigationInfo.setHome(true)
@@ -117,6 +122,7 @@ function getHome() {
             break;
     
         default:
+            console.log("Unknown screen: " + homeScreen)
             break;
     }
     

@@ -1,2 +1,6 @@
 creds.json
 .cache
+music/*
+unsorted
+sorted
+images
