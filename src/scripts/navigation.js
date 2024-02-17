@@ -95,6 +95,7 @@ function albumClick(id){
 }
 
 function getHome(place) {
+    reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
     if(typeof(place) == "undefined"){
         place = localStorage.getItem("configuredHomeScreen")
@@ -162,7 +163,8 @@ function back(){
 }
 
 function settingsClick(){
-    reset();
-    var c = document.getElementById("content");
+    // reset();
+    // var c = document.getElementById("content");
     // c.style.flexDirection = "column";
+    showSnackbar("Settings coming soon!")
 }
