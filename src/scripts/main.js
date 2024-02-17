@@ -1,4 +1,3 @@
-
 class PlayerQueue {
     constructor(){
         this.queue = []
@@ -37,15 +36,19 @@ class PlayerQueue {
         if(this.pos+pos > this.queue.length-1){
             console.log("At the end of the queue")
             showSnackbar("At the end of the queue")
-            return
+            return false
         }else{
             this.pos = this.pos + pos
+            return true
         }
     }
-    update(){
+    getPos(){
+        return this.pos
+    }
+    update(force){
         if (typeof(window.localPlaying) == "undefined") {
             console.log("Not playing");
-        }else if(window.localPlaying.get()){
+        }else if(window.localPlaying.get() && (typeof(force) == "undefined" || force == false)){
             return
         }
         if(this.queue.length == 0){
@@ -55,12 +58,10 @@ class PlayerQueue {
         playSong(song)
     }
     next(){
-        this.setPos(1)
-        this.update()
+        this.update(this.setPos(1))
     }
     previous(){
-        this.setPos(-1)
-        this.update()
+        this.update(this.setPos(-1))
     }
 }
 
@@ -102,6 +103,11 @@ setInterval(function() {
 window.setProgress = setProgress
 document.getElementById("playercontrols-bottom").onwheel = handleScroll
 window.localQueue = new PlayerQueue();
+window.prefs = new UserPreferences();
+window.fetchedData = new FetchedData();
+window.fetchedData.onceInitalized(function(){
+    getHome()
+})
 
 function handleSongClick(id) {
     if(typeof(window.localQueue) == "undefined"){

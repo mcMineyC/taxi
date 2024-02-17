@@ -6,10 +6,10 @@ class sidebar extends HTMLElement {
             <div class="sidebar-align-center">
                 <span class="sidebar-back-button" style="display: ${this.getAttribute('home') == "true" ? "none;" : "block;"}"><md-icon-button onclick="back()"><md-icon>arrow_back</md-icon></md-icon-button></span>
                 <md-icon-button variant="primary">
-                    <md-icon>menu</md-icon>
+                    <md-icon>queue_music</md-icon>
                 </md-icon-button>
                 <md-icon-button>
-                    <md-icon>menu</md-icon>
+                    <md-icon>download</md-icon>
                 </md-icon-button>
             </div>
         </div>  

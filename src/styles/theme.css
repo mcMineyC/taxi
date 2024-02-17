@@ -10,8 +10,11 @@ body{
 }
 
 
-h1,h2,h3,h4,h5,h6,span,md-primary-tab {
-    font-family: "Poppins";
+h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,input {
+    font-family: "Poppins" !important;
+}
+.input{
+    font-family: "Poppins" !important;
 }
 
 html{
@@ -20,6 +23,7 @@ html{
     /* background-repeat:space */
     background-size: auto;
     font-family: "Poppins" !important;
+  --md-sys-typescale-body-large: 400 3rem system-ui;
 }
 
 .playercontrols-bottom{

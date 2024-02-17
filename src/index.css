@@ -26,3 +26,53 @@
     bottom: 104px;
     right:  24px;
 }
+m3-playercontrols-bottom{
+    position: fixed;
+    z-index: 999999999;
+}
+
+
+
+#queue-list{
+    margin-right: 0px !important;
+    width: 100%;
+    /* background-color: red; */
+}
+#queue-list > md-list-item > span.list-header{
+    font-size: 20px;
+}
+#queue-list > md-list-item > img{
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 8px;
+}
+#queue-list > md-list-item{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* background-color: purple; */
+}
+#queue-list > md-list-item{
+    height: 74px;
+}
+#queue-list > md-list-item > div{
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+#queue-list > md-list-item > div#song-container{
+    top: 0px;
+    left: 84px;
+}
+#queue-list > md-list-item > div#duration-container{
+    position: absolute;
+    top: 0px;
+    right: 24px;
+}
+md-list-item > *[slot="end"]{
+    justify-content: end;
+}
+md-list-item > *[slot="start"]{
+    justify-content: end;
+}

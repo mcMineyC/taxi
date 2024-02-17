@@ -5,7 +5,8 @@ import "./components/all.js"
 import placeholder from "./placeholder.jpg";
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
 
-var themeColor = localStorage.getItem("configuredThemeColor")
+function applyThemeColor(){
+  var themeColor = localStorage.getItem("configuredThemeColor")
 if(themeColor == null || themeColor == undefined || themeColor == "" || themeColor == "null" || themeColor == "undefined"){
   themeColor = "#17496C"
 }else if(!themeColor.match("^#(?:[0-9a-fA-F]{3}){1,2}$") || !themeColor.match("^#(?:[0-9a-fA-F]{3,4}){1,2}$")){
@@ -34,3 +35,6 @@ if(darkMode == null || darkMode == undefined || darkMode == "" || darkMode == "n
 
 // Apply the theme to the body by updating custom properties for material tokens
 applyTheme(theme, {target: document.getElementsByTagName("html")[0], dark: (systemDark || darkMode=="true")});
+}
+applyThemeColor()
+window.apc = applyThemeColor

@@ -1,41 +1,24 @@
 function getAlbums(){
-    axios.get('http://localhost:3000/info/albums')
-    .then(function (response) {
-        var data = JSON.parse(JSON.stringify(response.data));
-        // console.log(data);
-        var artists = data["albums"];
-        for (var x = 0; x < artists.length; x++) {
-            // console.log(artists[x]["displayName"]);
-            document.getElementById("content").innerHTML += '<m3-mediacard image="http://localhost:3000/info/albums/' + artists[x]["id"] + '/image" text="' + artists[x]["displayName"] + '" onclick="albumClick(\'' + artists[x]["id"] + '\')"></m3-mediacard>';
-        }                
-    })
-    .catch(function (error){
-        console.log(error);
-    })
+    var albums = window.fetchedData.getAlbums();
+    for (var x = 0; x < albums.length; x++) {
+        // console.log(albums[x]["displayName"]);
+        document.getElementById("content").innerHTML += '<m3-mediacard image="http://localhost:3000/info/albums/' + albums[x]["id"] + '/image" text="' + albums[x]["displayName"] + '" onclick="albumClick(\'' + albums[x]["id"] + '\')"></m3-mediacard>';
+    }
 }
 function getAlbumsByArtist(id){
-    axios.get('http://localhost:3000/info/albums/by/artist/'+id)
-    .then(function (response) {
-        var data = JSON.parse(JSON.stringify(response.data));
-        // console.log(data);
-        var artists = data;
-        for (var x = 0; x < artists.length; x++) {
-            // console.log(artists[x]["displayName"]);
-            document.getElementById("content").innerHTML += '<m3-mediacard image="http://localhost:3000/info/albums/' + artists[x]["id"] + '/image" text="' + artists[x]["displayName"] + '" onclick="albumClick(\'' + artists[x]["id"] + '\')"></m3-mediacard>';
-        }                
-    })
-    .catch(function (error){
-        console.log(error);
-    })
+    var albums = window.fetchedData.getAlbumsByArtist(id);
+    for (var x = 0; x < albums.length; x++) {
+        // console.log(albums[x]["displayName"]);
+        document.getElementById("content").innerHTML += '<m3-mediacard image="http://localhost:3000/info/albums/' + albums[x]["id"] + '/image" text="' + albums[x]["displayName"] + '" onclick="albumClick(\'' + albums[x]["id"] + '\')"></m3-mediacard>';
+    }  
 }
 function getAlbumsBySameArtist(id){
-    axios.get('http://localhost:3000/info/albums/'+id)
-    .then(function (response) {
-        var data = JSON.parse(JSON.stringify(response.data));
-        // console.log(data);
-        getAlbumsByArtist(data[0]["artistId"]);
-    })
-    .catch(function (error){
-        console.log(error);
-    })
+    var albums = window.fetchedData.getAlbums();
+    var artist = ""
+    for (var x = 0; x < albums.length; x++) {
+        if(albums[x]["id"] == id){
+            artist = albums[x]["artistId"]
+        }
+    }
+    getAlbumsByArtist(artist)
 }

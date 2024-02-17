@@ -17,27 +17,41 @@
         </md-icon-button>
     </div>
     <div id="content-container" class="content-container">
-        <div id="content">
-            <md-list id="settings-list">
-                <md-divider></md-divider>
+        <div id="content"><!--
+            <md-list id="queue-list">
                 <md-list-item>
-                    <span slot="start">Dark Mode</span>
-                    <md-switch id="settings-switch" on="true" slot="end"></md-switch>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 1</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>43:21</span>
+                    </div>
                 </md-list-item>
                 <md-divider></md-divider>
                 <md-list-item>
-                    <span slot="start">Home page</span>
-                    <md-tabs slot="end">
-                        <md-primary-tab class="settings-homepage-artists">Artists</md-primary-tab>
-                        <md-primary-tab class="settings-homepage-albums">Albums</md-primary-tab>
-                        <md-primary-tab class="settings-homepage-songs">Songs (not recommended)</md-primary-tab>
-                    </md-tabs>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 2</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>00:42</span>
+                    </div>
                 </md-list-item>
                 <md-divider></md-divider>
-            </md-list>
+                <md-list-item>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 3</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>12:34</span>
+                    </div>
+                </md-list-item>
+            </md-list>-->
         </div>
     </div>
-    <md-dialog id="dialogger" type="fullscreen">
+    <md-dialog id="dialogger">
         <div slot="headline">
           Dialog title
         </div>
@@ -59,8 +73,5 @@
     <script src="scripts/songs.js"></script>
     <script src="scripts/navigation.js"></script>
     <script src="scripts/main.js"></script>
-    <script>
-        getHome()
-    </script>
 </body>
 </html>
