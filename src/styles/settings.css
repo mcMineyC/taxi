@@ -1,0 +1,17 @@
+#settings-list{
+    width: 100%;
+}
+#settings-list > md-list-item > span.list-header{
+    font-size: 20px;
+}
+md-list-item{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+md-list-item > *[slot="end"]{
+    justify-content: end;
+}
+md-list-item > md-tabs{
+    overflow: hidden;
+}

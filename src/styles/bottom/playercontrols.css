@@ -7,12 +7,10 @@
     width: 100%;
     position: fixed;
     bottom: 0;
-    left: 0;
+    /* left: 0; */
     padding-top: 16px;
     padding-bottom: 16px;
-    background: #00000000;
-    backdrop-filter: blur(16px);
-    z-index: 99999999999999999999;
+    z-index: 2;
 }
 
 .playercontrols-box{
@@ -42,7 +40,7 @@ div[progress="1"] > md-linear-progress{
     width: 100%;
 }
 
-div[progress="0"] > md-filled-tonal-button{
+div[progress="0"] > md-filled-button{
     display: flex;
     align-items: center;
     margin-left: 4px;

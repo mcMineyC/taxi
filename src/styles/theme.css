@@ -1,40 +1,59 @@
-html{
-    --icon-button-color: #ad9375;
-    --icon-button-hover-color: #d3b28b;
-}
-
-
-
-
 #content{
-    color: #AD9375;
-    font-family: "Poppins";
     margin-top: 0px !important;
     padding-top: 16px;
 }
 
 body{
     --md-icon-font: "Material Symbols Outlined";
+    background: var(--md-sys-color-surface-variant);
     margin: 0px;
 }
 
-#blur-overlay{
-    height: 100vh;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: -99999999;
-    backdrop-filter: blur(32px);
+
+h1,h2,h3,h4,h5,h6,span,md-primary-tab {
+    font-family: "Poppins";
 }
 
 html{
-    height: 100vh;
-    background: url("../bg.jpg");
+    background: var(--md-sys-color-surface-variant);
+    /* background: url("../bg.jpg"); */
+    /* background-repeat:space */
+    background-size: auto;
+    font-family: "Poppins" !important;
 }
 
 .playercontrols-bottom{
-    border-top: #2D6790 2px solid;
+    /* border-top: var(--md-sys-color-tertiary) 2px solid; */
+    background: var(--md-sys-color-surface-variant)
+
+    /* background: #00000000; */
+    /* backdrop-filter: blur(16px); */
     /* border-radius: 16px; */
+}
+.playercontrols-box > div[progress="1"] > md-linear-progress{
+    /* --md-linear-progress-track-color: var(--md-sys-color-primary-container); */
+    /* --md-linear-progress-active-indicator-color: var(--md-sys-color-primary); */
+}
+.playercontrols-box > div[progress="0"] > *{
+    /* --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container); */
+}
+.card{
+    background-color: var(--md-sys-color-secondary-container);
+}
+.card-caption{
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-secondary);
+}
+.sidebar{
+    background-color: var(--md-sys-color-surface-variant);
+}
+.header{
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant)
+}
+#content-container{
+    background: var(--md-sys-color-surface);
+}
+md-dialog{
+    --md-dialog-container-color: var(--md-sys-color-surface-variant)
 }

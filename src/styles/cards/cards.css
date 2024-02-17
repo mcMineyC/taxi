@@ -1,6 +1,5 @@
 .card{
     width: 200px;
-    background-color: #1e1e1e;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -13,30 +12,31 @@
 .card-image{
     border-radius: 10px;
     margin: 16px;
+    margin-bottom: 0px;
     max-width:  calc(200px - 32px);
     max-height: calc(200px - 32px);
 }
 .card-image-holder{
     border-radius: 20px;
-    background-color: #25272A;
 }
 .card-caption{
-    background: #1e1e1e;
-    border-bottom-left-radius: 32px;
-    border-bottom-right-radius: 32px;
-    height: 36px;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    height: 32px;
     display: flex;
     justify-content: center;
-    color: #ad9375;
     font-family: "Poppins";
     font-size: 10px;
     text-overflow: ellipsis;
 }
 .card-title{
     margin: 0px;
+    margin-left: 8px;
+    margin-right: 8px;
     text-overflow: ellipsis;
     overflow: hidden;
     text-align: center;
+    word-break: break-all;
 }
 
 #overlay {

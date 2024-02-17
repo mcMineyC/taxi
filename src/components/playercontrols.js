@@ -5,15 +5,15 @@ class playercontrols_bottom extends HTMLElement {
         <div class="playercontrols-bottom">
             <div class="playercontrols-box">
                 <div progress="0">
-                    <md-filled-tonal-button id="playercontrols-bottom-previous" onclick="handlePrev()">
+                    <md-filled-button id="playercontrols-bottom-previous" onclick="handlePrev()">
                         <md-icon>skip_previous</md-icon>
-                    </md-filled-tonal-button>
-                    <md-filled-tonal-button id="playercontrols-bottom-play" onclick="handlePause()">
+                    </md-filled-button>
+                    <md-filled-button id="playercontrols-bottom-play" onclick="handlePause()">
                         <md-icon id="playercontrols-bottom-icon">play_circle</md-icon>
-                    </md-filled-tonal-button>
-                    <md-filled-tonal-button id="playercontrols-bottom-next" onclick="handleNext()">
+                    </md-filled-button>
+                    <md-filled-button id="playercontrols-bottom-next" onclick="handleNext()">
                         <md-icon>skip_next</md-icon>
-                    </md-filled-tonal-button>
+                    </md-filled-button>
                 </div>
                 <div class="playercontrols-spacer"></div>
                 <div progress="1">

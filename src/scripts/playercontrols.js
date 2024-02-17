@@ -1,5 +1,5 @@
 function handlePrev(){
-    showSnackbar('Not Implemented')
+    window.localQueue.previous()
 }
 function handlePause(){
     if(typeof(window.howlerInstance) == "undefined"){
@@ -13,10 +13,14 @@ function handlePause(){
     }
 }
 function handleNext(){
-    showSnackbar('Not Implemented')
+    window.localQueue.next()
 }
 function handleScroll(event){
     event.preventDefault();
+    if(typeof(window.howlerInstance) == "undefined"){
+        console.log("No howler instance");
+        return
+    }
     d = (event.deltaY < 0 ? 1 : -1)
     var seekScale = 10
     var np = window.progress.get() + (d * seekScale)

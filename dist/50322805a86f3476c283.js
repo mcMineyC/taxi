@@ -95,11 +95,10 @@ function albumClick(id){
 }
 
 function getHome(place) {
-    sPlace = localStorage.getItem("configuredHomeScreen")
     if(typeof(place) == "undefined"){
         place = localStorage.getItem("configuredHomeScreen")
-    }else if(sPlace == null || sPlace == undefined || sPlace == "" || sPlace == "null" || sPlace == "undefined"){
-        place = localStorage.getItem("configuredHomeScreen")
+    }else{
+        localStorage.setItem("configuredHomeScreen", place)
     }
     var homeScreen = place
 
@@ -161,8 +160,3 @@ function back(){
     window.navigationInfo.prevPop()
 }
 
-function settingsClick(){
-    reset();
-    var c = document.getElementById("content");
-    // c.style.flexDirection = "column";
-}

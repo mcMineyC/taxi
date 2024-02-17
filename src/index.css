@@ -6,13 +6,12 @@
 @import url("styles/cards/cards.css");
 @import url("styles/bottom/playercontrols.css");
 @import url("styles/sidebar/sidebar.css");
+@import url("styles/top/header.css");
+@import url("styles/settings.css");
 
 #content{
-    margin-left: 64px;
-    margin-top: 16px;
     padding-left: 16px;
-    padding-right: 0px;
-    padding-bottom: 96px;
+    padding-right: 16px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -21,4 +20,9 @@
 #content > * {
     margin-right: 16px;
     margin-bottom: 16px;
+}
+.fab{
+    position: fixed;
+    bottom: 104px;
+    right:  24px;
 }

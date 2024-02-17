@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.header > h2 {
+    position: fixed;
+    left: 70px;
+    margin-top: 14px;
+}
+.header > md-icon-button#menu{
+    position: fixed;
+    right: 16px;
+}
+#content-container{
+    margin-top: 64px;
+    margin-left: 70px;
+    margin-bottom: 96px;
+    margin-right: 16px;
+    border-radius: 32px;
+}
