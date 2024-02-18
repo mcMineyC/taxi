@@ -68,10 +68,39 @@ class Location {
     
     setLocation(loc){
         this.loc["location"] = loc
-        if(loc == "home"){
+        if(loc["location"] == "home"){
             document.getElementById("sidebar").setAttribute("home", "true")
         }else{
             document.getElementById("sidebar").setAttribute("home", "false")
+        }
+        var v = this.loc["location"]
+        switch ((v.substring(v.length-2, v.length) == "ID") ? v.substring(0, v.length - 2) : v) {
+            case "home":
+                this.setHeader("Home")
+                break;
+            case "settings":
+                this.setHeader("Settings")
+                break;
+            case "artists":
+                this.setHeader("Artists")
+                break;
+            case "albums":
+                if(v.substring(v.length-2, v.length) == "ID"){
+                    // this.setHeader("Albums by "+window.fetchedData.getArtist(this.loc["id"]).displayName)
+                }else{
+                    this.setHeader("Albums")
+                }
+                break;
+            case "songs":
+                if(v.substring(v.length-2, v.length) == "ID"){
+                    // this.setHeader("Songs in "+window.fetchedData.getAlbum(this.loc["id"]).displayName)
+                }else{
+                    this.setHeader("Songs")
+                }
+                break;
+        
+            default:
+                break;
         }
     }
 
@@ -162,6 +191,24 @@ class FetchedData {
             }
         }
         return albums
+    }
+    getSongsByAlbum(id){
+        var songs = []
+        for(var x = 0; x < this.songs.length; x++){
+            if(this.songs[x]["albumId"] == id){
+                songs.push(this.songs[x])
+            }
+        }
+        return songs
+    }
+    getSongsByArtist(id){
+        var songs = []
+        for(var x = 0; x < this.songs.length; x++){
+            if(this.songs[x]["artistId"] == id){
+                songs.push(this.songs[x])
+            }
+        }
+        return songs
     }
 }
 
@@ -263,7 +310,11 @@ function back(){
             }
             break;
         case "songs":
-            getSongs()
+            if(v.substring(v.length-2, v.length) == "ID"){
+                getSongsByAlbum(window.navigationInfo.get()["id"])
+            }else{
+                getSongs()
+            }
             break;
         case "home":
             getHome()

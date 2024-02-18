@@ -16,9 +16,12 @@ function getAlbumsBySameArtist(id){
     var albums = window.fetchedData.getAlbums();
     var artist = ""
     for (var x = 0; x < albums.length; x++) {
-        if(albums[x]["id"] == id){
+        if(albums[x]["artistId"] == id){
             artist = albums[x]["artistId"]
         }
     }
+    console.log("BAANANAN")
+    console.log(id)
+    console.log(artist)
     getAlbumsByArtist(artist)
 }

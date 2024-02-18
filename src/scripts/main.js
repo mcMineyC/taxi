@@ -114,8 +114,13 @@ function handleSongClick(id) {
         console.log("No queue instance");
         window.localQueue = new PlayerQueue();
     }
+    var f = false
+    if(!window.prefs.getAddToQueue()){
+        window.localQueue.clear()
+        f = true
+    }
     window.localQueue.add(id)
-    window.localQueue.update()
+    window.localQueue.update(f)
 }
 
 function playSong(id) {

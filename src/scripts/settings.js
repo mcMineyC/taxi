@@ -1,7 +1,7 @@
 class UserPreferences{
     constructor(){
-        this.darkMode = window.localStorage.getItem("configuredDarkMode") == "true"
-        this.addToQueue = window.localStorage.getItem("configuredAddToQueue")
+        this.darkMode = Boolean(window.localStorage.getItem("configuredDarkMode"))
+        this.addToQueue = Boolean(window.localStorage.getItem("configuredAddToQueue"))
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
     }
@@ -12,8 +12,8 @@ class UserPreferences{
     }
 
     setAddToQueue(addToQueue){
-        this.addToQueue = addToQueue
         window.localStorage.setItem("configuredAddToQueue", addToQueue)
+        this.addToQueue = addToQueue
     }
 
     setHomeScreen(homeScreen){

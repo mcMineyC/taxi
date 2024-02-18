@@ -194,7 +194,7 @@ app.get('/info/songs/:id/image', function (req, res) {
         //Try to extract image again
         for(var x = 0; x < data["songs"].length; x++) {
             //Find first song that is in the same album and not the same song
-            if((data["songs"][x]["albumId"] == albumid) && (data["songs"][x]["id"] != req.params)){
+            if((data["songs"][x]["albumId"] == albumid) && (data["songs"][x]["id"] != req.params.id)){
                 file = data["songs"][x]["file"];
 
                 //Attempt to extract image from metadata
@@ -295,9 +295,15 @@ app.get('/info/artists/:id/image', async function (req, res) {
         }
         console.log(name)
         console.log("File doesn't exist, downloading...");
-        const { stdout, stderr } = await exec('python3 find_artist_profile_url.py '+name)
+        const { stdout, stderr } = await exec('python3 find_artist_profile_url.py "'+name+'"')
         console.log(stdout)
-        data = JSON.parse(stdout);
+        try{
+            data = JSON.parse(stdout)
+        }catch (err){
+            console.log(err)
+            res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
+            return
+        }
         url = data["url"];
         console.log(data["q"])
         await downloadFile(url, path.join(__dirname, "images", "artists", req.params.id+".png"));

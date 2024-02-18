@@ -2197,6 +2197,22 @@
             }
         },
         {
+            "id": "somerandomjapaneseartist",
+            "displayName": "Zunozen Artist",
+            "albums": {
+                "tv_animationSOMERANDOMJAPANESE": {
+                    "displayName": "TV Animation BOFURI: I Dont Want to Get Hurt, so I'll Max Out My Defense. Season 2\u201d Soundtrack",
+                    "songs": [
+                        {
+                            "id": "zunousen-logical_battle-",
+                            "title": "Zunousen-Logical Battle-",
+                            "file": "sorted/\u5897\u7530\u592a\u90ce/tv_animation\u201dbofuri-_i_don\u2019t_want_to_get_hurt-_so_i\u2019ll_max_out_my_defense-_season_2\u201d_soundtrack/zuno.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
             "id": "mikel",
             "displayName": "Mikel",
             "albums": {
