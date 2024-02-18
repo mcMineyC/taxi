@@ -86,14 +86,14 @@ class Location {
                 break;
             case "albums":
                 if(v.substring(v.length-2, v.length) == "ID"){
-                    // this.setHeader("Albums by "+window.fetchedData.getArtist(this.loc["id"]).displayName)
+                    this.setHeader("Albums by "+window.fetchedData.getArtist(window.fetchedData.getAlbum(this.loc["id"])["artistId"]).displayName)
                 }else{
                     this.setHeader("Albums")
                 }
                 break;
             case "songs":
                 if(v.substring(v.length-2, v.length) == "ID"){
-                    // this.setHeader("Songs in "+window.fetchedData.getAlbum(this.loc["id"]).displayName)
+                    this.setHeader("Songs in "+window.fetchedData.getAlbum(this.loc["id"]).displayName)
                 }else{
                     this.setHeader("Songs")
                 }
@@ -304,7 +304,9 @@ function back(){
             break;
         case "albums":
             if(v.substring(v.length-2, v.length) == "ID"){
-                getAlbumsBySameArtist(window.navigationInfo.get()["id"])
+                console.log("ID: "+window.navigationInfo.get()["id"])
+                console.log(window.navigationInfo.get()["id"])
+                getAlbumsByArtist(window.fetchedData.getAlbum(window.navigationInfo.get()["id"])["artistId"])
             }else{
                 getAlbums()
             }
