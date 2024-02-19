@@ -119,19 +119,19 @@ class Location {
 class FetchedData {
     constructor(){
         var t = this
-        axios.get('http://localhost:3000/info/artists')
+        axios.get(window.pref.getUrl()+'/info/artists')
         .then(function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
             t.artists = data["artists"];
-            axios.get('http://localhost:3000/info/albums')
+            axios.get(window.pref.getUrl()+'/info/albums')
             .then(function (response) {
                 var data = JSON.parse(JSON.stringify(response.data));
                 t.albums = data["albums"];
-                axios.get('http://localhost:3000/info/songs')
+                axios.get(window.pref.getUrl()+'/info/songs')
                 .then(function (response) {
                     var data = JSON.parse(JSON.stringify(response.data));
                     t.songs = data["songs"];
-                    axios.get('http://localhost:3000/info/all')
+                    axios.get(window.pref.getUrl()+'/info/all')
                     .then(function (response) {
                         var data = JSON.parse(JSON.stringify(response.data));
                         t.all = data["entries"];

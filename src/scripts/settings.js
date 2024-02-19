@@ -4,6 +4,7 @@ class UserPreferences{
         this.addToQueue = Boolean(window.localStorage.getItem("configuredAddToQueue"))
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
+        this.backendUrl = "https://eatthecow.mooo.com:3030"
     }
 
     setDarkMode(darkMode){
@@ -42,6 +43,11 @@ class UserPreferences{
     getThemeColor(){
         return this.themeColor
     }
+
+    getUrl(){
+        return this.backendUrl
+    }
+
     toggleDarkMode(){
         this.setDarkMode(!this.getDarkMode())
     }
