@@ -5,23 +5,73 @@
     <meta name="viewport" content="width=device-width">
     <title>Music Player</title>
     <script src="e765fbf0b0571480fe1d.js"></script>
-    <script src="aca1ac924ebfc2aac222.js"></script>
+    <script src="a6db8d7277f681879c84.js"></script>
 <script defer src="bundle.js"></script></head>
 <body>
     <m3-sidebar id="sidebar" home="true" class="sidebar"></m3-sidebar>
     <m3-playercontrols-bottom id="playercontrols-bottom" playing="false"></m3-playercontrols-bottom>
-    <div id="content">
+    <div id="header" class="header">
+        <h2 id="header-title">Albums</h2>
+        <md-icon-button id="menu" onclick="settingsClick()">
+            <md-icon>settings</md-icon>
+        </md-icon-button>
     </div>
-    <div id="blur-overlay"></div>
+    <div id="content-container" class="content-container">
+        <div id="content"><!--
+            <md-list id="queue-list">
+                <md-list-item>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 1</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>43:21</span>
+                    </div>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 2</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>00:42</span>
+                    </div>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item>
+                    <img src="https://picsum.photos/200/200?random=1" slot="start">
+                    <div id="song-container">
+                        <span>Song 3</span>
+                    </div>
+                    <div id="duration-container" slot="end">
+                        <span>12:34</span>
+                    </div>
+                </md-list-item>
+            </md-list>-->
+        </div>
+    </div>
+    <md-dialog id="dialogger">
+        <div slot="headline">
+          Dialog title
+        </div>
+        <form slot="content" id="form-id" method="dialog">
+          A simple dialog with free-form content.
+        </form>
+        <div slot="actions">
+          <md-text-button form="form-id">Ok</md-text-button>
+        </div>
+    </md-dialog>
+    <md-fab variant="primary" class="fab">
+        <md-icon slot="icon">search</md-icon>
+    </md-fab>
     <div id="snackbar">Not Implemented</div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="20ae4f9dd636f74e66ec.js"></script>
-    <script src="4cc07aa6bda58f204bcc.js"></script>
-    <script src="7a2022badb339efdbba4.js"></script>
-    <script src="50322805a86f3476c283.js"></script>
-    <script src="924642024b30b27719ac.js"></script>
-    <script>
-        getHome("artists")
-    </script>
+    <script src="918869f4e4507df731cc.js"></script>
+    <script src="cf29d11039632f58119e.js"></script>
+    <script src="512535c0ec7dc936ef3f.js"></script>
+    <script src="2e88280db24da441e220.js"></script>
+    <script src="21f006539ef8fbc3bccb.js"></script>
+    <script src="27bfa31fa8191f08e697.js"></script>
 </body>
 </html>
