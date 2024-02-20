@@ -73,7 +73,7 @@ class UserPreferences{
         this.addToQueue = Boolean(window.localStorage.getItem("configuredAddToQueue"))
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
-        this.backendUrl = window.backendUrl
+        this.backendUrl = "http://192.168.30.36:3000"
     }
 
     setDarkMode(darkMode){

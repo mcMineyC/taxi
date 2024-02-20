@@ -204,6 +204,10 @@ app.get('/info/songs/:id/image', async function (req, res) {
             file = data["songs"][x]["file"];
         }
     }
+    if(file == ""){
+        res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
+        return
+    }
     //Attempt to extract image from metadata
     if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
         console.log("File doesn't exist, creating...");

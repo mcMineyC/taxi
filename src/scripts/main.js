@@ -137,7 +137,7 @@ function playSong(id) {
         console.log("No howler playing");
     }
     var song = new Howl({
-        src: ['http://localhost:3000/info/songs/' + id + '/audio'],
+        src: [window.prefs.getUrl() + '/info/songs/' + id + '/audio'],
         html5: true
     })
     var i = song.play();
