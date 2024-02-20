@@ -16,6 +16,22 @@ app.use(express.urlencoded({
     extended: true
 }))
 
+var authData = fs.readFileSync(path.join(__dirname, 'auth.json'), 'utf-8');
+authData = JSON.parse(authData);
+var needToWrite = false
+for(var x = 0; x < authData["users"].length; x++){
+    if(authData["users"][x]["authtoken"] == ""){
+        console.log("Generating authtoken for "+authData["users"][x]["displayName"])
+        var authtoken = crypto.randomBytes(64).toString('hex');
+        authData["users"][x]["authtoken"] = authtoken;
+        needToWrite = true
+    }
+}
+if(needToWrite){
+    fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(authData,null,4));
+    console.log("Fixed auth.json")
+}
+
 app.use('/music', express.static(path.join(__dirname, 'music')));
 
 app.use('/',express.static(path.join(__dirname, 'static')));
@@ -39,7 +55,7 @@ app.post('/auth', function (req, res) {
                 authed = true
                 authtoken = crypto.randomBytes(64).toString('hex');
                 data["users"][x]["authtoken"] = authtoken;
-                data["users"][x]["password"] = authtoken;
+                data["users"][x]["password"] = req.body.password;
                 fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data,null,4));
                 break
             }
@@ -83,6 +99,7 @@ app.post('/info/albums', function (req, res) {
     if(checkAuth(req, res) == false){
         return
     }
+    console.log(checkAuth(req, res))
     var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     data = JSON.parse(data);
@@ -128,6 +145,7 @@ app.post('/info/artists', function (req, res) {
     if(checkAuth(req, res) == false){
         return
     }
+    console.log(checkAuth(req, res))
     var data = fs.readFileSync(path.join(__dirname, 'artists.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     data = JSON.parse(data);
