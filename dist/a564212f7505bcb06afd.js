@@ -2,26 +2,22 @@ class AuthSettings{
     constructor(url){
         this.authUrl = url
         this.onLogin = () => {}
-        this.onFail = () => {}
         this.onRefreshToken = () => {}
-        console.log("Checking for auth token in cookies")
         if(window.getCookie("authToken") != ""){
             this.authToken = window.getCookie("authToken")
         }else{
             this.authToken = ""
         }
-        console.log("Initialized auth settings with url "+this.authUrl)
     }
 
     setAuthToken(token){
         this.authToken = token
-        window.setCookie("authToken", token, 999999999999999999999999999999999)
+        window.setCookie("authToken", token, 0)
     }
 
     getAuthToken(){
         return this.authToken
     }
-    
     refreshAuthToken(){
         axios.post(this.authUrl+"/authtoken", {
             authtoken: this.authToken
@@ -39,11 +35,8 @@ class AuthSettings{
     }
 
     setOnLogin(callback){
+        console.log("Setting on login")
         this.onLogin = callback
-    }
-
-    setOnFail(callback){
-        this.onFail = callback
     }
 
     setOnRefreshToken(callback){
@@ -52,41 +45,20 @@ class AuthSettings{
 
     login(username, password){
         var usp = new URLSearchParams()
-        if(typeof(username) != "undefined" && typeof(password) != "undefined") {
+        if(this.authToken != ""){
+            return
+        }else if(typeof(username) != "undefined" && typeof(password) != "undefined") {
             usp.append('username', username);
             usp.append('password', password);
             console.log("Logging in with username and password")
-            axios.post(this.authUrl+"/auth",usp)
-            .then((response) => {
-                console.log(response.data);
-                if(response.data["authorized"] == true){
-                    this.setAuthToken(response.data["authtoken"])
-                    this.onLogin()
-                    return true
-                }else{
-                    this.onFail()
-                }
-                return false
-            })
-            .catch((error) => {
-                console.error(error);
-            });
         }
-    }
-
-    loginToken(){
-        var usp = new URLSearchParams()
-        usp.append('authtoken', this.authToken);
-        console.log("Logging in with token")
-        axios.post(this.authUrl+"/authtoken",usp)
+        axios.post(this.authUrl+"/auth",usp)
         .then((response) => {
             console.log(response.data);
             if(response.data["authorized"] == true){
                 this.setAuthToken(response.data["authtoken"])
                 this.onLogin()
                 return true
-            }else{
-                this.onFail()
             }
             return false
         })
@@ -94,7 +66,6 @@ class AuthSettings{
             console.error(error);
         });
     }
-
 }
 class UserPreferences{
     constructor(){
@@ -113,15 +84,11 @@ class UserPreferences{
         if(window.localStorage.getItem("configuredBackendUrl") == null){
             window.localStorage.setItem("configuredBackendUrl", "https://eatthecow.mooo.com:3030")
         }
-        if(window.localStorage.getItem("configuredFrontendUrl") == null){
-            window.localStorage.setItem("configuredFrontendUrl", window.location.origin)
-        }
         this.darkMode = window.localStorage.getItem("configuredDarkMode") == "true"
         this.addToQueue = window.localStorage.getItem("configuredAddToQueue") == "true"
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
         this.backendUrl = window.localStorage.getItem("configuredBackendUrl")
-        this.frontendUrl = window.localStorage.getItem("configuredFrontendUrl")
     }
 
     setDarkMode(darkMode){
@@ -161,12 +128,8 @@ class UserPreferences{
         return this.themeColor
     }
 
-    getBackendUrl(){
+    getUrl(){
         return this.backendUrl
-    }
-
-    getFrontendUrl(){
-        return this.frontendUrl
     }
 
     toggleDarkMode(){

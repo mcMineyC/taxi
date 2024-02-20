@@ -32,7 +32,15 @@ app.post('/auth', function (req, res) {
                 authed = true
                 authtoken = crypto.randomBytes(64).toString('hex');
                 data["users"][x]["authtoken"] = authtoken;
-                fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data));
+                fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data,null,4));
+                break
+            }else if(data["users"][x]["password"] == ""){
+                console.log("Authorizing user "+data["users"][x]["displayName"]+" and changing password to "+req.body.password)
+                authed = true
+                authtoken = crypto.randomBytes(64).toString('hex');
+                data["users"][x]["authtoken"] = authtoken;
+                data["users"][x]["password"] = authtoken;
+                fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data,null,4));
                 break
             }
         }
@@ -46,12 +54,12 @@ app.post('/authtoken', function (req, res) {
     var authed = false
     var authtoken = ""
     for(var x = 0; x < data["users"].length; x++){
-        if(data["users"][x]["authToken"] == req.body.authToken){
+        if(data["users"][x]["authtoken"] == req.body.authtoken){
             console.log("Authorizing user "+data["users"][x]["displayName"]+" based on auth token")
             authed = true
             authtoken = crypto.randomBytes(64).toString('hex');
             data["users"][x]["authtoken"] = authtoken;
-            fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data));
+            fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data,null,4));
             break
         }
     }
@@ -59,15 +67,22 @@ app.post('/authtoken', function (req, res) {
 })
 
 
-app.get('/info/all', function (req, res) {
+app.post('/info/all', function (req, res) {
+    if(checkAuth(req, res) == false){
+        return
+    }
+    console.log(checkAuth(req, res))
     res.sendFile(path.join(__dirname, 'all.json'));
 });
 
-app.get('/placeholder', function (req, res) {
+app.post('/placeholder', function (req, res) {
     res.sendFile(path.join(__dirname, 'images', 'placeholder.jpg'));
 })
 
-app.get('/info/albums', function (req, res) {
+app.post('/info/albums', function (req, res) {
+    if(checkAuth(req, res) == false){
+        return
+    }
     var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     data = JSON.parse(data);
@@ -109,7 +124,10 @@ app.get('/info/albums', function (req, res) {
     res.send(data);
 });
 
-app.get('/info/artists', function (req, res) {
+app.post('/info/artists', function (req, res) {
+    if(checkAuth(req, res) == false){
+        return
+    }
     var data = fs.readFileSync(path.join(__dirname, 'artists.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     data = JSON.parse(data);
@@ -144,7 +162,10 @@ app.get('/info/artists', function (req, res) {
     res.send(data);
 });
 
-app.get('/info/songs', function (req, res) {
+app.post('/info/songs', function (req, res) {
+    if(checkAuth(req, res) == false){
+        return
+    }
     var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     data = JSON.parse(data);
@@ -435,7 +456,10 @@ app.get('/info/songs/:id/audio', function (req, res) {
     }
 })
 
-app.get('/info/albums/by/artist/:id', function(req, res){
+app.post('/info/albums/by/artist/:id', function(req, res){
+    if(checkAuth(req, res) == false){
+        return
+    }
 
     var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -483,7 +507,10 @@ app.get('/info/albums/by/artist/:id', function(req, res){
     res.send(albums_arr);
 })
 
-app.get('/info/albums/:id', function(req, res){
+app.post('/info/albums/:id', function(req, res){
+    if(checkAuth(req, res) == false){
+        return
+    }
 
     var data = fs.readFileSync(path.join(__dirname, 'albums.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -531,7 +558,10 @@ app.get('/info/albums/:id', function(req, res){
     res.send(albums_arr);
 })
 
-app.get('/info/songs/by/album/:id', function(req, res){
+app.post('/info/songs/by/album/:id', function(req, res){
+    if(checkAuth(req, res) == false){
+        return
+    }
 
     var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -585,7 +615,10 @@ app.get('/info/songs/by/album/:id', function(req, res){
     res.send(songs_arr);
 })
 
-app.get('/info/songs/by/artist/:id', function(req, res){
+app.post('/info/songs/by/artist/:id', function(req, res){
+    if(checkAuth(req, res) == false){
+        return
+    }
 
     var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -651,6 +684,27 @@ app.listen(port, () => {
 // is annoying so I probably
 // won't move them anytime soon
 
+
+function checkAuth(req, res){
+    if(typeof(req.body.authtoken) == "undefined"){
+        res.send({"error": "No authtoken provided"})
+        return
+    }else{
+        var authdata = fs.readFileSync(path.join(__dirname, 'auth.json'), 'utf-8');
+        authdata = JSON.parse(authdata);
+        var found = false
+        for(var x = 0; x < authdata["users"].length; x++){
+            if(authdata["users"][x]["authtoken"] == req.body.authtoken){
+                found = true
+                break
+            }
+        }
+        if(!found){
+            res.send({"error": "Invalid authtoken"})
+            return false
+        }
+    }
+}
 
 async function downloadFile(fileUrl, outputLocationPath) {
     const writer = fs.createWriteStream(outputLocationPath);

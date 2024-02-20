@@ -91,6 +91,7 @@ class Playing {
     }
 }
 
+
 setInterval(function() {
     if(typeof(window.howlerInstance) == "undefined"){
         console.log("No howler instance");
@@ -103,7 +104,6 @@ window.setProgress = setProgress
 document.getElementById("playercontrols-bottom").onwheel = handleScroll
 window.localQueue = new PlayerQueue();
 window.prefs = new UserPreferences();
-window.authSettings = new AuthSettings(window.prefs.getBackendUrl());
 window.fetchedData = new FetchedData();
 window.fetchedData.onceInitalized(function(){
     getHome()
@@ -138,7 +138,7 @@ function playSong(id) {
         console.log("No howler playing");
     }
     var song = new Howl({
-        src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio'],
+        src: [window.prefs.getUrl() + '/info/songs/' + id + '/audio'],
         html5: true
     })
     var i = song.play();

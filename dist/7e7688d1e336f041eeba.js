@@ -118,38 +118,29 @@ class Location {
 
 class FetchedData {
     constructor(){
-        console.log("Initializing fetched data with backend url "+window.prefs.getBackendUrl())
+        console.log("Initializing fetched data with backend url "+window.prefs.getUrl())
         var t = this
-        var authParams = new URLSearchParams(
-            {
-                "authtoken": window.authSettings.getAuthToken()
-            }
-        )
-        axios.post(window.prefs.getBackendUrl()+'/info/artists', authParams)
+        axios.get(window.prefs.getUrl()+'/info/artists')
         .then(function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
             t.artists = data["artists"];
-            axios.post(window.prefs.getBackendUrl()+'/info/albums', authParams)
+            axios.get(window.prefs.getUrl()+'/info/albums')
             .then(function (response) {
                 var data = JSON.parse(JSON.stringify(response.data));
                 t.albums = data["albums"];
-                axios.post(window.prefs.getBackendUrl()+'/info/songs', authParams)
+                axios.get(window.prefs.getUrl()+'/info/songs')
                 .then(function (response) {
                     var data = JSON.parse(JSON.stringify(response.data));
                     t.songs = data["songs"];
-                    axios.post(window.prefs.getBackendUrl()+'/info/all', authParams)
+                    axios.get(window.prefs.getUrl()+'/info/all')
                     .then(function (response) {
                         var data = JSON.parse(JSON.stringify(response.data));
-                        console.log(data)
                         t.all = data["entries"];
                         t.onInit()
                     })
                 })
             })
         })
-    }
-    getAll(){
-        return this.all
     }
     onceInitalized(d){
         this.onInit = d
