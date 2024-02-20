@@ -5,6 +5,10 @@ import "./components/all.js"
 import placeholder from "./placeholder.jpg";
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
 
+window.frontendUrl = "http://localhost:8000"
+window.backendUrl = "http://localhost:3000"
+
+
 function applyThemeColor(){
   var themeColor = localStorage.getItem("configuredThemeColor")
 if(themeColor == null || themeColor == undefined || themeColor == "" || themeColor == "null" || themeColor == "undefined"){
@@ -38,3 +42,19 @@ applyTheme(theme, {target: document.getElementsByTagName("html")[0], dark: (syst
 }
 applyThemeColor()
 window.apc = applyThemeColor
+
+
+
+
+
+function checkCookie() {
+  let user = getCookie("username");
+  if (user != "") {
+    alert("Welcome again " + user);
+  } else {
+    user = prompt("Please enter your name:", "");
+    if (user != "" && user != null) {
+      setCookie("username", user, 365);
+    }
+  }
+} 

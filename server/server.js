@@ -6,15 +6,58 @@ const jsmt = require('jsmediatags');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
+const crypto = require('crypto');
 
 
 const app = express();
 const port = 3000;
 app.use(cors());
+app.use(express.urlencoded({
+    extended: true
+}))
 
 app.use('/music', express.static(path.join(__dirname, 'music')));
 
 app.use('/',express.static(path.join(__dirname, 'static')));
+
+app.post('/auth', function (req, res) {
+    var data = fs.readFileSync(path.join(__dirname, 'auth.json'), 'utf-8');
+    data = JSON.parse(data);
+    var authed = false
+    var authtoken = "";
+    for(var x = 0; x < data["users"].length; x++){
+        if(data["users"][x]["loginName"] == req.body.username){
+            if(data["users"][x]["password"] == req.body.password){
+                console.log("Authorizing user "+data["users"][x]["displayName"])
+                authed = true
+                authtoken = crypto.randomBytes(64).toString('hex');
+                data["users"][x]["authtoken"] = authtoken;
+                fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data));
+                break
+            }
+        }
+    }
+    res.send({"authorized": authed, "authtoken": authtoken})
+});
+
+app.post('/authtoken', function (req, res) {
+    var data = fs.readFileSync(path.join(__dirname, 'auth.json'), 'utf-8');
+    data = JSON.parse(data);
+    var authed = false
+    var authtoken = ""
+    for(var x = 0; x < data["users"].length; x++){
+        if(data["users"][x]["authToken"] == req.body.authToken){
+            console.log("Authorizing user "+data["users"][x]["displayName"]+" based on auth token")
+            authed = true
+            authtoken = crypto.randomBytes(64).toString('hex');
+            data["users"][x]["authtoken"] = authtoken;
+            fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(data));
+            break
+        }
+    }
+    res.send({"authorized": authed, "authtoken": authtoken})
+})
+
 
 app.get('/info/all', function (req, res) {
     res.sendFile(path.join(__dirname, 'all.json'));

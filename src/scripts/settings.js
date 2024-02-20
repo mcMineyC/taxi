@@ -1,10 +1,79 @@
+class AuthSettings{
+    constructor(url){
+        this.authUrl = url
+        this.onLogin = () => {}
+        this.onRefreshToken = () => {}
+        if(window.getCookie("authToken") != ""){
+            this.authToken = window.getCookie("authToken")
+        }else{
+            this.authToken = ""
+        }
+    }
+
+    setAuthToken(token){
+        this.authToken = token
+        window.setCookie("authToken", token, 0)
+    }
+
+    getAuthToken(){
+        return this.authToken
+    }
+    refreshAuthToken(){
+        axios.post(this.authUrl+"/authtoken", {
+            authtoken: this.authToken
+        })
+        .then((response) => {
+            console.log(response.data);
+            if(response.data["authorized"] == true){
+                this.setAuthToken(response.data["authtoken"])
+                this.onRefreshToken()
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+
+    setOnLogin(callback){
+        console.log("Setting on login")
+        this.onLogin = callback
+    }
+
+    setOnRefreshToken(callback){
+        this.onRefreshToken = callback
+    }
+
+    login(username, password){
+        var usp = new URLSearchParams()
+        if(this.authToken != ""){
+            return
+        }else if(typeof(username) != "undefined" && typeof(password) != "undefined") {
+            usp.append('username', username);
+            usp.append('password', password);
+            console.log("Logging in with username and password")
+        }
+        axios.post(this.authUrl+"/auth",usp)
+        .then((response) => {
+            console.log(response.data);
+            if(response.data["authorized"] == true){
+                this.setAuthToken(response.data["authtoken"])
+                this.onLogin()
+                return true
+            }
+            return false
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }
+}
 class UserPreferences{
     constructor(){
         this.darkMode = Boolean(window.localStorage.getItem("configuredDarkMode"))
         this.addToQueue = Boolean(window.localStorage.getItem("configuredAddToQueue"))
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
-        this.backendUrl = "https://eatthecow.mooo.com:3030"
+        this.backendUrl = window.backendUrl
     }
 
     setDarkMode(darkMode){
@@ -57,6 +126,27 @@ class UserPreferences{
     }
 }
 
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+  
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
 
 function addSettingsActions(){
     const tabs = document.getElementsByTagName("md-tabs")[0];

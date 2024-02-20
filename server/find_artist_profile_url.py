@@ -28,7 +28,7 @@ else:
     s = {
         "success": False,
         "name": q,
-        "url": "http://localhost:3000/placeholder",
+        # "url": "http://localhost:3000/placeholder",
         "q": q
     }
     print(json.dumps(s))

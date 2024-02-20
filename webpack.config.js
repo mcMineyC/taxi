@@ -25,14 +25,9 @@ module.exports = {
       template: "src/index.html",
     }),
     new HtmlWebpackPlugin({
-      filename: "artists.html",
+      filename: "login.html",
       // favicon: "favicon.ico",
-      template: "src/artists.html",
-    }),
-    new HtmlWebpackPlugin({
-      filename: "songs.html",
-      // favicon: "favicon.ico",
-      template: "src/songs.html",
+      template: "src/login.html",
     }),
   ],
 
