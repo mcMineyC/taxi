@@ -1,7 +1,6 @@
 class AuthSettings{
     constructor(url, authPageUrl){
         this.authUrl = url
-        this.authPageUrl = authPageUrl
         this.onLogin = () => {}
         this.onFail = () => {}
         this.onRefreshToken = () => {}
@@ -11,7 +10,7 @@ class AuthSettings{
         }else{
             this.authToken = ""
         }
-        if(this.authToken == "" && window.location.href != this.authPageUrl) {
+        if(this.authToken == "") {
             window.location = this.authPageUrl
         }
         console.log("Initialized auth settings with url "+this.authUrl)

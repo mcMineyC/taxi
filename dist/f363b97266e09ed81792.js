@@ -11,7 +11,7 @@ class AuthSettings{
         }else{
             this.authToken = ""
         }
-        if(this.authToken == "" && window.location.href != this.authPageUrl) {
+        if(this.authToken == "") {
             window.location = this.authPageUrl
         }
         console.log("Initialized auth settings with url "+this.authUrl)
