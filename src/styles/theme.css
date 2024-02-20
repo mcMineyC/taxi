@@ -13,6 +13,15 @@ body{
 h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,input {
     font-family: "Poppins" !important;
 }
+
+.loading-text-placeholder{
+    color: var(--md-sys-color-on-surface-variant);
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0px;
+}
+
 .input{
     font-family: "Poppins" !important;
 }
