@@ -128,21 +128,33 @@ class FetchedData {
         axios.post(window.prefs.getBackendUrl()+'/info/artists', authParams)
         .then(function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
+            if(data["authorized"] == false){
+                window.location = window.authSettings.getAuthPageUrl()
+            }
             t.artists = data["artists"];
             axios.post(window.prefs.getBackendUrl()+'/info/albums', authParams)
             .then(function (response) {
                 var data = JSON.parse(JSON.stringify(response.data));
+                if(data["authorized"] == false){
+                    window.location = window.authSettings.getAuthPageUrl()
+                }
                 t.albums = data["albums"];
                 axios.post(window.prefs.getBackendUrl()+'/info/songs', authParams)
                 .then(function (response) {
                     var data = JSON.parse(JSON.stringify(response.data));
+                    if(data["authorized"] == false){
+                        window.location = window.authSettings.getAuthPageUrl()
+                    }
                     t.songs = data["songs"];
                     axios.post(window.prefs.getBackendUrl()+'/info/all', authParams)
                     .then(function (response) {
                         var data = JSON.parse(JSON.stringify(response.data));
+                        if(data["authorized"] == false){
+                            window.location = window.authSettings.getAuthPageUrl()
+                        }
                         console.log(data)
                         t.all = data["entries"];
-                        t.onInit()
+                        // t.onInit()
                     })
                 })
             })
@@ -361,7 +373,19 @@ function settingsClick(){
         <md-list-item>
             <span slot="start">Theme color hex code (in the form #RRGGBB)</span>
             <md-filled-button id="settings-theme-hex-code-save" slot="end">Save</md-filled-button>
-            <md-outlined-text-field id="settings-theme-hex-code" label="" slot="end"></md-outlined-text-field>
+            <md-outlined-text-field id="settings-theme-hex-code" label="" value="${window.prefs.getThemeColor()}" slot="end"></md-outlined-text-field>
+        </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
+            <span slot="start">Backend URL to fetch data from (ADVANCED)</span>
+            <md-filled-button id="settings-backend-url-save" slot="end">Save</md-filled-button>
+            <md-outlined-text-field id="settings-backend-url" label="" value="${window.prefs.getBackendUrl()}" slot="end"></md-outlined-text-field>
+        </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
+            <span slot="start">Frontend URL to redirect to (ADVANCED)</span>
+            <md-filled-button id="settings-frontend-url-save" slot="end">Save</md-filled-button>
+            <md-outlined-text-field id="settings-frontend-url" label="" value="${window.prefs.getFrontendUrl()}" slot="end"></md-outlined-text-field>
         </md-list-item>
     </md-list>
     `

@@ -25,6 +25,10 @@ class AuthSettings{
     getAuthToken(){
         return this.authToken
     }
+
+    getAuthPageUrl(){
+        return this.authPageUrl
+    }
     
     refreshAuthToken(){
         axios.post(this.authUrl+"/authtoken", {
@@ -148,6 +152,16 @@ class UserPreferences{
         window.localStorage.setItem("configuredThemeColor", themeColor)
         window.apc()
     }
+    
+    setBackendUrl(backendUrl){
+        this.backendUrl = backendUrl
+        window.localStorage.setItem("configuredBackendUrl", backendUrl)
+    }
+    
+    setFrontendUrl(frontendUrl){
+        this.frontendUrl = frontendUrl
+        window.localStorage.setItem("configuredFrontendUrl", frontendUrl)
+    }
 
     getDarkMode(){
         return this.darkMode
@@ -253,6 +267,14 @@ function addSettingsActions(){
     })
     document.getElementById("settings-theme-hex-code-save").addEventListener("click", function(){
         window.prefs.setThemeColor(document.getElementById("settings-theme-hex-code").value)
+    })
+    document.getElementById("settings-backend-url-save").addEventListener("click", function(){
+        window.prefs.setBackendUrl(document.getElementById("settings-backend-url").value)
+        if(confirm("Backend URL changed.\nReload?")) window.location.reload()
+    })
+    document.getElementById("settings-frontend-url-save").addEventListener("click", function(){
+        window.prefs.setFrontendUrl(document.getElementById("settings-frontend-url").value)
+        if(confirm("Frontend URL changed.\nReload?")) window.location.reload()
     })
 
 }

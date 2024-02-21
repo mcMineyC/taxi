@@ -718,7 +718,7 @@ function checkAuth(req, res){
             }
         }
         if(!found){
-            res.send({"error": "Invalid authtoken"})
+            res.send({"authorized": false, "error": "Invalid authtoken"})
             return false
         }
     }

@@ -2,6 +2,8 @@ class PlayerQueue {
     constructor(){
         this.queue = []
         this.pos = 0
+        this.playedPoses = []
+        this.shuffled = false
     }
     set(queue){
         this.queue = queue
@@ -36,7 +38,9 @@ class PlayerQueue {
         if(this.pos+pos > this.queue.length-1){
             console.log("At the end of the queue")
             showSnackbar("At the end of the queue")
-            return false
+            this.pos = 0
+            this.playedPoses = []
+            return true
         }else{
             this.pos = this.pos + pos
             return true
@@ -54,8 +58,25 @@ class PlayerQueue {
         if(this.queue.length == 0){
             return
         }
-        var song = this.queue[this.pos]
+        var poses = 0
+        console.log(this.playedPoses)
+        if(this.shuffled){
+            poses = Math.floor(Math.random() * this.queue.length)
+            console.log("Choosing random song "+poses)
+            while(this.playedPoses.includes(poses)){
+                poses = Math.floor(Math.random() * this.queue.length)
+                console.log("Choosing random song "+poses)
+            }
+        }else{
+            poses = this.pos
+        }
+        var song = this.queue[poses]
         playSong(song)
+        this.playedPoses.push(poses)
+        console.log(this.playedPoses)
+    }
+    shuffle(val){
+        this.shuffled = val
     }
     next(){
         this.update(this.setPos(1))
@@ -91,6 +112,9 @@ class Playing {
     }
 }
 
+class Playlists {
+    
+}
 setInterval(function() {
     if(typeof(window.howlerInstance) == "undefined"){
         console.log("No howler instance");
@@ -108,6 +132,12 @@ window.fetchedData = new FetchedData();
 window.fetchedData.onceInitalized(function(){
     getHome()
 })
+window.onscroll = function(ev) {
+    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+      // you're at the bottom of the page
+      console.log("Bottom of page");
+    }
+};
 
 function handleSongClick(id) {
     if(typeof(window.localQueue) == "undefined"){
