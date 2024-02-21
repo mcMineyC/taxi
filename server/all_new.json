@@ -1,0 +1,2237 @@
+{
+    "entries": [
+        {
+            "id": "2_mello",
+            "displayName": "2 Mello",
+            "albums": {
+                "superliminal-_the_lo-fi_mix": {
+                    "displayName": "Superliminal: The Lo-Fi Mix",
+                    "songs": [
+                        {
+                            "id": "3_am_radio",
+                            "title": "3 AM Radio",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_3_am_radio.mp3"
+                        },
+                        {
+                            "id": "shared_memory",
+                            "title": "Shared Memory",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_shared_memory.mp3"
+                        },
+                        {
+                            "id": "summer_walk",
+                            "title": "Summer Walk",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_summer_walk.mp3"
+                        },
+                        {
+                            "id": "see_u_next_time",
+                            "title": "See U Next Time",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_see_u_next_time.mp3"
+                        },
+                        {
+                            "id": "swimming_lights",
+                            "title": "Swimming Lights",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_swimming_lights.mp3"
+                        },
+                        {
+                            "id": "come_closer",
+                            "title": "Come Closer",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_come_closer.mp3"
+                        },
+                        {
+                            "id": "afternoon_storm",
+                            "title": "Afternoon Storm",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_afternoon_storm.mp3"
+                        },
+                        {
+                            "id": "garden_vibes",
+                            "title": "Garden Vibes",
+                            "file": "music/sorted/2_mello/superliminal-_the_lo-fi_mix/2_mello_-_garden_vibes.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "big_giant_circles",
+            "displayName": "Big Giant Circles",
+            "albums": {
+                "beast_breaker": {
+                    "displayName": "Beast Breaker",
+                    "songs": [
+                        {
+                            "id": "snarling_shellsnapper",
+                            "title": "Snarling Shellsnapper",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_snarling_shellsnapper.mp3"
+                        },
+                        {
+                            "id": "more_paws_for_the_cause",
+                            "title": "More Paws for the Cause",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_more_paws_for_the_cause.mp3"
+                        },
+                        {
+                            "id": "cave_growth_beast",
+                            "title": "Cave Growth Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_cave_growth_beast.mp3"
+                        },
+                        {
+                            "id": "overgrown_hollow",
+                            "title": "Overgrown Hollow",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_overgrown_hollow.mp3"
+                        },
+                        {
+                            "id": "cave_arcane_beast",
+                            "title": "Cave Arcane Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_cave_arcane_beast.mp3"
+                        },
+                        {
+                            "id": "forged_from_fear",
+                            "title": "Forged from Fear",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_forged_from_fear.mp3"
+                        },
+                        {
+                            "id": "keep_things_light",
+                            "title": "Keep Things Light",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_keep_things_light.mp3"
+                        },
+                        {
+                            "id": "hexawhip_hassles",
+                            "title": "Hexawhip Hassles",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_hexawhip_hassles.mp3"
+                        },
+                        {
+                            "id": "defend_the_farm",
+                            "title": "Defend the Farm",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_defend_the_farm.mp3"
+                        },
+                        {
+                            "id": "a_royal_audience",
+                            "title": "A Royal Audience",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_a_royal_audience.mp3"
+                        },
+                        {
+                            "id": "the_beast_breaker",
+                            "title": "The Beast Breaker",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_the_beast_breaker.mp3"
+                        },
+                        {
+                            "id": "forging_the_future",
+                            "title": "Forging the Future",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_forging_the_future.mp3"
+                        },
+                        {
+                            "id": "pirates_and_other_problems",
+                            "title": "Pirates and Other Problems",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_pirates_and_other_problems.mp3"
+                        },
+                        {
+                            "id": "following_the_tremors",
+                            "title": "Following the Tremors",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_following_the_tremors.mp3"
+                        },
+                        {
+                            "id": "root_of_the_problem",
+                            "title": "Root of the Problem",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_root_of_the_problem.mp3"
+                        },
+                        {
+                            "id": "a_team_assembled",
+                            "title": "A Team Assembled",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_a_team_assembled.mp3"
+                        },
+                        {
+                            "id": "stick_a_pin_in_it",
+                            "title": "Stick a Pin in It",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_stick_a_pin_in_it.mp3"
+                        },
+                        {
+                            "id": "clatterclaw_clamoring",
+                            "title": "Clatterclaw Clamoring",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_clatterclaw_clamoring.mp3"
+                        },
+                        {
+                            "id": "nothing_good_grows_here",
+                            "title": "Nothing Good Grows Here",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_nothing_good_grows_here.mp3"
+                        },
+                        {
+                            "id": "thorns_and_shards",
+                            "title": "Thorns and Shards",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_thorns_and_shards.mp3"
+                        },
+                        {
+                            "id": "deserve_to_burn",
+                            "title": "Deserve to Burn",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_deserve_to_burn.mp3"
+                        },
+                        {
+                            "id": "a_peak_of_the_truth",
+                            "title": "A Peak of the Truth",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_a_peak_of_the_truth.mp3"
+                        },
+                        {
+                            "id": "broken_by_the_beast",
+                            "title": "Broken by the Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_broken_by_the_beast.mp3"
+                        },
+                        {
+                            "id": "whiskersmith_farm",
+                            "title": "Whiskersmith Farm",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_whiskersmith_farm.mp3"
+                        },
+                        {
+                            "id": "don_t_back_down",
+                            "title": "Don't Back Down",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_jeff_ball_-_don_t_back_down.mp3"
+                        },
+                        {
+                            "id": "a_stand_taken",
+                            "title": "A Stand Taken",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_a_stand_taken.mp3"
+                        },
+                        {
+                            "id": "jawtooth_jamboree",
+                            "title": "Jawtooth Jamboree",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_jawtooth_jamboree.mp3"
+                        },
+                        {
+                            "id": "hearth_and_home",
+                            "title": "Hearth and Home",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_hearth_and_home.mp3"
+                        },
+                        {
+                            "id": "cave_shard_beast",
+                            "title": "Cave Shard Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_cave_shard_beast.mp3"
+                        },
+                        {
+                            "id": "desert_arcane_beast",
+                            "title": "Desert Arcane Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_desert_arcane_beast.mp3"
+                        },
+                        {
+                            "id": "heavy",
+                            "title": "Heavy",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_jeff_ball_-_heavy.mp3"
+                        },
+                        {
+                            "id": "waste_not_want_not",
+                            "title": "Waste Not Want Not",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_waste_not_want_not.mp3"
+                        },
+                        {
+                            "id": "ssstrange_sssilhouette",
+                            "title": "Ssstrange Sssilhouette",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_ssstrange_sssilhouette.mp3"
+                        },
+                        {
+                            "id": "a_promise_kept",
+                            "title": "A Promise Kept",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_a_promise_kept.mp3"
+                        },
+                        {
+                            "id": "don_t_let_it_break_you",
+                            "title": "Don't Let It Break You",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_don_t_let_it_break_you.mp3"
+                        },
+                        {
+                            "id": "bramble_bashing",
+                            "title": "Bramble Bashing",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_bramble_bashing.mp3"
+                        },
+                        {
+                            "id": "skipper_s_song_of_mice_and_kin_remix",
+                            "title": "Skipper's Song (Of Mice and Kin Remix)",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_skipper_s_song_of_mice_and_kin_remix.mp3"
+                        },
+                        {
+                            "id": "at_what_coast",
+                            "title": "At What Coast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_at_what_coast.mp3"
+                        },
+                        {
+                            "id": "somber_stakes",
+                            "title": "Somber Stakes",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_somber_stakes.mp3"
+                        },
+                        {
+                            "id": "beast_breaker_trailer",
+                            "title": "Beast Breaker Trailer",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_beast_breaker_trailer.mp3"
+                        },
+                        {
+                            "id": "city_ruins",
+                            "title": "City Ruins",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_city_ruins.mp3"
+                        },
+                        {
+                            "id": "snacks_and_snails",
+                            "title": "Snacks and Snails",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_snacks_and_snails.mp3"
+                        },
+                        {
+                            "id": "bogged_down",
+                            "title": "Bogged Down",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_bogged_down.mp3"
+                        },
+                        {
+                            "id": "skipper_s_song",
+                            "title": "Skipper's Song",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_skipper_s_song.mp3"
+                        },
+                        {
+                            "id": "seeking_secrets",
+                            "title": "Seeking Secrets",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_seeking_secrets.mp3"
+                        },
+                        {
+                            "id": "cave_tracking",
+                            "title": "Cave Tracking",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_cave_tracking.mp3"
+                        },
+                        {
+                            "id": "level_boss_arcane",
+                            "title": "Level Boss Arcane",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_level_boss_arcane.mp3"
+                        },
+                        {
+                            "id": "forest_arcane_beast",
+                            "title": "Forest Arcane Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_forest_arcane_beast.mp3"
+                        },
+                        {
+                            "id": "swamp_arcane_beast",
+                            "title": "Swamp Arcane Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_swamp_arcane_beast.mp3"
+                        },
+                        {
+                            "id": "bogspitter_battle",
+                            "title": "Bogspitter Battle",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_kristin_naigus_-_bogspitter_battle.mp3"
+                        },
+                        {
+                            "id": "tipping_point",
+                            "title": "Tipping Point",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_tipping_point.mp3"
+                        },
+                        {
+                            "id": "no_time_to_waste",
+                            "title": "No Time to Waste",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_no_time_to_waste.mp3"
+                        },
+                        {
+                            "id": "a_final_battle",
+                            "title": "A Final Battle",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles-_breabach_-_a_final_battle.mp3"
+                        },
+                        {
+                            "id": "beach_arcane_beast",
+                            "title": "Beach Arcane Beast",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_beach_arcane_beast.mp3"
+                        },
+                        {
+                            "id": "memory_of_motes",
+                            "title": "Memory of Motes",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_memory_of_motes.mp3"
+                        },
+                        {
+                            "id": "the_simplest_answer",
+                            "title": "The Simplest Answer",
+                            "file": "music/sorted/big_giant_circles/beast_breaker/big_giant_circles_-_the_simplest_answer.mp3"
+                        }
+                    ]
+                },
+                "road_quest": {
+                    "displayName": "Road Quest",
+                    "songs": [
+                        {
+                            "id": "meet_saabine",
+                            "title": "Meet Saabine",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_meet_saabine.mp3"
+                        },
+                        {
+                            "id": "mountain_seclusion",
+                            "title": "Mountain Seclusion",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_mountain_seclusion.mp3"
+                        },
+                        {
+                            "id": "wide_angle_shot",
+                            "title": "Wide Angle Shot",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_wide_angle_shot.mp3"
+                        },
+                        {
+                            "id": "morning-_in...",
+                            "title": "Morning, In...",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_morning-_in....mp3"
+                        },
+                        {
+                            "id": "northern_majesty",
+                            "title": "Northern Majesty",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_northern_majesty.mp3"
+                        },
+                        {
+                            "id": "i_do_believe_in_ferries",
+                            "title": "I Do Believe in Ferries",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_i_do_believe_in_ferries.mp3"
+                        },
+                        {
+                            "id": "road_quest_main_theme",
+                            "title": "Road Quest Main Theme",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_road_quest_main_theme.mp3"
+                        },
+                        {
+                            "id": "the_canadian_frontier",
+                            "title": "The Canadian Frontier",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_the_canadian_frontier.mp3"
+                        },
+                        {
+                            "id": "pack_your_bags",
+                            "title": "Pack Your Bags",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_pack_your_bags.mp3"
+                        },
+                        {
+                            "id": "carefree",
+                            "title": "Carefree",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_carefree.mp3"
+                        },
+                        {
+                            "id": "moose_bait",
+                            "title": "Moose Bait",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_moose_bait.mp3"
+                        },
+                        {
+                            "id": "a_lineage_of_jets",
+                            "title": "A Lineage of Jets",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_a_lineage_of_jets.mp3"
+                        },
+                        {
+                            "id": "reflection",
+                            "title": "Reflection",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_reflection.mp3"
+                        },
+                        {
+                            "id": "good_enough_to_be_stock_footage",
+                            "title": "Good Enough to Be Stock Footage",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_good_enough_to_be_stock_footage.mp3"
+                        },
+                        {
+                            "id": "mischief",
+                            "title": "Mischief",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_mischief.mp3"
+                        },
+                        {
+                            "id": "0-60_eventually",
+                            "title": "0-60 Eventually",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_0-60_eventually.mp3"
+                        },
+                        {
+                            "id": "two_melatonin",
+                            "title": "Two Melatonin",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_two_melatonin.mp3"
+                        },
+                        {
+                            "id": "ashphalt",
+                            "title": "Ashphalt",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_ashphalt.mp3"
+                        },
+                        {
+                            "id": "loadingreadyreunited",
+                            "title": "LoadingReadyReunited",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_loadingreadyreunited.mp3"
+                        },
+                        {
+                            "id": "serenity",
+                            "title": "Serenity",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_serenity.mp3"
+                        },
+                        {
+                            "id": "sunshower",
+                            "title": "Sunshower",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_sunshower.mp3"
+                        },
+                        {
+                            "id": "abandoned_town",
+                            "title": "Abandoned Town",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_abandoned_town.mp3"
+                        },
+                        {
+                            "id": "hell_road",
+                            "title": "Hell Road",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_hell_road.mp3"
+                        },
+                        {
+                            "id": "a_real_saab_story",
+                            "title": "A Real Saab Story",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_a_real_saab_story.mp3"
+                        },
+                        {
+                            "id": "panoramic_shot",
+                            "title": "Panoramic Shot",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_panoramic_shot.mp3"
+                        },
+                        {
+                            "id": "fursuit_vehicle",
+                            "title": "Fursuit Vehicle",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_fursuit_vehicle.mp3"
+                        },
+                        {
+                            "id": "open_road",
+                            "title": "Open Road",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_open_road.mp3"
+                        },
+                        {
+                            "id": "barkerville",
+                            "title": "Barkerville",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_barkerville.mp3"
+                        },
+                        {
+                            "id": "say_hello_to_gandalf",
+                            "title": "Say Hello to Gandalf",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_say_hello_to_gandalf.mp3"
+                        },
+                        {
+                            "id": "half_empty",
+                            "title": "Half Empty",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_half_empty.mp3"
+                        },
+                        {
+                            "id": "millenial_bloop",
+                            "title": "Millenial Bloop",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_millenial_bloop.mp3"
+                        },
+                        {
+                            "id": "shenanigans",
+                            "title": "Shenanigans",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_shenanigans.mp3"
+                        },
+                        {
+                            "id": "rear-wheel_drive",
+                            "title": "Rear-Wheel Drive",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_rear-wheel_drive.mp3"
+                        },
+                        {
+                            "id": "hijinks",
+                            "title": "Hijinks",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_hijinks.mp3"
+                        },
+                        {
+                            "id": "the_civility",
+                            "title": "The Civility",
+                            "file": "music/sorted/big_giant_circles/road_quest/big_giant_circles_-_the_civility.mp3"
+                        }
+                    ]
+                },
+                "octogeddon_original_game_soundtrack": {
+                    "displayName": "Octogeddon (Original Game Soundtrack)",
+                    "songs": [
+                        {
+                            "id": "fish_are_friends_minigame",
+                            "title": "Fish Are Friends (Minigame)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_fish_are_friends_minigame.mp3"
+                        },
+                        {
+                            "id": "nightlife-or-death_tokyo_city",
+                            "title": "Nightlife-or-Death (Tokyo City)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_nightlife-or-death_tokyo_city.mp3"
+                        },
+                        {
+                            "id": "octodead__un_game_over",
+                            "title": "Octodead 'un (Game Over)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_octodead__un_game_over.mp3"
+                        },
+                        {
+                            "id": "octogoodies_power_up",
+                            "title": "Octogoodies (Power Up)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_octogoodies_power_up.mp3"
+                        },
+                        {
+                            "id": "rocktogeddon_boss_fight",
+                            "title": "Rocktogeddon (Boss Fight)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_rocktogeddon_boss_fight.mp3"
+                        },
+                        {
+                            "id": "new_york_squishy_new_york_city",
+                            "title": "New York Squishy (New York City)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_new_york_squishy_new_york_city.mp3"
+                        },
+                        {
+                            "id": "sushi_showdown_final_boss",
+                            "title": "Sushi Showdown (Final Boss)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_sushi_showdown_final_boss.mp3"
+                        },
+                        {
+                            "id": "octogeddon-_title_screen",
+                            "title": "Octogeddon! (Title Screen)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_octogeddon-_title_screen.mp3"
+                        },
+                        {
+                            "id": "french_dip_france_ocean",
+                            "title": "French Dip (France Ocean)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_french_dip_france_ocean.mp3"
+                        },
+                        {
+                            "id": "didgeridoo_i_m_comin__for_you_sydney_ocean",
+                            "title": "Didgeridoo I'm Comin' for You (Sydney Ocean)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_didgeridoo_i_m_comin__for_you_sydney_ocean.mp3"
+                        },
+                        {
+                            "id": "bassa_nova_shell_shop",
+                            "title": "Bassa Nova (Shell Shop)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_bassa_nova_shell_shop.mp3"
+                        },
+                        {
+                            "id": "octopus_vs._pentagon_d.c._city",
+                            "title": "Octopus vs. Pentagon (D.C. City)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_octopus_vs._pentagon_d.c._city.mp3"
+                        },
+                        {
+                            "id": "eiffel_scuffle_paris_city",
+                            "title": "Eiffel Scuffle (Paris City)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_eiffel_scuffle_paris_city.mp3"
+                        },
+                        {
+                            "id": "angry_octopus_credits",
+                            "title": "Angry Octopus (Credits)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_angry_octopus_credits.mp3"
+                        },
+                        {
+                            "id": "angry_octopus_instrumental_new_york_ocean",
+                            "title": "Angry Octopus Instrumental (New York Ocean)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_angry_octopus_instrumental_new_york_ocean.mp3"
+                        },
+                        {
+                            "id": "angry_octopus_unplugged",
+                            "title": "Angry Octopus (Unplugged)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_angry_octopus_unplugged.mp3"
+                        },
+                        {
+                            "id": "mad_doctor_octopus_lab",
+                            "title": "Mad Doctor Octopus (Lab)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_mad_doctor_octopus_lab.mp3"
+                        },
+                        {
+                            "id": "sea_to_blimey_sea_d.c._ocean",
+                            "title": "Sea to Blimey Sea (D.C. Ocean)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_sea_to_blimey_sea_d.c._ocean.mp3"
+                        },
+                        {
+                            "id": "george_fanfare_victory",
+                            "title": "George Fanfare (Victory)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_george_fanfare_victory.mp3"
+                        },
+                        {
+                            "id": "octovania_tokyo_ocean",
+                            "title": "Octovania (Tokyo Ocean)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_octovania_tokyo_ocean.mp3"
+                        },
+                        {
+                            "id": "one_tentacle_release_trailer",
+                            "title": "One Tentacle (Release Trailer)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_one_tentacle_release_trailer.mp3"
+                        },
+                        {
+                            "id": "the_road_to_rage_level_select",
+                            "title": "The Road to Rage (Level Select)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_the_road_to_rage_level_select.mp3"
+                        },
+                        {
+                            "id": "badliest_catch_miniboss",
+                            "title": "Badliest Catch (Miniboss)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_badliest_catch_miniboss.mp3"
+                        },
+                        {
+                            "id": "sunsets_and_no_regrets_sydney_city",
+                            "title": "Sunsets and No Regrets (Sydney City)",
+                            "file": "music/sorted/big_giant_circles/octogeddon_original_game_soundtrack/big_giant_circles_-_sunsets_and_no_regrets_sydney_city.mp3"
+                        }
+                    ]
+                },
+                "hive_jump_original_game_soundtrack": {
+                    "displayName": "Hive Jump (Original Game Soundtrack)",
+                    "songs": [
+                        {
+                            "id": "burninating_the_jumpers_lava_caverns",
+                            "title": "Burninating the Jumpers (Lava Caverns)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_burninating_the_jumpers_lava_caverns.mp3"
+                        },
+                        {
+                            "id": "crushing_the_crusher_crystal_boss",
+                            "title": "Crushing the Crusher (Crystal Boss)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_crushing_the_crusher_crystal_boss.mp3"
+                        },
+                        {
+                            "id": "cooking_crystal_death_crystal_caverns",
+                            "title": "Cooking Crystal Death (Crystal Caverns)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_cooking_crystal_death_crystal_caverns.mp3"
+                        },
+                        {
+                            "id": "queen_killer_final_boss_phase_1",
+                            "title": "Queen Killer (Final Boss Phase 1)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_queen_killer_final_boss_phase_1.mp3"
+                        },
+                        {
+                            "id": "killer_queen_final_boss_phase_2",
+                            "title": "Killer Queen (Final Boss Phase 2)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_killer_queen_final_boss_phase_2.mp3"
+                        },
+                        {
+                            "id": "the_jump_corps_hive_jump_theme",
+                            "title": "The Jump Corps (Hive Jump Theme)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_the_jump_corps_hive_jump_theme.mp3"
+                        },
+                        {
+                            "id": "fungal_jungle_mushroom_caverns",
+                            "title": "Fungal Jungle (Mushroom Caverns)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_fungal_jungle_mushroom_caverns.mp3"
+                        },
+                        {
+                            "id": "only_you_can_prevent_cavern_fires_lava_relic_room",
+                            "title": "Only You Can Prevent Cavern Fires (Lava Relic Room)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_only_you_can_prevent_cavern_fires_lava_relic_room.mp3"
+                        },
+                        {
+                            "id": "the_ugly_bug_ball_ambush_room",
+                            "title": "The Ugly Bug Ball (Ambush Room)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_the_ugly_bug_ball_ambush_room.mp3"
+                        },
+                        {
+                            "id": "written_in_graphite_story",
+                            "title": "Written in Graphite (Story)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_written_in_graphite_story.mp3"
+                        },
+                        {
+                            "id": "delpha_pre_final_boss",
+                            "title": "Delpha (Pre Final Boss)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_delpha_pre_final_boss.mp3"
+                        },
+                        {
+                            "id": "rip_crystal_visions_crystal_relic_room",
+                            "title": "Rip Crystal Visions (Crystal Relic Room)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_rip_crystal_visions_crystal_relic_room.mp3"
+                        },
+                        {
+                            "id": "bug_juice_see_what_i_did_there",
+                            "title": "Bug Juice (See What I Did There)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_bug_juice_see_what_i_did_there.mp3"
+                        },
+                        {
+                            "id": "learning_the_ropes_tutorial",
+                            "title": "Learning the Ropes (Tutorial)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_learning_the_ropes_tutorial.mp3"
+                        },
+                        {
+                            "id": "release_trailer_bonus",
+                            "title": "Release Trailer (Bonus)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_release_trailer_bonus.mp3"
+                        },
+                        {
+                            "id": "i_scream_for_ice_beam_ice_caverns",
+                            "title": "I Scream for Ice Beam (Ice Caverns)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_i_scream_for_ice_beam_ice_caverns.mp3"
+                        },
+                        {
+                            "id": "fort_issimo_campaign",
+                            "title": "Fort Issimo (Campaign)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_fort_issimo_campaign.mp3"
+                        },
+                        {
+                            "id": "cool_runnings_ice_relic_room",
+                            "title": "Cool Runnings (Ice Relic Room)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_cool_runnings_ice_relic_room.mp3"
+                        },
+                        {
+                            "id": "early_access_trailer_bonus",
+                            "title": "Early Access Trailer (Bonus)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_early_access_trailer_bonus.mp3"
+                        },
+                        {
+                            "id": "harvesting_the_harvester_mushroom_boss",
+                            "title": "Harvesting the Harvester (Mushroom Boss)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_harvesting_the_harvester_mushroom_boss.mp3"
+                        },
+                        {
+                            "id": "taking_care_of_the_caretaker_ice_boss",
+                            "title": "Taking Care of the Caretaker (Ice Boss)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_taking_care_of_the_caretaker_ice_boss.mp3"
+                        },
+                        {
+                            "id": "scorching_the_scorcher_lava_boss",
+                            "title": "Scorching the Scorcher (Lava Boss)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_scorching_the_scorcher_lava_boss.mp3"
+                        },
+                        {
+                            "id": "deployment_loadout",
+                            "title": "Deployment (Loadout)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_deployment_loadout.mp3"
+                        },
+                        {
+                            "id": "aftermath_credits",
+                            "title": "Aftermath (Credits)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_aftermath_credits.mp3"
+                        },
+                        {
+                            "id": "trust_the_fungus_mushroom_relic_room",
+                            "title": "Trust the Fungus (Mushroom Relic Room)",
+                            "file": "music/sorted/big_giant_circles/hive_jump_original_game_soundtrack/big_giant_circles_-_trust_the_fungus_mushroom_relic_room.mp3"
+                        }
+                    ]
+                },
+                "the_glory_days": {
+                    "displayName": "The Glory Days",
+                    "songs": [
+                        {
+                            "id": "peanut_butter_cupquakes",
+                            "title": "Peanut Butter Cupquakes",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_peanut_butter_cupquakes.mp3"
+                        },
+                        {
+                            "id": "sevcon",
+                            "title": "Sevcon",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_sevcon.mp3"
+                        },
+                        {
+                            "id": "go_for_distance",
+                            "title": "Go for Distance",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_go_for_distance.mp3"
+                        },
+                        {
+                            "id": "gront_is_a_muppet",
+                            "title": "Gront Is a Muppet",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_gront_is_a_muppet.mp3"
+                        },
+                        {
+                            "id": "micksplosions",
+                            "title": "Micksplosions",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_micksplosions.mp3"
+                        },
+                        {
+                            "id": "chip_zeal",
+                            "title": "Chip Zeal",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_chip_zeal.mp3"
+                        },
+                        {
+                            "id": "no_party_like_a_mojang_party",
+                            "title": "No Party Like a Mojang Party",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_no_party_like_a_mojang_party.mp3"
+                        },
+                        {
+                            "id": "artifact_hunter",
+                            "title": "Artifact Hunter",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_artifact_hunter.mp3"
+                        },
+                        {
+                            "id": "wintory_fresh",
+                            "title": "Wintory Fresh",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_wintory_fresh.mp3"
+                        },
+                        {
+                            "id": "houston",
+                            "title": "Houston",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_houston.mp3"
+                        },
+                        {
+                            "id": "biceps_blaster",
+                            "title": "Biceps Blaster",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_biceps_blaster.mp3"
+                        },
+                        {
+                            "id": "the_chiptune_legacy",
+                            "title": "The Chiptune Legacy",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_the_chiptune_legacy.mp3"
+                        },
+                        {
+                            "id": "snowcones",
+                            "title": "Snowcones",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_snowcones.mp3"
+                        },
+                        {
+                            "id": "interlude",
+                            "title": "Interlude",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_interlude.mp3"
+                        },
+                        {
+                            "id": "a_rose_in_a_field",
+                            "title": "A Rose in a Field",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_a_rose_in_a_field.mp3"
+                        },
+                        {
+                            "id": "vindicate_me",
+                            "title": "Vindicate Me",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_vindicate_me.mp3"
+                        },
+                        {
+                            "id": "viceroy_danny_von_b",
+                            "title": "Viceroy Danny Von B",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_viceroy_danny_von_b.mp3"
+                        },
+                        {
+                            "id": "the_glory_days",
+                            "title": "The Glory Days",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_the_glory_days.mp3"
+                        },
+                        {
+                            "id": "the_trials_of_man",
+                            "title": "The Trials of Man",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_the_trials_of_man.mp3"
+                        },
+                        {
+                            "id": "relapse",
+                            "title": "Relapse",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_relapse.mp3"
+                        },
+                        {
+                            "id": "virtuoso_sexy",
+                            "title": "Virtuoso Sexy",
+                            "file": "music/sorted/big_giant_circles/the_glory_days/big_giant_circles_-_virtuoso_sexy.mp3"
+                        }
+                    ]
+                },
+                "extreme_road_trip_2_soundtrack": {
+                    "displayName": "Extreme Road Trip 2 (Soundtrack)",
+                    "songs": [
+                        {
+                            "id": "extreme_road_trip_2_-_in_the_zone_alternate_unused_version",
+                            "title": "Extreme Road Trip 2 : In the Zone (Alternate Unused Version)",
+                            "file": "music/sorted/big_giant_circles/extreme_road_trip_2_soundtrack/big_giant_circles_-_extreme_road_trip_2_-_in_the_zone_alternate_unused_version.mp3"
+                        },
+                        {
+                            "id": "extreme_road_trip_2-_power_trip",
+                            "title": "Extreme Road Trip 2: Power Trip",
+                            "file": "music/sorted/big_giant_circles/extreme_road_trip_2_soundtrack/big_giant_circles_-_extreme_road_trip_2-_power_trip.mp3"
+                        },
+                        {
+                            "id": "extreme_road_trip_2-_title",
+                            "title": "Extreme Road Trip 2: Title",
+                            "file": "music/sorted/big_giant_circles/extreme_road_trip_2_soundtrack/big_giant_circles_-_extreme_road_trip_2-_title.mp3"
+                        },
+                        {
+                            "id": "extreme_road_trip_2-_in_the_zone",
+                            "title": "Extreme Road Trip 2: In the Zone",
+                            "file": "music/sorted/big_giant_circles/extreme_road_trip_2_soundtrack/big_giant_circles_-_extreme_road_trip_2-_in_the_zone.mp3"
+                        }
+                    ]
+                },
+                "there_came_an_echo": {
+                    "displayName": "There Came an Echo",
+                    "songs": [
+                        {
+                            "id": "sass_effect",
+                            "title": "Sass Effect",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_sass_effect.mp3"
+                        },
+                        {
+                            "id": "outside_the_realm",
+                            "title": "Outside the Realm",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_outside_the_realm.mp3"
+                        },
+                        {
+                            "id": "throwing_circles_feat._ronald_jenkees",
+                            "title": "Throwing Circles (feat. Ronald Jenkees)",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_throwing_circles_feat._ronald_jenkees.mp3"
+                        },
+                        {
+                            "id": "the_echo",
+                            "title": "The Echo",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_the_echo.mp3"
+                        },
+                        {
+                            "id": "daylight",
+                            "title": "Daylight",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_daylight.mp3"
+                        },
+                        {
+                            "id": "the_singularity",
+                            "title": "The Singularity",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_the_singularity.mp3"
+                        },
+                        {
+                            "id": "radial_lock",
+                            "title": "Radial Lock",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_radial_lock.mp3"
+                        },
+                        {
+                            "id": "voltage",
+                            "title": "Voltage",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_voltage.mp3"
+                        },
+                        {
+                            "id": "there_came_an_echo_theme",
+                            "title": "There Came an Echo Theme",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_there_came_an_echo_theme.mp3"
+                        },
+                        {
+                            "id": "the_peyton_conspiracy",
+                            "title": "The Peyton Conspiracy",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_the_peyton_conspiracy.mp3"
+                        },
+                        {
+                            "id": "ignite_defense",
+                            "title": "Ignite Defense",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_ignite_defense.mp3"
+                        },
+                        {
+                            "id": "waiting_for_fire",
+                            "title": "Waiting for Fire",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_waiting_for_fire.mp3"
+                        },
+                        {
+                            "id": "never_coming_back",
+                            "title": "Never Coming Back",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_never_coming_back.mp3"
+                        },
+                        {
+                            "id": "override",
+                            "title": "Override",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_override.mp3"
+                        },
+                        {
+                            "id": "signs_feat._aureylian",
+                            "title": "Signs (feat. Aureylian)",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_signs_feat._aureylian.mp3"
+                        },
+                        {
+                            "id": "telescopic",
+                            "title": "Telescopic",
+                            "file": "music/sorted/big_giant_circles/there_came_an_echo/big_giant_circles_-_telescopic.mp3"
+                        }
+                    ]
+                },
+                "contingency": {
+                    "displayName": "Contingency",
+                    "songs": [
+                        {
+                            "id": "lost_souls_2009",
+                            "title": "Lost Souls (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_lost_souls_2009.mp3"
+                        },
+                        {
+                            "id": "stress_2009",
+                            "title": "Stress (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_stress_2009.mp3"
+                        },
+                        {
+                            "id": "tropical_rain_2007",
+                            "title": "Tropical Rain (2007)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_tropical_rain_2007.mp3"
+                        },
+                        {
+                            "id": "subterfuge_2009",
+                            "title": "Subterfuge (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_subterfuge_2009.mp3"
+                        },
+                        {
+                            "id": "last_stand_2010",
+                            "title": "Last Stand (2010)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_last_stand_2010.mp3"
+                        },
+                        {
+                            "id": "conspiracy_theory_2010",
+                            "title": "Conspiracy Theory (2010)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_conspiracy_theory_2010.mp3"
+                        },
+                        {
+                            "id": "hacking_the_system_2010",
+                            "title": "Hacking the System (2010)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_hacking_the_system_2010.mp3"
+                        },
+                        {
+                            "id": "chasing_lightning_2010",
+                            "title": "Chasing Lightning (2010)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_chasing_lightning_2010.mp3"
+                        },
+                        {
+                            "id": "standoff_2008",
+                            "title": "Standoff (2008)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_standoff_2008.mp3"
+                        },
+                        {
+                            "id": "subconscious_2008",
+                            "title": "Subconscious (2008)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_subconscious_2008.mp3"
+                        },
+                        {
+                            "id": "far_beyond_eyes_2008",
+                            "title": "Far Beyond Eyes (2008)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_far_beyond_eyes_2008.mp3"
+                        },
+                        {
+                            "id": "cosmic_visions_2009",
+                            "title": "Cosmic Visions (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_cosmic_visions_2009.mp3"
+                        },
+                        {
+                            "id": "faith_2009",
+                            "title": "Faith (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_faith_2009.mp3"
+                        },
+                        {
+                            "id": "hold_the_line_2009",
+                            "title": "Hold the Line (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_hold_the_line_2009.mp3"
+                        },
+                        {
+                            "id": "unsettled_2010",
+                            "title": "Unsettled (2010)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_unsettled_2010.mp3"
+                        },
+                        {
+                            "id": "march_of_legions_2009",
+                            "title": "March of Legions (2009)",
+                            "file": "music/sorted/big_giant_circles/contingency/big_giant_circles_-_march_of_legions_2009.mp3"
+                        }
+                    ]
+                },
+                "puzzlejuice_soundtrack": {
+                    "displayName": "Puzzlejuice Soundtrack",
+                    "songs": [
+                        {
+                            "id": "puzzlejuice_trailer_%5Bbonus_track%5D",
+                            "title": "Puzzlejuice Trailer [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_puzzlejuice_trailer_%5Bbonus_track%5D.mp3"
+                        },
+                        {
+                            "id": "too_much_juice-_unused_%5Bbonus_track%5D",
+                            "title": "Too Much Juice! (Unused) [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_too_much_juice-_unused_%5Bbonus_track%5D.mp3"
+                        },
+                        {
+                            "id": "over-juiced-_hardcore_mode",
+                            "title": "Over-Juiced! (Hardcore Mode)",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_over-juiced-_hardcore_mode.mp3"
+                        },
+                        {
+                            "id": "puzzlejuice_menu",
+                            "title": "Puzzlejuice (Menu)",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_puzzlejuice_menu.mp3"
+                        },
+                        {
+                            "id": "sipping_juice_casual_mode",
+                            "title": "Sipping Juice (Casual Mode)",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_sipping_juice_casual_mode.mp3"
+                        },
+                        {
+                            "id": "mojito_punch_unused_alternate_version_%5Bbonus_track%5D",
+                            "title": "Mojito Punch (Unused Alternate Version [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_mojito_punch_unused_alternate_version_%5Bbonus_track%5D.mp3"
+                        },
+                        {
+                            "id": "mojito_punch_impossible_mode",
+                            "title": "Mojito Punch (Impossible Mode)",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_mojito_punch_impossible_mode.mp3"
+                        },
+                        {
+                            "id": "over-juiced-_unused_alternate_version_%5Bbonus_track%5D",
+                            "title": "Over-Juiced! (Unused Alternate Version) [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/puzzlejuice_soundtrack/big_giant_circles_-_over-juiced-_unused_alternate_version_%5Bbonus_track%5D.mp3"
+                        }
+                    ]
+                },
+                "legacy": {
+                    "displayName": "Legacy",
+                    "songs": [
+                        {
+                            "id": "nova_siberia_oc_remix_%5Bbonus_track%5D",
+                            "title": "Nova Siberia (Oc Remix) [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_nova_siberia_oc_remix_%5Bbonus_track%5D.mp3"
+                        },
+                        {
+                            "id": "march_of_legions_unused",
+                            "title": "March of Legions (Unused)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_march_of_legions_unused.mp3"
+                        },
+                        {
+                            "id": "hold_the_line_unused",
+                            "title": "Hold the Line (Unused)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_hold_the_line_unused.mp3"
+                        },
+                        {
+                            "id": "8-bit_tali_bonus_track",
+                            "title": "8-Bit Tali (Bonus Track)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_8-bit_tali_bonus_track.mp3"
+                        },
+                        {
+                            "id": "no_one_believes_me_draft",
+                            "title": "No One Believes Me (Draft)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_no_one_believes_me_draft.mp3"
+                        },
+                        {
+                            "id": "cosmic_visions_unused",
+                            "title": "Cosmic Visions (Unused)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_cosmic_visions_unused.mp3"
+                        },
+                        {
+                            "id": "shepard_of_the_galaxy_tribute",
+                            "title": "Shepard of the Galaxy (Tribute)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_shepard_of_the_galaxy_tribute.mp3"
+                        },
+                        {
+                            "id": "lost_souls_draft",
+                            "title": "Lost Souls (Draft)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_lost_souls_draft.mp3"
+                        },
+                        {
+                            "id": "faster_than_light_unused",
+                            "title": "Faster Than Light (Unused)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_faster_than_light_unused.mp3"
+                        },
+                        {
+                            "id": "this_place_feels_unnatural_draft",
+                            "title": "This Place Feels Unnatural (Draft)",
+                            "file": "music/sorted/big_giant_circles/legacy/big_giant_circles_-_this_place_feels_unnatural_draft.mp3"
+                        }
+                    ]
+                },
+                "threes_soundtrack": {
+                    "displayName": "Threes Soundtrack",
+                    "songs": [
+                        {
+                            "id": "threes_soundtrack",
+                            "title": "Threes Soundtrack",
+                            "file": "music/sorted/big_giant_circles/threes_soundtrack/big_giant_circles_-_threes_soundtrack.mp3"
+                        }
+                    ]
+                },
+                "impostor_nostalgia": {
+                    "displayName": "Impostor Nostalgia",
+                    "songs": [
+                        {
+                            "id": "you_can_have_mine",
+                            "title": "You Can Have Mine",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_you_can_have_mine.mp3"
+                        },
+                        {
+                            "id": "buzzsaw_feat._zircon",
+                            "title": "Buzzsaw (Feat. Zircon)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_buzzsaw_feat._zircon.mp3"
+                        },
+                        {
+                            "id": "chips_ahoy_mateys",
+                            "title": "Chips Ahoy Mateys",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_chips_ahoy_mateys.mp3"
+                        },
+                        {
+                            "id": "raindancer",
+                            "title": "Raindancer",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_raindancer.mp3"
+                        },
+                        {
+                            "id": "last_hope_bonus_track",
+                            "title": "Last Hope (Bonus Track)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_last_hope_bonus_track.mp3"
+                        },
+                        {
+                            "id": "your_quest_is_over_feat._pongball",
+                            "title": "Your Quest is Over (Feat. Pongball)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_your_quest_is_over_feat._pongball.mp3"
+                        },
+                        {
+                            "id": "katana_blaster",
+                            "title": "Katana Blaster",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_katana_blaster.mp3"
+                        },
+                        {
+                            "id": "yeah-_feat._souleye",
+                            "title": "Yeah! (Feat. Souleye)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_yeah-_feat._souleye.mp3"
+                        },
+                        {
+                            "id": "flicker_feat._chris_geehan",
+                            "title": "Flicker (Feat. Chris Geehan)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_flicker_feat._chris_geehan.mp3"
+                        },
+                        {
+                            "id": "bgc418_feat._c418",
+                            "title": "BGC418 (Feat. C418)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_bgc418_feat._c418.mp3"
+                        },
+                        {
+                            "id": "big_giant_sea_for_a_dream_bonus_track",
+                            "title": "Big Giant Sea for a Dream (Bonus Track)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_big_giant_sea_for_a_dream_bonus_track.mp3"
+                        },
+                        {
+                            "id": "antimatter_factory_feat._alex_brandon",
+                            "title": "Antimatter Factory (Feat. Alex Brandon)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_antimatter_factory_feat._alex_brandon.mp3"
+                        },
+                        {
+                            "id": "some_things_are_not_as_they_seem_impostor_nostalgia_trailer_%5Bbonus_track%5D",
+                            "title": "Some Things Are Not As They Seem (Impostor Nostalgia trailer) [Bonus Track]",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_some_things_are_not_as_they_seem_impostor_nostalgia_trailer_%5Bbonus_track%5D.mp3"
+                        },
+                        {
+                            "id": "fight_the_current",
+                            "title": "Fight the Current",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_fight_the_current.mp3"
+                        },
+                        {
+                            "id": "super_vvvvvveat_boy",
+                            "title": "Super VVVVVVeat Boy",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_super_vvvvvveat_boy.mp3"
+                        },
+                        {
+                            "id": "happiness_feat._disasterpeace",
+                            "title": "Happiness (Feat. Disasterpeace)",
+                            "file": "music/sorted/big_giant_circles/impostor_nostalgia/big_giant_circles_-_happiness_feat._disasterpeace.mp3"
+                        }
+                    ]
+                },
+                "big_giant_christmas": {
+                    "displayName": "Big Giant Christmas",
+                    "songs": [
+                        {
+                            "id": "good_king_wencircles",
+                            "title": "Good King Wencircles",
+                            "file": "music/sorted/big_giant_circles/big_giant_christmas/big_giant_circles_-_good_king_wencircles.mp3"
+                        },
+                        {
+                            "id": "i_saw_three_chips",
+                            "title": "I Saw Three Chips",
+                            "file": "music/sorted/big_giant_circles/big_giant_christmas/big_giant_circles_-_i_saw_three_chips.mp3"
+                        },
+                        {
+                            "id": "jingle_bits",
+                            "title": "Jingle Bits",
+                            "file": "music/sorted/big_giant_circles/big_giant_christmas/big_giant_circles_-_jingle_bits.mp3"
+                        },
+                        {
+                            "id": "deck_the_halls_-_welshpixie_s_souvenir_mbira_version",
+                            "title": "Deck the Halls - Welshpixie's Souvenir Mbira version",
+                            "file": "music/sorted/big_giant_circles/big_giant_christmas/big_giant_circles_-_deck_the_halls_-_welshpixie_s_souvenir_mbira_version.mp3"
+                        },
+                        {
+                            "id": "circles_of_the_bells",
+                            "title": "Circles of the Bells",
+                            "file": "music/sorted/big_giant_circles/big_giant_christmas/big_giant_circles_-_circles_of_the_bells.mp3"
+                        }
+                    ]
+                },
+                "pocket_mine_soundtrack": {
+                    "displayName": "Pocket Mine (Soundtrack)",
+                    "songs": [
+                        {
+                            "id": "that_diamond_smile",
+                            "title": "That Diamond Smile",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_that_diamond_smile.mp3"
+                        },
+                        {
+                            "id": "inverted_vertigo",
+                            "title": "Inverted Vertigo",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_inverted_vertigo.mp3"
+                        },
+                        {
+                            "id": "pocket_mine_menu",
+                            "title": "Pocket Mine Menu",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_pocket_mine_menu.mp3"
+                        },
+                        {
+                            "id": "tally_up_the_loot",
+                            "title": "Tally Up the Loot",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_tally_up_the_loot.mp3"
+                        },
+                        {
+                            "id": "what_s_pocket_mine_is_pocket_yours",
+                            "title": "What's Pocket Mine Is Pocket Yours",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_what_s_pocket_mine_is_pocket_yours.mp3"
+                        },
+                        {
+                            "id": "inverted_vertigo_ben_briggs_remix_%5Bfeat._benjamin_briggs%5D",
+                            "title": "Inverted Vertigo (Ben Briggs Remix) [feat. Benjamin Briggs]",
+                            "file": "music/sorted/big_giant_circles/pocket_mine_soundtrack/big_giant_circles_-_inverted_vertigo_ben_briggs_remix_%5Bfeat._benjamin_briggs%5D.mp3"
+                        }
+                    ]
+                },
+                "neon_protocol": {
+                    "displayName": "Neon Protocol",
+                    "songs": [
+                        {
+                            "id": "neon_protocol",
+                            "title": "Neon Protocol",
+                            "file": "music/sorted/big_giant_circles/neon_protocol/big_giant_circles_-_neon_protocol.mp3"
+                        }
+                    ]
+                },
+                "recovery": {
+                    "displayName": "Recovery",
+                    "songs": [
+                        {
+                            "id": "recovery",
+                            "title": "Recovery",
+                            "file": "music/sorted/big_giant_circles/recovery/big_giant_circles_-_recovery.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "flashygoodness",
+            "displayName": "flashygoodness",
+            "albums": {
+                "impostor_nostalgia": {
+                    "displayName": "Impostor Nostalgia",
+                    "songs": [
+                        {
+                            "id": "fight_the_current_flashy_mix",
+                            "title": "Fight the Current (Flashy Mix)",
+                            "file": "music/sorted/flashygoodness/impostor_nostalgia/flashygoodness_-_fight_the_current_flashy_mix.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "hotline_sehwani",
+            "displayName": "Hotline Sehwani",
+            "albums": {
+                "tarrey_town_-_lofi_piano_from__the_legend_of_zelda-_breath_of_the_wild__%5Bcover%5D": {
+                    "displayName": "Tarrey Town - Lofi Piano (From \"The Legend of Zelda: Breath of the Wild\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "tarrey_town_-_lofi_piano_from__the_legend_of_zelda-_breath_of_the_wild__-_cover",
+                            "title": "Tarrey Town - Lofi Piano (From \"The Legend of Zelda: Breath of the Wild\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/tarrey_town_-_lofi_piano_from__the_legend_of_zelda-_breath_of_the_wild__%5Bcover%5D/hotline_sehwani-_alessio_dicorato_-_tarrey_town_-_lofi_piano_from__the_legend_of_zelda-_breath_of_the_wild__-_cover.mp3"
+                        }
+                    ]
+                },
+                "bubblaine_lofi_from__super_mario_odyssey__%5Bcover%5D": {
+                    "displayName": "Bubblaine Lofi (From \"Super Mario Odyssey\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "bubblaine_lofi_from__super_mario_odyssey__-_cover",
+                            "title": "Bubblaine Lofi (From \"Super Mario Odyssey\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/bubblaine_lofi_from__super_mario_odyssey__%5Bcover%5D/hotline_sehwani_-_bubblaine_lofi_from__super_mario_odyssey__-_cover.mp3"
+                        }
+                    ]
+                },
+                "64_bits_of_chill-_nintendo_lofi_beats": {
+                    "displayName": "64 Bits of Chill: Nintendo Lofi Beats",
+                    "songs": [
+                        {
+                            "id": "file_select_lofi_from__super_mario_64__-_cover",
+                            "title": "File Select Lofi (From \"Super Mario 64\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/64_bits_of_chill-_nintendo_lofi_beats/hotline_sehwani-_melodies_zone_-_file_select_lofi_from__super_mario_64__-_cover.mp3"
+                        },
+                        {
+                            "id": "pause_screen_lofi_from__goldeneye_007__-_cover",
+                            "title": "Pause Screen Lofi (From \"GoldenEye 007\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/64_bits_of_chill-_nintendo_lofi_beats/hotline_sehwani-_melodies_zone_-_pause_screen_lofi_from__goldeneye_007__-_cover.mp3"
+                        }
+                    ]
+                },
+                "knight_of_the_wind_lofi_from__sonic_and_the_black_knight__%5Bcover%5D": {
+                    "displayName": "Knight of the Wind Lofi (From \"Sonic and the Black Knight\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "knight_of_the_wind_lofi_from__sonic_and_the_black_knight__%5Bcover%5D",
+                            "title": "Knight of the Wind Lofi (From \"Sonic and the Black Knight\") [Cover]",
+                            "file": "music/sorted/hotline_sehwani/knight_of_the_wind_lofi_from__sonic_and_the_black_knight__%5Bcover%5D/hotline_sehwani_-_knight_of_the_wind_lofi_from__sonic_and_the_black_knight__%5Bcover%5D.mp3"
+                        }
+                    ]
+                },
+                "tostarena_ruins_lofi_from__super_mario_odyssey__%5Bcover%5D": {
+                    "displayName": "Tostarena Ruins Lofi (From \"Super Mario Odyssey\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "tostarena_ruins_lofi_from__super_mario_odyssey__-_cover",
+                            "title": "Tostarena Ruins Lofi (From \"Super Mario Odyssey\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/tostarena_ruins_lofi_from__super_mario_odyssey__%5Bcover%5D/hotline_sehwani_-_tostarena_ruins_lofi_from__super_mario_odyssey__-_cover.mp3"
+                        }
+                    ]
+                },
+                "jump_up-_super_star-_80_s_song_super_mario_odyssey_%5Bcover%5D": {
+                    "displayName": "Jump Up, Super Star! 80's Song (Super Mario Odyssey) [Cover]",
+                    "songs": [
+                        {
+                            "id": "jump_up-_super_star-_80_s_song_super_mario_odyssey_-_cover",
+                            "title": "Jump Up, Super Star! 80's Song (Super Mario Odyssey) - Cover",
+                            "file": "music/sorted/hotline_sehwani/jump_up-_super_star-_80_s_song_super_mario_odyssey_%5Bcover%5D/hotline_sehwani_-_jump_up-_super_star-_80_s_song_super_mario_odyssey_-_cover.mp3"
+                        }
+                    ]
+                },
+                "steam_gardens_lofi_from__super_mario_odyssey_": {
+                    "displayName": "Steam Gardens Lofi (From \"Super Mario Odyssey\")",
+                    "songs": [
+                        {
+                            "id": "steam_gardens_lofi_from__super_mario_odyssey_",
+                            "title": "Steam Gardens Lofi (From \"Super Mario Odyssey\")",
+                            "file": "music/sorted/hotline_sehwani/steam_gardens_lofi_from__super_mario_odyssey_/hotline_sehwani_-_steam_gardens_lofi_from__super_mario_odyssey_.mp3"
+                        }
+                    ]
+                },
+                "link_s_journey-_a_zelda_lofi_tribute": {
+                    "displayName": "Link's Journey: A Zelda LoFi Tribute",
+                    "songs": [
+                        {
+                            "id": "ilia_s_theme_-_chillhop_from__the_legend_of_zelda-_twilight_princess__-_cover",
+                            "title": "Ilia's Theme - Chillhop (from \"The Legend of Zelda: Twilight Princess\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/link_s_journey-_a_zelda_lofi_tribute/hotline_sehwani-_a-bug-_sad_gatomon_-_ilia_s_theme_-_chillhop_from__the_legend_of_zelda-_twilight_princess__-_cover.mp3"
+                        },
+                        {
+                            "id": "deku_palace_-_chillhop_from__the_legend_of_zelda-_majora_s_mask__-_cover",
+                            "title": "Deku Palace - Chillhop (From \"The Legend of Zelda: Majora's Mask\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/link_s_journey-_a_zelda_lofi_tribute/hotline_sehwani-_less_gravity_-_deku_palace_-_chillhop_from__the_legend_of_zelda-_majora_s_mask__-_cover.mp3"
+                        },
+                        {
+                            "id": "dark_world_-_lofi_from__the_legend_of_zelda-_a_link_to_the_past__-_cover",
+                            "title": "Dark World - Lofi (from \"The Legend of Zelda: A Link to the Past\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/link_s_journey-_a_zelda_lofi_tribute/hotline_sehwani_-_dark_world_-_lofi_from__the_legend_of_zelda-_a_link_to_the_past__-_cover.mp3"
+                        },
+                        {
+                            "id": "island_in_the_sky_-_lofi_from__the_legend_of_zelda-_skyward_sword__-_cover",
+                            "title": "Island in the Sky - Lofi (from \"The Legend of Zelda: Skyward Sword\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/link_s_journey-_a_zelda_lofi_tribute/hotline_sehwani-_melodies_zone_-_island_in_the_sky_-_lofi_from__the_legend_of_zelda-_skyward_sword__-_cover.mp3"
+                        },
+                        {
+                            "id": "windfall_island_-_lofi_from__the_legend_of_zelda-_the_wind_waker__-_cover",
+                            "title": "Windfall Island - Lofi (from \"The Legend of Zelda: The Wind Waker\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/link_s_journey-_a_zelda_lofi_tribute/hotline_sehwani_-_windfall_island_-_lofi_from__the_legend_of_zelda-_the_wind_waker__-_cover.mp3"
+                        }
+                    ]
+                },
+                "dk_s_tree_house_after_hours": {
+                    "displayName": "DK's Tree House After Hours",
+                    "songs": [
+                        {
+                            "id": "dk_island_swing_lofi_from__donkey_kong_country_",
+                            "title": "DK Island Swing Lofi (From \"Donkey Kong Country\")",
+                            "file": "music/sorted/hotline_sehwani/dk_s_tree_house_after_hours/hotline_sehwani-_a-bug_-_dk_island_swing_lofi_from__donkey_kong_country_.mp3"
+                        }
+                    ]
+                },
+                "cosmic_cove_galaxy_lofi_from__super_mario_galaxy_2_": {
+                    "displayName": "Cosmic Cove Galaxy Lofi (From \"Super Mario Galaxy 2\")",
+                    "songs": [
+                        {
+                            "id": "cosmic_cove_galaxy_lofi_from__super_mario_galaxy_2_",
+                            "title": "Cosmic Cove Galaxy Lofi (From \"Super Mario Galaxy 2\")",
+                            "file": "music/sorted/hotline_sehwani/cosmic_cove_galaxy_lofi_from__super_mario_galaxy_2_/hotline_sehwani_-_cosmic_cove_galaxy_lofi_from__super_mario_galaxy_2_.mp3"
+                        }
+                    ]
+                },
+                "lake_lamode_lofi_from__super_mario_odyssey__%5Bcover%5D": {
+                    "displayName": "Lake Lamode Lofi (From \"Super Mario Odyssey\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "lake_lamode_lofi_from__super_mario_odyssey__-_cover",
+                            "title": "Lake Lamode Lofi (From \"Super Mario Odyssey\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/lake_lamode_lofi_from__super_mario_odyssey__%5Bcover%5D/hotline_sehwani_-_lake_lamode_lofi_from__super_mario_odyssey__-_cover.mp3"
+                        }
+                    ]
+                },
+                "comet_observatory_lofi_from__super_mario_galaxy__%5Bcover%5D": {
+                    "displayName": "Comet Observatory Lofi (From \"Super Mario Galaxy\") [Cover]",
+                    "songs": [
+                        {
+                            "id": "comet_observatory_lofi_from__super_mario_galaxy__-_cover",
+                            "title": "Comet Observatory Lofi (From \"Super Mario Galaxy\") - Cover",
+                            "file": "music/sorted/hotline_sehwani/comet_observatory_lofi_from__super_mario_galaxy__%5Bcover%5D/hotline_sehwani_-_comet_observatory_lofi_from__super_mario_galaxy__-_cover.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "aether",
+            "displayName": "Aether",
+            "albums": {
+                "viewfinder_original_soundtrack": {
+                    "displayName": "Viewfinder (Original Soundtrack)",
+                    "songs": [
+                        {
+                            "id": "the_machine",
+                            "title": "The Machine",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_the_machine.mp3"
+                        },
+                        {
+                            "id": "failsafe",
+                            "title": "Failsafe",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_failsafe.mp3"
+                        },
+                        {
+                            "id": "cait_s_theme_jingle",
+                            "title": "CAIT's Theme (Jingle)",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_cait_s_theme_jingle.mp3"
+                        },
+                        {
+                            "id": "aharon_s_domain",
+                            "title": "Aharon's Domain",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_aharon_s_domain.mp3"
+                        },
+                        {
+                            "id": "mirren_s_domain",
+                            "title": "Mirren's Domain",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_mirren_s_domain.mp3"
+                        },
+                        {
+                            "id": "when_data_corrupts",
+                            "title": "When Data Corrupts",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_when_data_corrupts.mp3"
+                        },
+                        {
+                            "id": "chi_leung_s_lounge",
+                            "title": "Chi Leung's Lounge",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_chi_leung_s_lounge.mp3"
+                        },
+                        {
+                            "id": "red_world",
+                            "title": "Red World",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_red_world.mp3"
+                        },
+                        {
+                            "id": "mirren_s_lounge",
+                            "title": "Mirren's Lounge",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_mirren_s_lounge.mp3"
+                        },
+                        {
+                            "id": "failsafe_ii_bonus",
+                            "title": "Failsafe II (Bonus)",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_failsafe_ii_bonus.mp3"
+                        },
+                        {
+                            "id": "a_void_where_something_once_was",
+                            "title": "A Void Where Something Once Was",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_a_void_where_something_once_was.mp3"
+                        },
+                        {
+                            "id": "chi_leung_s_domain",
+                            "title": "Chi Leung's Domain",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_chi_leung_s_domain.mp3"
+                        },
+                        {
+                            "id": "fragmented_lounge",
+                            "title": "Fragmented Lounge",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_fragmented_lounge.mp3"
+                        },
+                        {
+                            "id": "hiraya_s_lounge",
+                            "title": "Hiraya's Lounge",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_hiraya_s_lounge.mp3"
+                        },
+                        {
+                            "id": "completionist",
+                            "title": "Completionist",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_completionist.mp3"
+                        },
+                        {
+                            "id": "aharon_s_lounge",
+                            "title": "Aharon's Lounge",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_aharon_s_lounge.mp3"
+                        },
+                        {
+                            "id": "hiraya_s_domain",
+                            "title": "Hiraya's Domain",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_hiraya_s_domain.mp3"
+                        },
+                        {
+                            "id": "cait_s_theme_credits",
+                            "title": "CAIT's Theme (Credits)",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_cait_s_theme_credits.mp3"
+                        },
+                        {
+                            "id": "alpha_bonus",
+                            "title": "Alpha (Bonus)",
+                            "file": "music/sorted/aether/viewfinder_original_soundtrack/aether_-_alpha_bonus.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "rifti_beats",
+            "displayName": "Rifti Beats",
+            "albums": {
+                "super_mario_lofi": {
+                    "displayName": "Super Mario Lofi",
+                    "songs": [
+                        {
+                            "id": "bob-omb_battlefield_lofi",
+                            "title": "Bob-Omb Battlefield Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_bob-omb_battlefield_lofi.mp3"
+                        },
+                        {
+                            "id": "castle_lofi",
+                            "title": "Castle Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_castle_lofi.mp3"
+                        },
+                        {
+                            "id": "overworld_2_lofi",
+                            "title": "Overworld 2 Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_overworld_2_lofi.mp3"
+                        },
+                        {
+                            "id": "overworld_lofi",
+                            "title": "Overworld Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_overworld_lofi.mp3"
+                        },
+                        {
+                            "id": "file_select_lofi",
+                            "title": "File Select Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_file_select_lofi.mp3"
+                        },
+                        {
+                            "id": "underground_lofi",
+                            "title": "Underground Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_underground_lofi.mp3"
+                        },
+                        {
+                            "id": "star_theme_lofi",
+                            "title": "Star Theme Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_star_theme_lofi.mp3"
+                        },
+                        {
+                            "id": "dire_dire_docks_lofi",
+                            "title": "Dire Dire Docks Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_dire_dire_docks_lofi.mp3"
+                        },
+                        {
+                            "id": "main_theme_lofi",
+                            "title": "Main Theme Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_main_theme_lofi.mp3"
+                        },
+                        {
+                            "id": "delfino_plaza_lofi",
+                            "title": "Delfino Plaza Lofi",
+                            "file": "music/sorted/rifti_beats/super_mario_lofi/rifti_beats_-_delfino_plaza_lofi.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "a-bug",
+            "displayName": "A-bug",
+            "albums": {
+                "link_s_journey-_a_zelda_lofi_tribute": {
+                    "displayName": "Link's Journey: A Zelda LoFi Tribute",
+                    "songs": [
+                        {
+                            "id": "kokiri_forest_-_chill_kawaii_from__the_legend_of_zelda-_ocarina_of_time__-_cover",
+                            "title": "Kokiri Forest - Chill Kawaii (from \"The Legend of Zelda: Ocarina Of Time\") - Cover",
+                            "file": "music/sorted/a-bug/link_s_journey-_a_zelda_lofi_tribute/a-bug_-_kokiri_forest_-_chill_kawaii_from__the_legend_of_zelda-_ocarina_of_time__-_cover.mp3"
+                        },
+                        {
+                            "id": "zora_s_domain_-_lo-future_from__the_legend_of_zelda-_breath_of_the_wild__-_cover",
+                            "title": "Zora's Domain - Lo-Future (from \"The Legend of Zelda: Breath of the Wild\") - Cover",
+                            "file": "music/sorted/a-bug/link_s_journey-_a_zelda_lofi_tribute/a-bug-_bounty_haunter_-_zora_s_domain_-_lo-future_from__the_legend_of_zelda-_breath_of_the_wild__-_cover.mp3"
+                        },
+                        {
+                            "id": "kass__theme_-_chillhop_from__the_legend_of_zelda-_breath_of_the_wild__-_cover",
+                            "title": "Kass' Theme - Chillhop (from \"The Legend of Zelda: Breath of the Wild\") - Cover",
+                            "file": "music/sorted/a-bug/link_s_journey-_a_zelda_lofi_tribute/a-bug-_jembei_-_kass__theme_-_chillhop_from__the_legend_of_zelda-_breath_of_the_wild__-_cover.mp3"
+                        },
+                        {
+                            "id": "rito_village_day_-_lofi_from__the_legend_of_zelda-_breath_of_the_wild__-_cover",
+                            "title": "Rito Village (Day) - Lofi (from \"The Legend of Zelda: Breath of the Wild\") - Cover",
+                            "file": "music/sorted/a-bug/link_s_journey-_a_zelda_lofi_tribute/a-bug-_mipsick_-_rito_village_day_-_lofi_from__the_legend_of_zelda-_breath_of_the_wild__-_cover.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "slofi",
+            "displayName": "Slofi",
+            "albums": {
+                "nintendo_wii_lofi-_vol._1": {
+                    "displayName": "Nintendo Wii Lofi, Vol. 1",
+                    "songs": [
+                        {
+                            "id": "wii_sports_from__nintendo_wii__%5Blofi_version%5D",
+                            "title": "Wii Sports (From \"Nintendo Wii\") [Lofi Version]",
+                            "file": "music/sorted/slofi/nintendo_wii_lofi-_vol._1/slofi_-_wii_sports_from__nintendo_wii__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                },
+                "minecraft_lofi-_vol._1": {
+                    "displayName": "Minecraft Lofi, Vol. 1",
+                    "songs": [
+                        {
+                            "id": "wet_hands_from__minecraft__%5Blofi_version%5D",
+                            "title": "Wet Hands (From \"Minecraft\") [Lofi Version]",
+                            "file": "music/sorted/slofi/minecraft_lofi-_vol._1/slofi_-_wet_hands_from__minecraft__%5Blofi_version%5D.mp3"
+                        },
+                        {
+                            "id": "subwoofer_lullaby_from__minecraft__%5Blofi_version%5D",
+                            "title": "Subwoofer Lullaby (From \"Minecraft\") [Lofi Version]",
+                            "file": "music/sorted/slofi/minecraft_lofi-_vol._1/slofi_-_subwoofer_lullaby_from__minecraft__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                },
+                "animal_crossing_lofi-_vol._2": {
+                    "displayName": "Animal Crossing Lofi, Vol. 2",
+                    "songs": [
+                        {
+                            "id": "save_your_game_from__animal_crossing__%5Blofi_version%5D",
+                            "title": "Save Your Game (From \"Animal Crossing\") [Lofi Version]",
+                            "file": "music/sorted/slofi/animal_crossing_lofi-_vol._2/slofi_-_save_your_game_from__animal_crossing__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                },
+                "zelda_lofi-_vol._4": {
+                    "displayName": "Zelda Lofi, Vol. 4",
+                    "songs": [
+                        {
+                            "id": "the_legend_of_zelda-_tears_of_the_kingdom_-_main_theme_lofi_version",
+                            "title": "The Legend of Zelda: Tears of the Kingdom - Main Theme (Lofi Version)",
+                            "file": "music/sorted/slofi/zelda_lofi-_vol._4/slofi_-_the_legend_of_zelda-_tears_of_the_kingdom_-_main_theme_lofi_version.mp3"
+                        },
+                        {
+                            "id": "sidon_s_theme_from__the_legend_of_zelda-_tears_of_the_kingdom__%5Blofi_version%5D",
+                            "title": "Sidon's Theme (From \"The Legend of Zelda: Tears of the Kingdom\") [Lofi Version]",
+                            "file": "music/sorted/slofi/zelda_lofi-_vol._4/slofi_-_sidon_s_theme_from__the_legend_of_zelda-_tears_of_the_kingdom__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                },
+                "mario_lofi-_vol._1": {
+                    "displayName": "Mario Lofi, Vol. 1",
+                    "songs": [
+                        {
+                            "id": "the_star_festival_from__super_mario_galaxy__%5Blofi_version%5D",
+                            "title": "The Star Festival (From \"Super Mario Galaxy\") [Lofi Version]",
+                            "file": "music/sorted/slofi/mario_lofi-_vol._1/slofi_-_the_star_festival_from__super_mario_galaxy__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                },
+                "minecraft_lofi-_vol._2": {
+                    "displayName": "Minecraft Lofi, Vol. 2",
+                    "songs": [
+                        {
+                            "id": "dry_hands_from__minecraft__%5Blofi_version%5D",
+                            "title": "Dry Hands (From \"Minecraft\") [Lofi Version]",
+                            "file": "music/sorted/slofi/minecraft_lofi-_vol._2/slofi_-_dry_hands_from__minecraft__%5Blofi_version%5D.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "coffee_date",
+            "displayName": "Coffee Date",
+            "albums": {
+                "coffee_date": {
+                    "displayName": "Coffee Date",
+                    "songs": [
+                        {
+                            "id": "midna_s_lament",
+                            "title": "Midna's Lament",
+                            "file": "music/sorted/coffee_date/coffee_date/coffee_date-_gamechops_-_midna_s_lament.mp3"
+                        },
+                        {
+                            "id": "kakariko_village",
+                            "title": "Kakariko Village",
+                            "file": "music/sorted/coffee_date/coffee_date/coffee_date-_gamechops_-_kakariko_village.mp3"
+                        }
+                    ]
+                },
+                "sweden_minecraft": {
+                    "displayName": "Sweden (Minecraft)",
+                    "songs": [
+                        {
+                            "id": "sweden_minecraft",
+                            "title": "Sweden (Minecraft)",
+                            "file": "music/sorted/coffee_date/sweden_minecraft/coffee_date_-_sweden_minecraft.mp3"
+                        }
+                    ]
+                },
+                "cafe_days": {
+                    "displayName": "Cafe Days",
+                    "songs": [
+                        {
+                            "id": "yoshi_s_obstacle_course",
+                            "title": "Yoshi's Obstacle Course",
+                            "file": "music/sorted/coffee_date/cafe_days/coffee_date-_gamechops_-_yoshi_s_obstacle_course.mp3"
+                        },
+                        {
+                            "id": "green_greens",
+                            "title": "Green Greens",
+                            "file": "music/sorted/coffee_date/cafe_days/coffee_date-_gamechops_-_green_greens.mp3"
+                        }
+                    ]
+                },
+                "kass__theme": {
+                    "displayName": "Kass' Theme",
+                    "songs": [
+                        {
+                            "id": "kass__theme",
+                            "title": "Kass' Theme",
+                            "file": "music/sorted/coffee_date/kass__theme/coffee_date-_mipsick-_gamechops_-_kass__theme.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "mipsick",
+            "displayName": "Mipsick",
+            "albums": {
+                "song_of_storms": {
+                    "displayName": "Song of Storms",
+                    "songs": [
+                        {
+                            "id": "song_of_storms",
+                            "title": "Song of Storms",
+                            "file": "music/sorted/mipsick/song_of_storms/mipsick_-_song_of_storms.mp3"
+                        }
+                    ]
+                },
+                "lost_woods": {
+                    "displayName": "Lost Woods",
+                    "songs": [
+                        {
+                            "id": "lost_woods",
+                            "title": "Lost Woods",
+                            "file": "music/sorted/mipsick/lost_woods/mipsick_-_lost_woods.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "wizard_of_loneliness",
+            "displayName": "Wizard of Loneliness",
+            "albums": {
+                "divine_beats": {
+                    "displayName": "Divine Beats",
+                    "songs": [
+                        {
+                            "id": "sidon_beat",
+                            "title": "Sidon Beat",
+                            "file": "music/sorted/wizard_of_loneliness/divine_beats/wizard_of_loneliness_-_sidon_beat.mp3"
+                        },
+                        {
+                            "id": "calm_grind_in_tarrey_town",
+                            "title": "Calm Grind in Tarrey Town",
+                            "file": "music/sorted/wizard_of_loneliness/divine_beats/wizard_of_loneliness_-_calm_grind_in_tarrey_town.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "sad_gatomon",
+            "displayName": "Sad Gatomon",
+            "albums": {
+                "link_s_journey-_a_zelda_lofi_tribute": {
+                    "displayName": "Link's Journey: A Zelda LoFi Tribute",
+                    "songs": [
+                        {
+                            "id": "ocarina_of_time_theme_-_lofi_from__the_legend_of_zelda-_ocarina_of_time__-_cover",
+                            "title": "Ocarina of Time Theme - Lofi (from \"The Legend of Zelda: Ocarina Of Time\") - Cover",
+                            "file": "music/sorted/sad_gatomon/link_s_journey-_a_zelda_lofi_tribute/sad_gatomon_-_ocarina_of_time_theme_-_lofi_from__the_legend_of_zelda-_ocarina_of_time__-_cover.mp3"
+                        },
+                        {
+                            "id": "great_fairy_fountain_-_lofi_from__the_legend_of_zelda-_ocarina_of_time__-_cover",
+                            "title": "Great Fairy Fountain - Lofi (from \"The Legend of Zelda: Ocarina Of Time\") - Cover",
+                            "file": "music/sorted/sad_gatomon/link_s_journey-_a_zelda_lofi_tribute/sad_gatomon_-_great_fairy_fountain_-_lofi_from__the_legend_of_zelda-_ocarina_of_time__-_cover.mp3"
+                        },
+                        {
+                            "id": "gerudo_valley_-_chillhop_from__the_legend_of_zelda-_ocarina_of_time__-_cover",
+                            "title": "Gerudo Valley - Chillhop (from \"The Legend of Zelda: Ocarina Of Time\") - Cover",
+                            "file": "music/sorted/sad_gatomon/link_s_journey-_a_zelda_lofi_tribute/sad_gatomon-_jembei_-_gerudo_valley_-_chillhop_from__the_legend_of_zelda-_ocarina_of_time__-_cover.mp3"
+                        },
+                        {
+                            "id": "song_of_storms_-_chillhop_from__the_legend_of_zelda-_ocarina_of_time__-_cover",
+                            "title": "Song of Storms - Chillhop (from \"The Legend of Zelda: Ocarina Of Time\") - Cover",
+                            "file": "music/sorted/sad_gatomon/link_s_journey-_a_zelda_lofi_tribute/sad_gatomon-_a-bug_-_song_of_storms_-_chillhop_from__the_legend_of_zelda-_ocarina_of_time__-_cover.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "jonas_munk_lindbo",
+            "displayName": "Jonas Munk Lindbo",
+            "albums": {
+                "the_korok_forest": {
+                    "displayName": "The Korok Forest",
+                    "songs": [
+                        {
+                            "id": "the_korok_forest",
+                            "title": "The Korok Forest",
+                            "file": "music/sorted/jonas_munk_lindbo/the_korok_forest/jonas_munk_lindbo_-_the_korok_forest.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "besso0",
+            "displayName": "Besso0",
+            "albums": {
+                "animal_crossing_remixed": {
+                    "displayName": "Animal Crossing Remixed",
+                    "songs": [
+                        {
+                            "id": "museum_lo-fi_animal_crossing-_city_folk",
+                            "title": "Museum Lo-fi (Animal Crossing: City Folk)",
+                            "file": "music/sorted/besso0/animal_crossing_remixed/besso0-_gonzealous-_tiny_waves_-_museum_lo-fi_animal_crossing-_city_folk.mp3"
+                        }
+                    ]
+                },
+                "rito_village_lo-fi_edit": {
+                    "displayName": "Rito Village (Lo-fi Edit)",
+                    "songs": [
+                        {
+                            "id": "rito_village_-_lo-fi_edit",
+                            "title": "Rito Village - Lo-fi Edit",
+                            "file": "music/sorted/besso0/rito_village_lo-fi_edit/besso0-_tiny_waves-_gonzealous_-_rito_village_-_lo-fi_edit.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "qumu",
+            "displayName": "Qumu",
+            "albums": {
+                "year_4": {
+                    "displayName": "Year 4",
+                    "songs": [
+                        {
+                            "id": "sweden_from__minecraft_",
+                            "title": "Sweden (From \"Minecraft\")",
+                            "file": "music/sorted/qumu/year_4/qumu_-_sweden_from__minecraft_.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "helynt",
+            "displayName": "Helynt",
+            "albums": {
+                "chillcraft": {
+                    "displayName": "Chillcraft",
+                    "songs": [
+                        {
+                            "id": "subwoofer_lullaby",
+                            "title": "Subwoofer Lullaby",
+                            "file": "music/sorted/helynt/chillcraft/helynt-_gamechops_-_subwoofer_lullaby.mp3"
+                        },
+                        {
+                            "id": "dry_hands",
+                            "title": "Dry Hands",
+                            "file": "music/sorted/helynt/chillcraft/helynt-_gamechops_-_dry_hands.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "jembei",
+            "displayName": "Jembei",
+            "albums": {
+                "mindful_melodies-_puzzle_gaming_beats": {
+                    "displayName": "Mindful Melodies: Puzzle Gaming Beats",
+                    "songs": [
+                        {
+                            "id": "tetris_99_theme_-_synthwave_from__tetris_99__-_cover",
+                            "title": "Tetris 99 Theme - Synthwave (From \"Tetris 99\") - Cover",
+                            "file": "music/sorted/jembei/mindful_melodies-_puzzle_gaming_beats/jembei-_hotline_sehwani_-_tetris_99_theme_-_synthwave_from__tetris_99__-_cover.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "lofi_lia",
+            "displayName": "Lofi Lia",
+            "albums": {
+                "season_two": {
+                    "displayName": "Season Two",
+                    "songs": [
+                        {
+                            "id": "death_by_glamour_from__undertale_",
+                            "title": "Death by Glamour (From \"Undertale\")",
+                            "file": "music/sorted/lofi_lia/season_two/lofi_lia_-_death_by_glamour_from__undertale_.mp3"
+                        },
+                        {
+                            "id": "kass_s_theme_from__the_legend_of_zelda-_breath_of_the_wild_",
+                            "title": "Kass's Theme (From \"The Legend of Zelda: Breath of the Wild\")",
+                            "file": "music/sorted/lofi_lia/season_two/lofi_lia_-_kass_s_theme_from__the_legend_of_zelda-_breath_of_the_wild_.mp3"
+                        },
+                        {
+                            "id": "mii_plaza_from__mii_channel_",
+                            "title": "Mii Plaza (From \"Mii Channel\")",
+                            "file": "music/sorted/lofi_lia/season_two/lofi_lia_-_mii_plaza_from__mii_channel_.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "christian_mazzariello",
+            "displayName": "Christian Mazzariello",
+            "albums": {
+                "vibes_of_the_wild": {
+                    "displayName": "Vibes of the Wild",
+                    "songs": [
+                        {
+                            "id": "deku_palace",
+                            "title": "Deku Palace",
+                            "file": "music/sorted/christian_mazzariello/vibes_of_the_wild/christian_mazzariello_-_deku_palace.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "surasshu",
+            "displayName": "Surasshu",
+            "albums": {
+                "impostor_nostalgia": {
+                    "displayName": "Impostor Nostalgia",
+                    "songs": [
+                        {
+                            "id": "buzzsaw_just_can_t_wait_mix",
+                            "title": "Buzzsaw (Just Can't Wait Mix)",
+                            "file": "music/sorted/surasshu/impostor_nostalgia/surasshu_-_buzzsaw_just_can_t_wait_mix.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "blurred",
+            "displayName": "Blurred",
+            "albums": {
+                "block_game_lo-fi_remake": {
+                    "displayName": "Block Game (Lo-fi Remake)",
+                    "songs": [
+                        {
+                            "id": "sweden_-_lo-fi_remake",
+                            "title": "Sweden - Lo-fi Remake",
+                            "file": "music/sorted/blurred/block_game_lo-fi_remake/blurred_-_sweden_-_lo-fi_remake.mp3"
+                        },
+                        {
+                            "id": "moog_city_-_lo-fi_remake",
+                            "title": "Moog City - Lo-fi Remake",
+                            "file": "music/sorted/blurred/block_game_lo-fi_remake/blurred_-_moog_city_-_lo-fi_remake.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "josh_whelchel",
+            "displayName": "Josh Whelchel",
+            "albums": {
+                "impostor_nostalgia": {
+                    "displayName": "Impostor Nostalgia",
+                    "songs": [
+                        {
+                            "id": "yo_ho_ye_big_giant_chips_chips_ahoy_mateys",
+                            "title": "Yo Ho Ye Big Giant Chips (Chips Ahoy Mateys)",
+                            "file": "music/sorted/josh_whelchel/impostor_nostalgia/josh_whelchel_-_yo_ho_ye_big_giant_chips_chips_ahoy_mateys.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "snore_lax",
+            "displayName": "Snore Lax",
+            "albums": {
+                "snorlax_sleepover": {
+                    "displayName": "Snorlax Sleepover",
+                    "songs": [
+                        {
+                            "id": "time_trials_lofi",
+                            "title": "Time Trials Lofi",
+                            "file": "music/sorted/snore_lax/snorlax_sleepover/snore_lax-_gamechops_-_time_trials_lofi.mp3"
+                        },
+                        {
+                            "id": "mario_kart_rainbow_road_lofi",
+                            "title": "Mario Kart Rainbow Road Lofi",
+                            "file": "music/sorted/snore_lax/snorlax_sleepover/snore_lax-_gamechops_-_mario_kart_rainbow_road_lofi.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "mick_gordon",
+            "displayName": "Mick Gordon",
+            "albums": {
+                "impostor_nostalgia": {
+                    "displayName": "Impostor Nostalgia",
+                    "songs": [
+                        {
+                            "id": "katana_blaster_constantly_playing_mix",
+                            "title": "Katana Blaster (Constantly Playing Mix)",
+                            "file": "music/sorted/mick_gordon/impostor_nostalgia/mick_gordon_-_katana_blaster_constantly_playing_mix.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "jokabi",
+            "displayName": "Jokabi",
+            "albums": {
+                "chilltendo": {
+                    "displayName": "Chilltendo",
+                    "songs": [
+                        {
+                            "id": "game_over",
+                            "title": "Game Over",
+                            "file": "music/sorted/jokabi/chilltendo/jokabi-_gamechops_-_game_over.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "wish_on_the_beat",
+            "displayName": "Wish on the Beat",
+            "albums": {
+                "undertale_shop": {
+                    "displayName": "Undertale Shop",
+                    "songs": [
+                        {
+                            "id": "undertale_shop",
+                            "title": "Undertale Shop",
+                            "file": "music/sorted/wish_on_the_beat/undertale_shop/wish_on_the_beat-_gamechops_-_undertale_shop.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "mikel",
+            "displayName": "Mikel",
+            "albums": {
+                "zelda_-_chill_ii": {
+                    "displayName": "Zelda & Chill II",
+                    "songs": [
+                        {
+                            "id": "zelda_s_lullaby",
+                            "title": "Zelda's Lullaby",
+                            "file": "music/sorted/mikel/zelda_-_chill_ii/mikel-_gamechops_-_zelda_s_lullaby.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "\u5897\u7530\u592a\u90ce",
+            "displayName": "\u5897\u7530\u592a\u90ce",
+            "albums": {
+                "tv_animationbofuri-_i_dont_want_to_get_hurt-_so_ill_max_out_my_defense._season_2_soundtrack": {
+                    "displayName": "TV Animation\u201dBOFURI: I Don\u2019t Want to Get Hurt, so I\u2019ll Max Out My Defense. Season 2\u201d Soundtrack",
+                    "songs": [
+                        {
+                            "id": "team_battle",
+                            "title": "Team Battle",
+                            "file": "music/sorted/tv_animationbofuri-_i_dont_want_to_get_hurt-_so_ill_max_out_my_defense._season_2_soundtrack/team.mp3"
+                        },
+                        {
+                            "id": "zunousen-logical_battle-",
+                            "title": "Zunousen-Logical Battle-",
+                            "file": "music/sorted/tv_animationbofuri-_i_dont_want_to_get_hurt-_so_ill_max_out_my_defense._season_2_soundtrack/_-_zunousen-logical_battle-.mp3"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
