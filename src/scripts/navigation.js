@@ -277,7 +277,6 @@ function artistClick(id){
     })
 }
 
-
 function albumClick(id){
     console.log("Clicked on album: " + id);
     document.getElementById("content").innerHTML = "";
@@ -355,6 +354,7 @@ function queueClick(){
     })
     getQueue()
 }
+
 function getHome(place) {
     reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
