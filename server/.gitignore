@@ -1,7 +1,7 @@
 creds.json
 auth.json
 all.json
-all.json*
+all*.json*
 artists.json
 albums.json
 songs.json
