@@ -4,5 +4,7 @@ auth.json
 music/*
 unsorted/*
 sorted
-images
+images/artists/*
+images/albums/*
+images/songs/*
 node_modules
