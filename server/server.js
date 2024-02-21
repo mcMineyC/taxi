@@ -82,7 +82,6 @@ app.post('/authtoken', function (req, res) {
     res.send({"authorized": authed, "authtoken": authtoken})
 })
 
-
 app.post('/info/all', function (req, res) {
     if(checkAuth(req, res) == false){
         return
@@ -91,7 +90,7 @@ app.post('/info/all', function (req, res) {
     res.sendFile(path.join(__dirname, 'all.json'));
 });
 
-app.post('/placeholder', function (req, res) {
+app.get('/placeholder', function (req, res) {
     res.sendFile(path.join(__dirname, 'images', 'placeholder.jpg'));
 })
 
