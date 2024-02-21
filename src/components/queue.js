@@ -6,7 +6,7 @@ class queuelistitem extends HTMLElement {
                     <img src="${this.getAttribute('image')}">
                 </div>
                 <div id="song-container">
-                    <span>${this.getAttribute('song')} - <span onclick="${this.getAttribute('artistClick')}">${this.getAttribute('artist')}: </span><span onclick="${this.getAttribute('albumClick')}">${this.getAttribute('album')}</span></span>
+                    <span>${this.getAttribute('song')} - <span class="pseudo-link" onclick="${this.getAttribute('artistClick')}">${this.getAttribute('artist')}: </span><span class="pseudo-link" onclick="${this.getAttribute('albumClick')}">${this.getAttribute('album')}</span></span>
                 </div>
                  <div id="duration-container" slot="end">
                     <span>${this.getAttribute('duration')}</span>

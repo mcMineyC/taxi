@@ -8,6 +8,7 @@
 @import url("styles/sidebar/sidebar.css");
 @import url("styles/top/header.css");
 @import url("styles/settings.css");
+@import url("styles/queue.css");
 @import url("styles/login.css");
 
 
@@ -32,50 +33,6 @@ m3-playercontrols-bottom{
     z-index: 999999999;
 }
 
-
-#queue-list{
-    width: 100%;
-}
-
-#queue-list-item{
-    margin-right: 0px !important;
-    width: 100%;
-    margin-right: 16px !important;
-    /* margin-bottom: 0px !important; */
-    /* background-color: red; */
-}
-#queue-list-item  > span.list-header{
-    font-size: 20px;
-}
-#queue-list-item > img, #image-container > img{
-    max-width: 50px;
-    max-height: 50px;
-    border-radius: 8px;
-}
-#queue-list-item {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    /* background-color: purple; */
-}
-#queue-list-item{
-    height: 74px;
-}
-#queue-list-item > div{
-    position: absolute;
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-#queue-list-item > div#song-container{
-    top: 0px;
-    left: 84px;
-}
-#queue-list-item > div#duration-container{
-    position: absolute;
-    top: 0px;
-    right: 24px;
-}
 *[slot="end"]{
     justify-content: end;
 }

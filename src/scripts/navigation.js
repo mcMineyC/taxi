@@ -86,7 +86,8 @@ class Location {
                 break;
             case "albums":
                 if(v.substring(v.length-2, v.length) == "ID"){
-                    this.setHeader("Albums by "+window.fetchedData.getArtist(window.fetchedData.getAlbum(this.loc["id"])["artistId"]).displayName)
+                    var vv = window.fetchedData.getAlbum(this.loc["id"])
+                    this.setHeader("Albums by "+window.fetchedData.getArtist((typeof(vv) == "undefined") ? this.loc["id"] : vv["artistId"]).displayName)
                 }else{
                     this.setHeader("Albums")
                 }
@@ -97,6 +98,9 @@ class Location {
                 }else{
                     this.setHeader("Songs")
                 }
+                break;
+            case "queue":
+                this.setHeader("Queue")
                 break;
         
             default:
@@ -154,7 +158,7 @@ class FetchedData {
                         }
                         console.log(data)
                         t.all = data["entries"];
-                        // t.onInit()
+                        t.onInit()
                     })
                 })
             })
@@ -234,31 +238,45 @@ class FetchedData {
     }
 }
 
+function getQueue(){
+    if(typeof(window.localQueue) == "undefined"){
+        console.log("No queue instance");
+    }else if(window.localQueue.get().length == 0){
+        console.log("Queue is empty")
+        reset()
+        document.getElementById("content").innerHTML = `
+            <h1 class="loading-text-placeholder">Nothing in queue...</h1>
+        `
+    }else{
+        reset()
+        var innerhtml = "";
+        for(var x = 0; x < window.localQueue.get().length; x++){
+            var sInfo = window.fetchedData.getSong(window.localQueue.get()[x])
+            innerhtml += `
+                <m3-queue-list-item image="${window.prefs.getBackendUrl()+"/info/songs/" + sInfo["id"] + "/image"}" song="${sInfo["displayName"]}" album="${window.fetchedData.getAlbum(sInfo["albumId"])["displayName"]}" artist="${window.fetchedData.getArtist(sInfo["artistId"])["displayName"]}" albumClick="albumClick('${sInfo["albumId"]}')" artistClick="artistClick('${sInfo["artistId"]}')" duration="00:42"></m3-queue-list-item>`
+        }
+        document.getElementById("content").innerHTML = `
+            <md-list id="queue-list">
+                ${innerhtml}
+            </md-list>
+        `
+        // console.log(innerhtml)
+    }
+}
+
 function artistClick(id){
     console.log("Clicked on artist: " + id);
     document.getElementById("content").innerHTML = "";
     getAlbumsByArtist(id);
     window.navigationInfo.addHist("artistsID")
+    console.log({"artistId": id})
     window.navigationInfo.set({
         "prev": window.navigationInfo.getHist(),
         "location": "albumsID",
         "id": id,
-        "screen": "albums"
     })
 }
 
-function artistClickSongs(id){
-    console.log("Clicked on artist: " + id);
-    document.getElementById("content").innerHTML = "";
-    getSongsByArtist(id);
-    window.navigationInfo.addHist("artists")
-    window.navigationInfo.set({
-        "prev": window.navigationInfo.getHist(),
-        "location": "songsID",
-        "id": id,
-        "screen": "songs"
-    })
-}
 
 function albumClick(id){
     console.log("Clicked on album: " + id);
@@ -268,82 +286,8 @@ function albumClick(id){
     window.navigationInfo.set({
         "prev": window.navigationInfo.getHist(),
         "location": "songsID",
-        "id": id,
-        "screen": "songs"
+        "id": id
     })
-}
-
-function getHome(place) {
-    reset()
-    sPlace = localStorage.getItem("configuredHomeScreen")
-    if(typeof(place) == "undefined"){
-        place = localStorage.getItem("configuredHomeScreen")
-    }else if(sPlace == null || sPlace == undefined || sPlace == "" || sPlace == "null" || sPlace == "undefined"){
-        place = localStorage.getItem("configuredHomeScreen")
-    }
-    var homeScreen = place
-
-    window.navigationInfo = new Location()
-    window.navigationInfo.setHome(true)
-    window.navigationInfo.set({
-        "prev": ["home"],
-        "location": "home",
-        "id": "MURP"
-    })
-
-    switch (homeScreen) {
-        case "artists":
-            getArtists()
-            break;
-        case "albums":
-            getAlbums()
-            break;
-        case "songs":
-            getSongs()
-            break;
-    
-        default:
-            console.log("Unknown screen: " + homeScreen)
-            break;
-    }
-    
-}
-
-function reset(){
-    document.getElementById("content").innerHTML = "";
-}
-
-function back(){
-    var i = window.navigationInfo.get();
-    reset()
-    console.log("Going back")
-    window.navigationInfo.setLocation(i["prev"][i["prev"].length - 1])
-    var v = window.navigationInfo.get()["location"]
-    switch ((v.substring(v.length-2, v.length) == "ID") ? v.substring(0, v.length - 2) : v) {
-        case "artists":
-            console.log(v.substring(-2, v.length))
-            getArtists()
-            break;
-        case "albums":
-            if(v.substring(v.length-2, v.length) == "ID"){
-                console.log("ID: "+window.navigationInfo.get()["id"])
-                console.log(window.navigationInfo.get()["id"])
-                getAlbumsByArtist(window.fetchedData.getAlbum(window.navigationInfo.get()["id"])["artistId"])
-            }else{
-                getAlbums()
-            }
-            break;
-        case "songs":
-            if(v.substring(v.length-2, v.length) == "ID"){
-                getSongsByAlbum(window.navigationInfo.get()["id"])
-            }else{
-                getSongs()
-            }
-            break;
-        case "home":
-            getHome()
-    }
-    window.navigationInfo.prevPop()
 }
 
 function settingsClick(){
@@ -397,4 +341,94 @@ function settingsClick(){
         "location": "settings",
         "id": window.navigationInfo.get()["id"],
     })
+}
+
+function queueClick(){
+    console.log("Opening queue");
+    reset()
+    window.navigationInfo.setHeader("Queue")
+    window.navigationInfo.addHist(window.navigationInfo.get()["location"])
+    window.navigationInfo.set({
+        "prev": window.navigationInfo.getHist(),
+        "location": "queue",
+        "id": window.navigationInfo.get()["id"],
+    })
+    getQueue()
+}
+function getHome(place) {
+    reset()
+    sPlace = localStorage.getItem("configuredHomeScreen")
+    if(typeof(place) == "undefined"){
+        place = localStorage.getItem("configuredHomeScreen")
+    }else if(sPlace == null || sPlace == undefined || sPlace == "" || sPlace == "null" || sPlace == "undefined"){
+        place = localStorage.getItem("configuredHomeScreen")
+    }
+    var homeScreen = place
+
+    window.navigationInfo = new Location()
+    window.navigationInfo.setHome(true)
+    window.navigationInfo.set({
+        "prev": ["home"],
+        "location": "home",
+        "id": "MURP"
+    })
+
+    switch (homeScreen) {
+        case "artists":
+            getArtists()
+            break;
+        case "albums":
+            getAlbums()
+            break;
+        case "songs":
+            getSongs()
+            break;
+    
+        default:
+            console.log("Unknown screen: " + homeScreen)
+            break;
+    }
+    
+}
+
+function reset(){
+    document.getElementById("content").innerHTML = "";
+}
+
+function back(){
+    var i = window.navigationInfo.get();
+    reset()
+    console.log("Going back")
+    window.navigationInfo.setLocation(i["prev"][i["prev"].length - 1])
+    var v = window.navigationInfo.get()["location"]
+    switch ((v.substring(v.length-2, v.length) == "ID") ? v.substring(0, v.length - 2) : v) {
+        case "artists":
+            getArtists()
+            break;
+        case "albums":
+            if(v.substring(v.length-2, v.length) == "ID"){
+                var vv = window.fetchedData.getAlbum(window.navigationInfo.get()["id"])
+                getAlbumsByArtist((typeof(vv) == "undefined") ? window.navigationInfo.get()["id"] : vv["artistId"])
+            }else{
+                getAlbums()
+            }
+            break;
+        case "songs":
+            if(v.substring(v.length-2, v.length) == "ID"){
+                getSongsByAlbum(window.navigationInfo.get()["id"])
+            }else{
+                getSongs()
+            }
+            break;
+        case "home":
+            getHome()
+            break;
+        case "queue":
+            queueClick()
+            break;
+        case "settings":
+            settingsClick()
+            break;
+    }
+    window.navigationInfo.prevPop()
 }
