@@ -2,7 +2,7 @@ creds.json
 auth.json
 .cache
 music/*
-unsorted
+unsorted/*
 sorted
 images
 node_modules
