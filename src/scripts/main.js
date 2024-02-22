@@ -3,7 +3,7 @@ class PlayerQueue {
         this.queue = []
         this.pos = 0
         this.playedPoses = []
-        this.shuffled = false
+        this.shuffled = true
         this.looped = true
         if(localStorage.getItem("stateLastShuffled") != null){
             this.shuffled = (localStorage.getItem("stateLastShuffled") == "true")
