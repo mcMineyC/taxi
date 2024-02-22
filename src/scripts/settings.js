@@ -104,6 +104,7 @@ class AuthSettings{
     }
 
 }
+
 class UserPreferences{
     constructor(){
         if(window.localStorage.getItem("configuredDarkMode") == null){
@@ -116,7 +117,7 @@ class UserPreferences{
             window.localStorage.setItem("configuredHomeScreen", "artists")
         }
         if(window.localStorage.getItem("configuredThemeColor") == null){
-            window.localStorage.setItem("configuredThemeColor", "")
+            window.localStorage.setItem("configuredThemeColor", "#17496C")
         }
         if(window.localStorage.getItem("configuredBackendUrl") == null){
             window.localStorage.setItem("configuredBackendUrl", "https://eatthecow.mooo.com:3030")

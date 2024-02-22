@@ -13,8 +13,10 @@ function applyThemeColor(){
   var themeColor = localStorage.getItem("configuredThemeColor")
 if(themeColor == null || themeColor == undefined || themeColor == "" || themeColor == "null" || themeColor == "undefined"){
   themeColor = "#17496C"
+  localStorage.setItem("configuredThemeColor", "#17496C")
 }else if(!themeColor.match("^#(?:[0-9a-fA-F]{3}){1,2}$") || !themeColor.match("^#(?:[0-9a-fA-F]{3,4}){1,2}$")){
   themeColor = "#17496C"
+  localStorage.setItem("configuredThemeColor", "#17496C")
 }
 
 // Get the theme from a hex color
