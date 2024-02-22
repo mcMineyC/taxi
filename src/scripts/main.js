@@ -4,6 +4,13 @@ class PlayerQueue {
         this.pos = 0
         this.playedPoses = []
         this.shuffled = false
+        this.looped = true
+        if(localStorage.getItem("stateLastShuffled") != null){
+            this.shuffled = (localStorage.getItem("stateLastShuffled") == "true")
+        }
+        if(localStorage.getItem("stateLastLooped") != null){
+            this.looped = (localStorage.getItem("stateLastLooped") == "true")
+        }
     }
     set(queue){
         this.queue = queue
@@ -38,9 +45,15 @@ class PlayerQueue {
         if(this.pos+pos > this.queue.length-1){
             console.log("At the end of the queue")
             showSnackbar("At the end of the queue")
-            this.pos = 0
-            this.playedPoses = []
-            return true
+            if(this.looped){
+                console.log("Looped")
+                this.pos = 0
+                this.playedPoses = []
+                return true
+            }else{
+                console.log("Not looping")
+                return false
+            }
         }else{
             this.pos = this.pos + pos
             return true
@@ -76,13 +89,22 @@ class PlayerQueue {
         console.log(this.playedPoses)
     }
     shuffle(val){
+        localStorage.setItem("stateLastShuffled", val)
         this.shuffled = val
     }
+    loop(val){
+        localStorage.setItem("stateLastLooped", val)
+        this.looped = val
+    }
     next(){
-        this.update(this.setPos(1))
+        if(this.setPos(1)){
+            this.update()
+        }
     }
     previous(){
-        this.update(this.setPos(-1))
+        if(this.setPos(-1)){
+            this.update()
+        }
     }
 }
 
@@ -115,6 +137,7 @@ class Playing {
 class Playlists {
     
 }
+
 setInterval(function() {
     if(typeof(window.howlerInstance) == "undefined"){
         console.log("No howler instance");
@@ -138,6 +161,28 @@ window.onscroll = function(ev) {
       console.log("Bottom of page");
     }
 };
+
+function handleShuffleClick(th){
+    window.localQueue.shuffle(th.getAttribute("enabled") == "true")
+    console.log("Shuffling: "+window.localQueue.shuffled)
+    /*
+    if(window.localQueue.shuffled){
+        showSnackbar("Shuffling")
+    }else{
+        showSnackbar("Not shuffling")
+    }*/
+}
+
+function handleLoopClick(th){
+    window.localQueue.loop(th.getAttribute("enabled") == "true")
+    console.log("Looping: "+window.localQueue.shuffled)
+    /*
+    if(window.localQueue.looped){
+        showSnackbar("Looping")
+    }else{
+        showSnackbar("Not looping")
+    }*/
+}
 
 function handleSongClick(id) {
     if(typeof(window.localQueue) == "undefined"){
@@ -180,8 +225,7 @@ function playSong(id) {
     })
     song.on('end', function() {
         window.localPlaying.set(false)
-        window.localQueue.setPos(1)
-        window.localQueue.update()
+        if(window.localQueue.setPos(1)) window.localQueue.update()
         setProgress(0)
     })
     song.once('load', function() {
@@ -194,7 +238,6 @@ function playSong(id) {
     window.progress.set(song.seek())
     window.localPlaying = new Playing(false);
 }
-
 // Update progress bar on seek/position change
 function setProgress(val){
     var p = val / window.duration;

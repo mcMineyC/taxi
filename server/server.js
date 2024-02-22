@@ -32,6 +32,128 @@ if(needToWrite){
     console.log("Fixed auth.json")
 }
 
+if(!fs.existsSync(path.join(__dirname, 'images'))){
+    fs.mkdirSync(path.join(__dirname, 'images'));
+}
+if(!fs.existsSync(path.join(__dirname, 'images', 'albums'))){
+    fs.mkdirSync(path.join(__dirname, 'images', 'albums'));
+}
+if(!fs.existsSync(path.join(__dirname, 'images', 'artists'))){
+    fs.mkdirSync(path.join(__dirname, 'images', 'artists'));
+}
+if(!fs.existsSync(path.join(__dirname, 'images', 'songs'))){
+    fs.mkdirSync(path.join(__dirname, 'images', 'songs'));
+}
+if(!fs.existsSync(path.join(__dirname, 'music'))){
+    fs.mkdirSync(path.join(__dirname, 'music'));
+}
+if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var albums_data = {
+        "last_updated": all,
+    }
+    var albums_arr = [];
+
+    //This is only needed if the file changed
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            var artistId = artist["id"]
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                Object.entries(album["songs"]).forEach((song) => {
+                    var [key, v] = song;
+                    console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
+                
+                    var warr = {
+                        "id": v["id"],
+                        "displayName": v["title"],
+                        "albumId": albumid,
+                        "artistId": artistId,
+                        "file": v["file"]
+                    }
+                    albums_arr.push(warr)
+                });
+            }
+        }
+        albums_data["songs"] = albums_arr
+        console.log("\n\n")
+        console.log(albums_data)
+        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(albums_data,null,4), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+}
+if(!fs.existsSync(path.join(__dirname, 'albums.json'))){
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var albums_data = {
+        "last_updated": all,
+    }
+    var albums_arr = [];
+
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]); //artist
+            for (var album in artist["albums"]) {
+                var albumid = album;
+                var album = artist["albums"][album];
+                console.log("\t" + album["displayName"]); //album
+                var warr = {
+                    "id": albumid,
+                    "displayName": album["displayName"],
+                    "artist": artist["displayName"],
+                    "artistId": artist["id"]
+                }
+                albums_arr.push(warr)
+            }
+        }
+        albums_data["albums"] = albums_arr
+        console.log("\n\n")
+        console.log(albums_data)
+        fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+}
+if(!fs.existsSync(path.join(__dirname, 'artists.json'))){
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var artist_data = {
+        "last_updated": all,
+    }
+    var artist_arr = [];
+
+        console.log("Updating")
+        for(var x = 0; x < (all["entries"].length); x++){
+            artist = all["entries"][x]
+            console.log(artist["displayName"]);
+            var warr = {
+                "id": artist["id"],
+                "displayName": artist["displayName"],
+            }
+            artist_arr.push(warr)
+        }
+        artist_data["artists"] = artist_arr
+        console.log("\n\n")
+        console.log(artist_data)
+        fs.writeFile(path.join(__dirname, 'artists.json'), JSON.stringify(artist_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+}
+if(!fs.existsSync(path.join(__dirname, 'auth.json'))){
+    fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify({"users":[]},null,4));
+}
+
 app.use('/music', express.static(path.join(__dirname, 'music')));
 
 app.use('/',express.static(path.join(__dirname, 'static')));
@@ -717,7 +839,6 @@ function checkAuth(req, res){
             }
         }
         if(!found){
-            res.send({"authorized": false, "error": "Invalid authtoken"})
             return false
         }
     }
