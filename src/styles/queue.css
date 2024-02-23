@@ -41,3 +41,19 @@
     top: 0px;
     right: 24px;
 }
+.pseudo-link:hover{
+    /* text-decoration: underline; */
+    cursor: pointer;
+    color: color-mix(in srgb, var(--md-sys-color-on-primary-container), var(--md-sys-color-primary) 80%);
+    transition: color 0.2s ease-in-out;
+}
+.pseudo-link{
+    transition: color 0.2s ease-in-out;
+}
+.oneline {
+    /* width: 100%; */
+    font-size: 16px; /* Adjust the font size as needed */
+    line-height: 16px; /* Set the same value as the font size */
+    overflow: hidden; /* Optional: hide any overflow text */
+    white-space: nowrap; /* Optional: prevent wrapping */
+  }

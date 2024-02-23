@@ -1,15 +1,33 @@
-.context-menu{
-    background-color: aqua;
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
-    border-radius: 10px;
-    padding: 6px;
-}
 .context-menu-container{
-    background-color: brown;
+    background-color: var(--md-sys-color-surface-variant);
+    border: 1.5px solid var(--md-sys-color-outline);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: 10px;
+    /* background-color: brown; */
     position: absolute;
     margin: 0px;
     width: 200px;
     z-index: 99999999;
+    display: none;
+}
+.context-menu{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 10px;
+    margin: 6px;
+}
+.context-menu > li{
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.context-menu > li > md-icon{
+    margin-right: 6px;
+}
+
+.context-menu > li:hover{
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-variant) 50%, var(--md-sys-color-surface));
+    border-radius: 6px;
 }

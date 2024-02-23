@@ -12,18 +12,38 @@ document.addEventListener('contextmenu', function(event) {
     switch(event.target.getAttribute("thingtype")){
         case "album":
             console.log("album")
-            inhtml += `<li value="play">Play</li>`
+            inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
+            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+                inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+            }
+            inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
+            inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
             break;
         case "artist":
             console.log("artist")
-            inhtml += `<li value="play">Play</li>`
+            inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
+            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+                inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+            }
+            inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
+            inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
             break;
         case "playlist":
             console.log("playlist")
             break;
         case "song":
             console.log("song")
-            inhtml += `<li value="play">Play</li>`
+            inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
+            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+                inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+            }
+            inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
+            inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
+            break;
+        default:
+            console.log("default")
+            customContextMenu.style.display = 'none';
+            return
             break;
     }
     inhtml += `</ul>`
@@ -40,22 +60,49 @@ document.addEventListener('contextmenu', function(event) {
         var a = option.getAttribute('value')
         console.log('Selected option:', a);
 
-        if(a == "play"){
-            switch(thingtype){
-                case "album":
-                    console.log("album")
-                    break;
-                case "artist":
-                    console.log("artist")
-                    playList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
-                    break;
-                case "playlist":
-                    console.log("playlist")
-                    break;
-                case "song":
-                    console.log("song")
-                    break;
-            }
+        switch(a){
+            case "play":
+                switch(thingtype){
+                    case "album":
+                        console.log("album")
+                        break;
+                    case "artist":
+                        console.log("artist")
+                        playList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                        break;
+                    case "playlist":
+                        console.log("playlist")
+                        break;
+                    case "song":
+                        console.log("song")
+                        break;
+                }
+                break;
+            case "queue":
+                switch(thingtype){
+                    case "album":
+                        console.log("album")
+                        window.localQueue.addList(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                        break;
+                    case "artist":
+                        console.log("artist")
+                        window.localQueue.addList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                        break;
+                    case "playlist":
+                        console.log("playlist")
+                        break;
+                    case "song":
+                        console.log("song")
+                        window.localQueue.addList([thingid])
+                        break;
+                }
+                break;
+            case "addplaylist":
+                console.log("addplaylist")
+                break;
+            case "share":
+                console.log("share")
+                break;
         }
 
         // Hide the custom context menu

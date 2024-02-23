@@ -14,6 +14,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
     "jsmediatags": "^3.9.7",
     "qs": "^6.11.2",
     "spotify-web-api-node": "^5.0.2"

@@ -7,6 +7,8 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
 const crypto = require('crypto');
+const ffmpeg = require('fluent-ffmpeg');
+const ffprobe = util.promisify(ffmpeg.ffprobe);
 
 
 const app = express();
@@ -50,44 +52,10 @@ if(!fs.existsSync(path.join(__dirname, 'music'))){
 if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
-    var albums_data = {
-        "last_updated": all,
-    }
     var albums_arr = [];
-
-    //This is only needed if the file changed
-        console.log("Updating")
-        for(var x = 0; x < (all["entries"].length); x++){
-            artist = all["entries"][x]
-            console.log(artist["displayName"]); //artist
-            var artistId = artist["id"]
-            for (var album in artist["albums"]) {
-                var albumid = album;
-                var album = artist["albums"][album];
-                console.log("\t" + album["displayName"]); //album
-                Object.entries(album["songs"]).forEach((song) => {
-                    var [key, v] = song;
-                    console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
-                
-                    var warr = {
-                        "id": v["id"],
-                        "displayName": v["title"],
-                        "albumId": albumid,
-                        "artistId": artistId,
-                        "file": v["file"]
-                    }
-                    albums_arr.push(warr)
-                });
-            }
-        }
-        albums_data["songs"] = albums_arr
-        console.log("\n\n")
-        console.log(albums_data)
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(albums_data,null,4), function (err) {
-            if (err) {
-                console.log(err);
-            }
-        })
+    updateSongs().then(() => {
+        console.log("Updated songs.json")
+    })
 }
 if(!fs.existsSync(path.join(__dirname, 'albums.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -315,41 +283,11 @@ app.post('/info/songs', function (req, res) {
     var albums_arr = [];
 
     //This is only needed if the file changed
-    if((JSON.stringify(data["last_updated"]) != JSON.stringify(all))){
-        console.log("Updating")
-        for(var x = 0; x < (all["entries"].length); x++){
-            artist = all["entries"][x]
-            console.log(artist["displayName"]); //artist
-            var artistId = artist["id"]
-            for (var album in artist["albums"]) {
-                var albumid = album;
-                var album = artist["albums"][album];
-                console.log("\t" + album["displayName"]); //album
-                Object.entries(album["songs"]).forEach((song) => {
-                    var [key, v] = song;
-                    console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
-                
-                    var warr = {
-                        "id": v["id"],
-                        "displayName": v["title"],
-                        "albumId": albumid,
-                        "artistId": artistId,
-                        "file": v["file"]
-                    }
-                    albums_arr.push(warr)
-                });
-            }
-        }
-        albums_data["songs"] = albums_arr
-        console.log("\n\n")
-        console.log(albums_data)
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(albums_data), function (err) {
-            if (err) {
-                console.log(err);
-            }
-        })
-        data = albums_data
+    if((data["last_updated"] != hash5(JSON.stringify(all)))){
+        updateSongs()
     }
+    var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    data = JSON.parse(data);
     res.send(data);
 });
 
@@ -824,6 +762,94 @@ app.listen(port, () => {
 // won't move them anytime soon
 
 
+async function updateSongs(once){
+    //This is only needed if the file changed
+    console.log("Updating")
+    for(var x = 0; x < (all["entries"].length); x++){
+        artist = all["entries"][x]
+        console.log(artist["displayName"]); //artist
+        var artistId = artist["id"]
+        for (var album in artist["albums"]) {
+            var albumid = album;
+            var album = artist["albums"][album];
+            console.log("\t" + album["displayName"]); //album
+            for(var song in album["songs"]) {
+                var v = album["songs"][song];
+                console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
+                
+                if(fs.existsSync(path.join(__dirname, v["file"]))){
+                    try{
+                        var z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
+                        var dur = z["format"]["duration"]
+                        
+                        var warr = {
+                            "id": v["id"],
+                            "displayName": v["title"],
+                            "albumId": albumid,
+                            "artistId": artistId,
+                            "duration": dur,
+                            "file": v["file"]
+                        }
+                        albums_arr.push(warr)
+                    }catch(err){
+                        switch(err.code){
+                            case "ENOENT":
+                                console.log("File does not exist: "+v["file"])
+                                break;
+                            case "ETIMEDOUT":
+                                console.log("Timed out trying to extract data from: "+v["file"])
+                                break;
+                            default:
+                                console.log(err)
+                        }
+                    }
+                }else{
+                    console.log("File does not exist: "+v["file"])
+                }
+            };
+        }
+    }
+    if(once){
+        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(albums_data), function (err) {
+            if (err) {
+                console.log(err);
+            }
+        })
+    }else{
+        console.log("Writing file...")
+        songs_data = {
+            "last_updated": hash5(JSON.stringify(all)),
+            "songs": albums_arr
+        }
+        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data,null,4), function (err) {
+            if (err) {
+                console.log(err);
+            }else{
+                console.log("File written")
+            }
+        })
+        return
+    }
+}
+
+function hash5(string){
+    return crypto.createHash('md5').update(string).digest('hex');
+}
+
+async function withTimeout(promise, timeoutMs) {
+    const timeoutPromise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error({"code": "ETIMEDOUT"}));
+      }, timeoutMs);
+    });
+  
+    try {
+      return await Promise.race([promise, timeoutPromise]);
+    } catch (err) {
+      throw err; // Rethrow the error for the caller to handle
+    }
+}
+
 function checkAuth(req, res){
     if(typeof(req.body.authtoken) == "undefined"){
         res.send({"error": "No authtoken provided"})
@@ -873,4 +899,4 @@ async function downloadFile(fileUrl, outputLocationPath) {
         });
       });
     });
-  }
+}

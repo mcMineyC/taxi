@@ -22,6 +22,10 @@ class PlayerQueue {
         this.queue.push(song)
         showSnackbar("Added " + song + " to queue")
     }
+    addList(list){
+        this.queue = this.queue.concat(list)
+        showSnackbar("Added " + list.length + " songs to queue")
+    }
     remove(song){
         var q = this.queue
         if(q.length == 0){

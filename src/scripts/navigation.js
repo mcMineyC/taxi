@@ -249,7 +249,7 @@ class FetchedData {
     }
 }
 
-function getQueue(){
+async function getQueue(){
     if(typeof(window.localQueue) == "undefined"){
         console.log("No queue instance");
     }else if(window.localQueue.get().length == 0){
@@ -264,7 +264,7 @@ function getQueue(){
         for(var x = 0; x < window.localQueue.get().length; x++){
             var sInfo = window.fetchedData.getSong(window.localQueue.get()[x])
             innerhtml += `
-                <m3-queue-list-item image="${window.prefs.getBackendUrl()+"/info/songs/" + sInfo["id"] + "/image"}" song="${sInfo["displayName"]}" album="${window.fetchedData.getAlbum(sInfo["albumId"])["displayName"]}" artist="${window.fetchedData.getArtist(sInfo["artistId"])["displayName"]}" albumClick="albumClick('${sInfo["albumId"]}')" artistClick="artistClick('${sInfo["artistId"]}')" duration="00:42"></m3-queue-list-item>`
+                <m3-queue-list-item image="${window.prefs.getBackendUrl()+"/info/songs/" + sInfo["id"] + "/image"}" song="${sInfo["displayName"]}" album="${sInfo["albumId"]}" artist="${sInfo["artistId"]}" albumClick="albumClick('${sInfo["albumId"]}')" artistClick="artistClick('${sInfo["artistId"]}')" duration="${Math.floor(Math.round(sInfo["duration"]) / 60)+":"+Math.round(sInfo["duration"] % 60).toString().padStart(2, '0')}"></m3-queue-list-item>`
         }
         document.getElementById("content").innerHTML = `
             <md-list id="queue-list">
@@ -275,7 +275,7 @@ function getQueue(){
     }
 }
 
-function getPlaylists(){
+async function getPlaylists(){
     reset()
     var d = document.getElementById("content")
     console.log("Getting playlists...")
@@ -302,7 +302,7 @@ function getPlaylists(){
 
 }
 
-function artistClick(id){
+async function artistClick(id){
     console.log("Clicked on artist: " + id);
     document.getElementById("content").innerHTML = "";
     getAlbumsByArtist(id);
@@ -315,7 +315,7 @@ function artistClick(id){
     })
 }
 
-function albumClick(id){
+async function albumClick(id){
     console.log("Clicked on album: " + id);
     document.getElementById("content").innerHTML = "";
     getSongsByAlbum(id);
@@ -327,7 +327,7 @@ function albumClick(id){
     })
 }
 
-function settingsClick(){
+async function settingsClick(){
     console.log("Opening settings");
     reset()
     document.getElementById("content").innerHTML = `
@@ -380,7 +380,7 @@ function settingsClick(){
     })
 }
 
-function queueClick(){
+async function queueClick(){
     console.log("Opening queue");
     reset()
     window.navigationInfo.setHeader("Queue")
@@ -393,7 +393,7 @@ function queueClick(){
     getQueue()
 }
 
-function playlistClick(){
+async function playlistClick(){
     console.log("Opening playlists");
     reset()
     window.navigationInfo.setHeader("Playlists")
@@ -406,7 +406,7 @@ function playlistClick(){
     getPlaylists()
 }
 
-function playlistClicked(id){
+async function playlistClicked(id){
     console.log("Clicked on playlist: " + id);
     document.getElementById("content").innerHTML = "";
     getSongsByPlaylist(id);
@@ -418,7 +418,7 @@ function playlistClicked(id){
     })
 }
 
-function getHome(place) {
+async function getHome(place) {
     reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
     if(typeof(place) == "undefined"){
@@ -454,11 +454,11 @@ function getHome(place) {
     
 }
 
-function reset(){
+async function reset(){
     document.getElementById("content").innerHTML = "";
 }
 
-function back(){
+async function back(){
     var i = window.navigationInfo.get();
     reset()
     console.log("Going back")
