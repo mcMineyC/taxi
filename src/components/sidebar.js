@@ -8,6 +8,9 @@ class sidebar extends HTMLElement {
                 <md-icon-button variant="primary" onclick="queueClick()">
                     <md-icon>queue_music</md-icon>
                 </md-icon-button>
+                <md-icon-button onclick="playlistClick()">
+                    <md-icon>playlist_add</md-icon>
+                </md-icon-button>
                 <md-icon-button>
                     <md-icon>download</md-icon>
                 </md-icon-button>

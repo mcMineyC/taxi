@@ -40,6 +40,7 @@ class PlayerQueue {
     }
     clear(){
         this.queue = []
+        this.playedPoses = []
     }
     setPos(pos){
         if(this.pos+pos > this.queue.length-1){
@@ -98,12 +99,12 @@ class PlayerQueue {
     }
     next(){
         if(this.setPos(1)){
-            this.update()
+            this.update(true)
         }
     }
     previous(){
         if(this.setPos(-1)){
-            this.update()
+            this.update(true)
         }
     }
 }
@@ -173,6 +174,7 @@ function handleShuffleClick(th){
     }*/
 }
 
+
 function handleLoopClick(th){
     window.localQueue.loop(th.getAttribute("enabled") == "true")
     console.log("Looping: "+window.localQueue.shuffled)
@@ -197,6 +199,16 @@ function handleSongClick(id) {
     console.log("Added " + id + " to queue")
     window.localQueue.add(id)
     window.localQueue.update(f)
+}
+
+function playList(list){
+    if(typeof(window.localQueue) == "undefined"){
+        console.log("No queue instance");
+        window.localQueue = new PlayerQueue();
+    }
+    window.localQueue.clear()
+    window.localQueue.set(list)
+    window.localQueue.update(true)
 }
 
 function playSong(id) {

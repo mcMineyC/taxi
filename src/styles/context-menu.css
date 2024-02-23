@@ -1,0 +1,15 @@
+.context-menu{
+    background-color: aqua;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 10px;
+    padding: 6px;
+}
+.context-menu-container{
+    background-color: brown;
+    position: absolute;
+    margin: 0px;
+    width: 200px;
+    z-index: 99999999;
+}

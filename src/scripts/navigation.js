@@ -39,8 +39,12 @@ class Location {
                 }
                 break;
             case "songs":
-                if(v.substring(v.length-2, v.length) == "ID"){
+                var e = this.loc["prev"][this.loc["prev"].length - 1]
+                var b = ((e.substring(e.length-2, e.length) == "ID") ? e.substring(0, e.length - 2) : e)
+                if(v.substring(v.length-2, v.length) == "ID" && (b == "albums")){
                     this.setHeader("Songs in "+window.fetchedData.getAlbum(this.loc["id"]).displayName)
+                }else if(v.substring(v.length-2, v.length) == "ID" && (b == "playlists")){
+                    this.setHeader("Songs in "+window.prefs.getPlaylist(this.loc["id"]).displayName)
                 }else{
                     this.setHeader("Songs")
                 }
@@ -62,7 +66,6 @@ class Location {
             return
         }else{
             console.log("Popping "+i["prev"].pop())
-            this.loc = i
         }
     }
     
@@ -86,21 +89,29 @@ class Location {
                 break;
             case "albums":
                 if(v.substring(v.length-2, v.length) == "ID"){
-                    var vv = window.fetchedData.getAlbum(this.loc["id"])
-                    this.setHeader("Albums by "+window.fetchedData.getArtist((typeof(vv) == "undefined") ? this.loc["id"] : vv["artistId"]).displayName)
+                    try{
+                        this.setHeader("Albums by "+window.fetchedData.getArtist(this.loc["id"]).displayName)
+                    }catch(e){
+                        try{
+                            this.setHeader("Albums by "+window.fetchedData.getArtist(window.fetchedData.getAlbum(this.loc["id"]).artistId).displayName)
+                        }catch{
+                            this.setHeader("Albums")
+                        }
+                    }
                 }else{
                     this.setHeader("Albums")
                 }
                 break;
             case "songs":
-                if(v.substring(v.length-2, v.length) == "ID"){
+                var e = this.loc["prev"][this.loc["prev"].length - 1]
+                var b = ((e.substring(e.length-2, e.length) == "ID") ? e.substring(0, e.length - 2) : e)
+                if(v.substring(v.length-2, v.length) == "ID" && (b == "albums")){
                     this.setHeader("Songs in "+window.fetchedData.getAlbum(this.loc["id"]).displayName)
+                }else if(v.substring(v.length-2, v.length) == "ID" && (b == "playlists")){
+                    this.setHeader("Songs in "+window.prefs.getPlaylist(this.loc["id"]).displayName)
                 }else{
                     this.setHeader("Songs")
                 }
-                break;
-            case "queue":
-                this.setHeader("Queue")
                 break;
         
             default:
@@ -264,6 +275,33 @@ function getQueue(){
     }
 }
 
+function getPlaylists(){
+    reset()
+    var d = document.getElementById("content")
+    console.log("Getting playlists...")
+    var p = window.prefs.getPlaylists()["playlists"]
+    console.log("Playlists: " + p.length)
+    console.log(p)
+    d.innerHTML = `
+        <h1 class="loading-text-placeholder">Loading...</h1>
+    `
+    if(p.length == 0){
+        d.innerHTML = `
+            <h1 class="loading-text-placeholder">No playlists...</h1>
+        `
+        return
+    }
+    reset()
+    for(var x = 0; x < p.length; x++){
+        var i = p[x]
+        console.log(i["displayName"])
+        d.innerHTML += `
+            <m3-mediacard text="${i["displayName"]}" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+'/placeholder'}"></m3-mediacard>
+        `
+    }
+
+}
+
 function artistClick(id){
     console.log("Clicked on artist: " + id);
     document.getElementById("content").innerHTML = "";
@@ -355,6 +393,31 @@ function queueClick(){
     getQueue()
 }
 
+function playlistClick(){
+    console.log("Opening playlists");
+    reset()
+    window.navigationInfo.setHeader("Playlists")
+    window.navigationInfo.addHist(window.navigationInfo.get()["location"])
+    window.navigationInfo.set({
+        "prev": window.navigationInfo.getHist(),
+        "location": "playlists",
+        "id": window.navigationInfo.get()["id"],
+    })
+    getPlaylists()
+}
+
+function playlistClicked(id){
+    console.log("Clicked on playlist: " + id);
+    document.getElementById("content").innerHTML = "";
+    getSongsByPlaylist(id);
+    window.navigationInfo.addHist("playlistsID")
+    window.navigationInfo.set({
+        "prev": window.navigationInfo.getHist(),
+        "location": "songsID",
+        "id": id
+    })
+}
+
 function getHome(place) {
     reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
@@ -424,7 +487,11 @@ function back(){
             getHome()
             break;
         case "queue":
-            queueClick()
+            window.navigationInfo.setHeader("Queue")
+            break;
+        case "playlists":
+            getPlaylists()
+            window.navigationInfo.setHeader("Playlists")
             break;
         case "settings":
             settingsClick()

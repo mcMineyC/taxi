@@ -125,12 +125,18 @@ class UserPreferences{
         if(window.localStorage.getItem("configuredFrontendUrl") == null){
             window.localStorage.setItem("configuredFrontendUrl", window.location.origin)
         }
+        if(window.localStorage.getItem("savedPlaylists") == null){
+            window.localStorage.setItem("savedPlaylists", JSON.stringify({
+                "playlists": []
+            }))
+        }
         this.darkMode = window.localStorage.getItem("configuredDarkMode") == "true"
         this.addToQueue = window.localStorage.getItem("configuredAddToQueue") == "true"
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
         this.backendUrl = window.localStorage.getItem("configuredBackendUrl")
         this.frontendUrl = window.localStorage.getItem("configuredFrontendUrl")
+        this.savedPlaylists = JSON.parse(window.localStorage.getItem("savedPlaylists"))
     }
 
     setDarkMode(darkMode){
@@ -188,6 +194,62 @@ class UserPreferences{
         return this.frontendUrl
     }
 
+    getPlaylists(){
+        return this.savedPlaylists
+    }
+
+    getPlaylist(playlist_id){
+        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
+            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
+                return this.savedPlaylists["playlists"][i]
+            }
+        }
+    }
+
+    setPlaylists(savedPlaylists){
+        this.savedPlaylists = savedPlaylists
+        window.localStorage.setItem("savedPlaylists", JSON.stringify(this.savedPlaylists))
+    }
+
+    addPlaylist(playlist){
+        this.savedPlaylists["playlists"].push(playlist)
+        this.setPlaylists(this.savedPlaylists)
+    }
+
+    removePlaylist(playlist){
+        this.savedPlaylists["playlists"].splice(this.savedPlaylists["playlists"].indexOf(playlist), 1)
+        this.setPlaylists(this.savedPlaylists)
+    }
+
+    addToPlaylist(playlist_id, song){
+        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
+            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
+                this.savedPlaylists["playlists"][i]["songs"].push(song)
+                this.setPlaylists(this.savedPlaylists)
+                return
+            }
+        }
+    }
+
+    removeFromPlaylist(playlist_id, index){
+        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
+            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
+                for(var j = 0; j < this.savedPlaylists["playlists"][i]["songs"].length; j++){
+                    if(j == index){
+                        this.savedPlaylists["playlists"][i]["songs"].splice(j, 1)
+                        this.setPlaylists(this.savedPlaylists)
+                        return
+                    }
+                }
+                return
+            }
+        }
+    }
+
+    savePlaylists(){
+        
+    }
+
     toggleDarkMode(){
         this.setDarkMode(!this.getDarkMode())
     }
@@ -195,6 +257,7 @@ class UserPreferences{
     toggleAddToQueue(){
         this.setAddToQueue(!this.getAddToQueue())
     }
+
 }
 
 function setCookie(cname, cvalue, exdays) {

@@ -8,7 +8,7 @@ class mediacard extends HTMLElement {
             <div class="card-caption">
                 <h1 class="card-title">${this.getAttribute('text')}</h1>
             </div>
-            <div id="overlay"></div>
+            <div id="overlay" thingtype="${this.getAttribute('thingtype')}" thingid="${this.getAttribute('thingid')}"></div>
         </div>
         `;
     }
