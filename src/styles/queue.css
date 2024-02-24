@@ -53,7 +53,7 @@
 .oneline {
     /* width: 100%; */
     font-size: 16px; /* Adjust the font size as needed */
-    line-height: 16px; /* Set the same value as the font size */
+    /* line-height: 16px; Set the same value as the font size */
     overflow: hidden; /* Optional: hide any overflow text */
     white-space: nowrap; /* Optional: prevent wrapping */
   }

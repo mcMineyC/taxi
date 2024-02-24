@@ -143,7 +143,7 @@ class FetchedData {
         axios.post(window.prefs.getBackendUrl()+'/info/artists', authParams)
         .then(function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
-            if(data["authorized"] == false){
+            if(data["authorized"] == false || data["authed"] == false){
                 window.location = window.authSettings.getAuthPageUrl()
             }
             t.artists = data["artists"];

@@ -28,6 +28,9 @@ for(var x = 0; x < authData["users"].length; x++){
         authData["users"][x]["authtoken"] = authtoken;
         needToWrite = true
     }
+    if(!fs.existsSync(path.join(__dirname, "playlists", 'playlists_'+authData["users"][x]["loginName"]+'.json'))){
+        fs.writeFileSync(path.join(__dirname, "playlists", 'playlists_'+authData["users"][x]["loginName"]+'.json'), JSON.stringify({"playlists":[]},null,4));
+    }
 }
 if(needToWrite){
     fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify(authData,null,4));
@@ -120,6 +123,9 @@ if(!fs.existsSync(path.join(__dirname, 'artists.json'))){
 }
 if(!fs.existsSync(path.join(__dirname, 'auth.json'))){
     fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify({"users":[]},null,4));
+}
+if(!fs.existsSync(path.join(__dirname, 'playlists.json'))){
+    fs.writeFileSync(path.join(__dirname, 'playlists.json'), JSON.stringify({"playlists":[]},null,4));
 }
 
 app.use('/music', express.static(path.join(__dirname, 'music')));
@@ -749,6 +755,48 @@ app.post('/info/songs/by/artist/:id', function(req, res){
     res.send(songs_arr);
 })
 
+app.post('/playlists/user/:id', function(req, res){
+    if(checkAuth(req, res) == false){
+        res.send({"error": "Not authorized", "authed": false})
+        return
+    }
+    var data = fs.readFileSync(path.join(__dirname, "playlists_"+req.params.id+".json"), 'utf-8');
+    data = JSON.parse(data);
+    var d = [];
+    for(var x = 0; x < data["playlists"].length; x++){
+        d.push(data["playlists"][x])
+    }
+    res.send(d)
+})
+
+app.post('/playlists/user/:id/modify/:playlist', function(req, res){
+    if(checkAuth(req, res) == false){
+        res.send({"error": "Not authorized", "authed": false})
+        return
+    }
+    var data = fs.readFileSync(path.join(__dirname, "playlists_"+req.params.id+".json"), 'utf-8');
+    data = JSON.parse(data);
+    var d = [];
+
+    for(var x = 0; x < data["playlists"].length; x++){
+        if(data["playlists"][x]["id"] == req.params.playlist){
+            data["playlists"][x]["name"] = req.body.name
+            data["playlists"][x]["description"] = req.body.description
+        }
+        d.push(data["playlists"][x])
+    }
+    fs.writeFile(path.join(__dirname, "playlists_"+req.params.id+".json"), JSON.stringify(data), function (err) {
+        if (err) {
+            console.log(err);
+        }
+    })
+
+    for(var x = 0; x < data["playlists"].length; x++){
+        d.push(data["playlists"][x])
+    }
+    res.send(d)
+})
+
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 })
@@ -865,6 +913,7 @@ function checkAuth(req, res){
             }
         }
         if(!found){
+            res.send({"error": "Invalid authtoken", "authed": false})
             return false
         }
     }

@@ -67,7 +67,7 @@ class PlayerQueue {
     getPos(){
         return this.pos
     }
-    update(force){
+    async update(force){
         if (typeof(window.localPlaying) == "undefined") {
             console.log("Not playing");
         }else if(window.localPlaying.get() && (typeof(force) == "undefined" || force == false)){
@@ -78,15 +78,55 @@ class PlayerQueue {
         }
         var poses = 0
         console.log(this.playedPoses)
-        if(this.shuffled){
-            poses = Math.floor(Math.random() * this.queue.length)
-            console.log("Choosing random song "+poses)
-            while(this.playedPoses.includes(poses)){
-                poses = Math.floor(Math.random() * this.queue.length)
-                console.log("Choosing random song "+poses)
-            }
+        if(this.queue.length == this.playedPoses.length){
+            poses = 0
         }else{
-            poses = this.pos
+            if(this.shuffled && this.queue.length != this.playedPoses.length){
+                console.log("Shuffling, not all songs played")
+                var availPoses = []
+                for(var x = 0; x < this.queue.length; x++){
+                    if(!this.playedPoses.includes(x)){
+                        availPoses.push(this.queue[x])
+                    }else{
+                        availPoses.push("NULL")
+                    }
+                }
+                console.log(availPoses)
+                poses = Math.floor(Math.random() * availPoses.length)
+                // console.log("Choosing random song "+poses)
+                console.log("Choosing song: "+this.queue[poses])
+                // console.log(availPoses[poses] == "NULL")
+                // console.log(!availPoses.includes(this.queue[poses]))
+                while(!availPoses.includes(this.queue[poses]) || availPoses[poses] == "NULL"){
+                    poses = Math.floor(Math.random() * availPoses.length)
+                    console.log("ALready chosen, choosing a new one")
+                    console.log("Choosing random song "+poses)
+                }
+            }else if(this.shuffled && this.queue.length == this.playedPoses.length){
+                console.log("Shuffling, all songs played")
+                this.playedPoses = []
+                var availPoses = []
+                for(var x = 0; x < this.queue.length; x++){
+                    if(!this.playedPoses.includes(x)){
+                        availPoses.push(this.queue[x])
+                    }else{
+                        this.playedPoses.push("NULL")
+                    }
+                }
+                console.log(availPoses)
+                poses = Math.floor(Math.random() * availPoses.length)
+                // console.log("Choosing random song "+poses)
+                console.log("Choosing song: "+this.queue[poses])
+                // console.log(availPoses[poses] == "NULL")
+                // console.log(!availPoses.includes(this.queue[poses]))
+                while(!availPoses.includes(this.queue[poses]) || availPoses[poses] == "NULL"){
+                    poses = Math.floor(Math.random() * availPoses.length)
+                    console.log("ALready chosen, choosing a new one")
+                    console.log("Choosing random song "+poses)
+                }
+            }else{
+                poses = this.pos
+            }
         }
         var song = this.queue[poses]
         playSong(song)
