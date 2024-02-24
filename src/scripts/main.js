@@ -128,6 +128,7 @@ class PlayerQueue {
                 poses = this.pos
             }
         }
+        this.pos = poses
         var song = this.queue[poses]
         playSong(song)
         this.playedPoses.push(poses)

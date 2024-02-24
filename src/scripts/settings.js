@@ -142,6 +142,7 @@ class UserPreferences{
     setDarkMode(darkMode){
         this.darkMode = darkMode
         window.localStorage.setItem("configuredDarkMode", darkMode)
+        window.apc()
     }
 
     setAddToQueue(addToQueue){
