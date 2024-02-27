@@ -59,12 +59,15 @@ for file in os.listdir(directory_path):
             shutil.move(os.path.join(directory_path, file), os.path.join(sorted_directory, file))
             # Update the tag_info dictionary
             if artid not in tag_info:
+                print("Creating artist entry for " + artist + " at " + artid)
                 tag_info[artid] = {
                     "id": artid,
                     "displayName": artist,
                     "albums": {}
                 }
-            if albid not in tag_info[artid]["albums"]:
+                print(json.dumps(tag_info[artid], indent=4))
+            if artid+"_"+albid not in tag_info[artid]["albums"]:
+                print("Creating album entry for " + album + " at "+artid + "_" + albid)
                 tag_info[artid]["albums"][artid + "_" + albid] = {
                     "displayName": album,
                     "songs": []
