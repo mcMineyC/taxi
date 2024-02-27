@@ -393,6 +393,15 @@ async function queueClick(){
     getQueue()
 }
 
+async function downloadClick(){
+    showSnackbar("Download not yet implemented")
+}
+
+async function searchClick(){
+    console.log("Opening search");
+    showSnackbar("Search not yet implemented")
+}
+
 async function playlistClick(){
     console.log("Opening playlists");
     reset()

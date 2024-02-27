@@ -11,7 +11,7 @@ class sidebar extends HTMLElement {
                 <md-icon-button onclick="playlistClick()">
                     <md-icon>playlist_add</md-icon>
                 </md-icon-button>
-                <md-icon-button>
+                <md-icon-button onclick="downloadClick()">
                     <md-icon>download</md-icon>
                 </md-icon-button>
             </div>

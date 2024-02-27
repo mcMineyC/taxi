@@ -9,12 +9,16 @@ document.addEventListener('contextmenu', function(event) {
     var thingtype = event.target.getAttribute("thingtype")
     var thingid = event.target.getAttribute("thingid")
     var inhtml = `<ul class="context-menu">`
+    var contextMenuWidth = 202;
+    var contextMenuHeight = 122;
+
     switch(event.target.getAttribute("thingtype")){
         case "album":
             console.log("album")
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
             if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+                contextMenuHeight = 158;
             }
             inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
             inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
@@ -24,6 +28,7 @@ document.addEventListener('contextmenu', function(event) {
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
             if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+                contextMenuHeight = 158;
             }
             inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
             inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
@@ -36,6 +41,7 @@ document.addEventListener('contextmenu', function(event) {
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
             if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+                contextMenuHeight = 158;
             }
             inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
             inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
@@ -46,10 +52,29 @@ document.addEventListener('contextmenu', function(event) {
             return
             break;
     }
+    var leftPos = ''
+    var topPos  = ''
+
+    if (event.clientX < window.innerWidth - contextMenuWidth) {
+      leftPos = `${event.clientX}px`;
+    } else {
+      leftPos = `${event.clientX - contextMenuWidth}px`;
+    }
+
+    if (event.clientY < window.innerHeight - contextMenuHeight) {
+        topPos = `${event.clientY}px`;
+      } else {
+        topPos = `${event.clientY - contextMenuHeight}px`;
+      }
+    // if (event.pageX < window.innerWidth - contextMenuWidth - contextSubMenuWidth) {
+    //   menu.classList.remove("sub-left");
+    // } else {
+    //   menu.classList.add("sub-left");
+    // }
     inhtml += `</ul>`
     customContextMenu.innerHTML = inhtml
-    customContextMenu.style.left = event.clientX + 'px';
-    customContextMenu.style.top = event.clientY + 'px';
+    customContextMenu.style.left = leftPos
+    customContextMenu.style.top = topPos
     customContextMenu.style.display = 'block';
     document.body.appendChild(customContextMenu);
     
@@ -65,6 +90,7 @@ document.addEventListener('contextmenu', function(event) {
                 switch(thingtype){
                     case "album":
                         console.log("album")
+                        playList(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
                         break;
                     case "artist":
                         console.log("artist")
@@ -72,9 +98,11 @@ document.addEventListener('contextmenu', function(event) {
                         break;
                     case "playlist":
                         console.log("playlist")
+                        showSnackbar("Not implemented")
                         break;
                     case "song":
                         console.log("song")
+                        playList([thingid])
                         break;
                 }
                 break;
@@ -90,6 +118,7 @@ document.addEventListener('contextmenu', function(event) {
                         break;
                     case "playlist":
                         console.log("playlist")
+                        showSnackbar("Not implemented")
                         break;
                     case "song":
                         console.log("song")

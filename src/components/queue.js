@@ -8,7 +8,7 @@ class queuelistitem extends HTMLElement {
                 </div>
                 <div id="song-container">
                     <span class="oneline">
-                        ${this.getAttribute('song')} - 
+                        <span class="pseudo-link" thingtype="song" thingid="${this.getAttribute('song')}" onclick="${this.getAttribute('albumClick')}">${this.getAttribute('song')}</span> - 
                         <span class="pseudo-link" thingtype="artist" thingid="${this.getAttribute('artist')}" onclick="${this.getAttribute('artistClick')}">
                             ${window.fetchedData.getArtist(this.getAttribute('artist'))["displayName"]}: 
                         </span>

@@ -3,6 +3,12 @@
     padding-top: 16px;
 }
 
+#content-container{
+    overflow-x: hidden !important;
+    overflow-y: scroll;
+    scrollbar-color: var(--md-sys-color-primary) #00000000;
+}
+
 body{
     --md-icon-font: "Material Symbols Outlined";
     background: var(--md-sys-color-surface-variant);
@@ -10,7 +16,7 @@ body{
 }
 
 
-h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,input {
+h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,input,span {
     font-family: "Poppins" !important;
 }
 
@@ -32,12 +38,12 @@ html{
     /* background-repeat:space */
     background-size: auto;
     font-family: "Poppins" !important;
-  --md-sys-typescale-body-large: 400 3rem system-ui;
+    --md-sys-typescale-body-large: 400 3rem system-ui;
 }
 
-.playercontrols-bottom{
+.playercontrols-bottom, .buttons{
     /* border-top: var(--md-sys-color-tertiary) 2px solid; */
-    background: var(--md-sys-color-surface-variant)
+    background: var(--md-sys-color-surface-variant) !important;
 
     /* background: #00000000; */
     /* backdrop-filter: blur(16px); */
@@ -50,6 +56,12 @@ html{
 .playercontrols-box > div[progress="0"] > *{
     /* --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container); */
 }
+
+.playercontrols-box-start{
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 700;
+}
+
 .card{
     background-color: var(--md-sys-color-secondary-container);
 }

@@ -121,7 +121,7 @@ class PlayerQueue {
                 // console.log(!availPoses.includes(this.queue[poses]))
                 while(!availPoses.includes(this.queue[poses]) || availPoses[poses] == "NULL"){
                     poses = Math.floor(Math.random() * availPoses.length)
-                    console.log("ALready chosen, choosing a new one")
+                    console.log("Already chosen, choosing a new one")
                     console.log("Choosing random song "+poses)
                 }
             }else{
@@ -133,6 +133,8 @@ class PlayerQueue {
         playSong(song)
         this.playedPoses.push(poses)
         console.log(this.playedPoses)
+        this.currentSong = song
+        this.changeInfo()
     }
     shuffle(val){
         localStorage.setItem("stateLastShuffled", val)
@@ -151,6 +153,22 @@ class PlayerQueue {
         if(this.setPos(-1)){
             this.update(true)
         }
+    }
+    changeInfo(){
+        document.getElementById("playercontrols-box-info").style.visibility = "visible"
+        document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
+        var title = document.getElementById("playercontrols-info-title")
+        var album = document.getElementById("playercontrols-info-album")
+        var artist = document.getElementById("playercontrols-info-artist")
+        var cSong = window.fetchedData.getSong(this.currentSong)
+        
+        title.setAttribute("thingid", cSong["id"])
+        album.setAttribute("thingid", cSong["albumId"])
+        artist.setAttribute("thingid", cSong["artistId"])
+
+        title.innerHTML = cSong["displayName"]
+        album.innerHTML = window.fetchedData.getAlbum(cSong["albumId"])["displayName"]
+        artist.innerHTML = window.fetchedData.getArtist(cSong["artistId"])["displayName"]
     }
 }
 

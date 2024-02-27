@@ -760,11 +760,15 @@ app.post('/playlists/user/:id', function(req, res){
         res.send({"error": "Not authorized", "authed": false})
         return
     }
-    var data = fs.readFileSync(path.join(__dirname, "playlists_"+req.params.id+".json"), 'utf-8');
+    var u = getUser(req.body.authtoken);
+
+    var data = fs.readFileSync(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
     data = JSON.parse(data);
     var d = [];
     for(var x = 0; x < data["playlists"].length; x++){
-        d.push(data["playlists"][x])
+        if(data["playlists"][x]["public"] == true || u["loginName"] == req.params.id){
+            d.push(data["playlists"][x])
+        }
     }
     res.send(d)
 })
@@ -774,26 +778,61 @@ app.post('/playlists/user/:id/modify/:playlist', function(req, res){
         res.send({"error": "Not authorized", "authed": false})
         return
     }
-    var data = fs.readFileSync(path.join(__dirname, "playlists_"+req.params.id+".json"), 'utf-8');
+    var u = getUser(req.body.authtoken);
+    if(u["loginName"] != req.params.id){
+        res.send({"error": "Not authorized", "success": false})
+    }
+
+    var data = fs.readFileSync(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
     data = JSON.parse(data);
     var d = [];
-
+    var found = false
     for(var x = 0; x < data["playlists"].length; x++){
         if(data["playlists"][x]["id"] == req.params.playlist){
-            data["playlists"][x]["name"] = req.body.name
-            data["playlists"][x]["description"] = req.body.description
+            if(req.body.name != undefined){
+                console.log("Name: "+req.body.public)
+                data["playlists"][x]["name"] = req.body.name
+            }
+            if(req.body.description != undefined){
+                console.log("Description: "+req.body.public)
+                data["playlists"][x]["description"] = req.body.description
+            }
+            if(req.body.public != undefined){
+                console.log("Public: "+req.body.public)
+                data["playlists"][x]["public"] = req.body.public
+            }
+            found = true
         }
-        d.push(data["playlists"][x])
+        d[x] = data["playlists"][x]
     }
-    fs.writeFile(path.join(__dirname, "playlists_"+req.params.id+".json"), JSON.stringify(data), function (err) {
+    if(!found){
+        try{
+            d.push({
+                "id": req.params.playlist,
+                "name": req.body.name,
+                "description": req.body.description,
+                "public": req.body.public,
+                "songs": JSON.parse(req.body.songs)
+            })
+        }catch(e){
+            d.push({
+                "id": req.params.playlist,
+                "name": req.body.name,
+                "description": req.body.description,
+                "public": req.body.public
+            })
+        }
+    }
+    data = {
+        "playlists": d
+    }
+    console.log("\n\n")
+    fs.writeFile(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
         if (err) {
             console.log(err);
         }
     })
 
-    for(var x = 0; x < data["playlists"].length; x++){
-        d.push(data["playlists"][x])
-    }
     res.send(d)
 })
 
@@ -915,6 +954,16 @@ function checkAuth(req, res){
         if(!found){
             res.send({"error": "Invalid authtoken", "authed": false})
             return false
+        }
+    }
+}
+
+function getUser(authtoken){
+    var authdata = fs.readFileSync(path.join(__dirname, 'auth.json'), 'utf-8');
+    authdata = JSON.parse(authdata);
+    for(var x = 0; x < authdata["users"].length; x++){
+        if(authdata["users"][x]["authtoken"] == authtoken){
+            return authdata["users"][x]
         }
     }
 }

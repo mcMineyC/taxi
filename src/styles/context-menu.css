@@ -7,7 +7,7 @@
     position: absolute;
     margin: 0px;
     width: 200px;
-    z-index: 99999999;
+    z-index: 999999999999999;
     display: none;
 }
 .context-menu{

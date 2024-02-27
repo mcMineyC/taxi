@@ -14,19 +14,21 @@
 }
 
 .playercontrols-box{
-    align-self: center;
-    width: 100%;
+    /* align-self: center; */
+    width: calc(100% - 32px);
+    margin-right: 16px;
+    margin-left: 16px;
 }
 
 .playercontrols-box > div{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
     /* justify-content: none; */
     /* width: calc(100%-16px); */
-    padding-left: 8px;
-    padding-right: 8px;
-    overflow: auto;
+    /* padding-left: 8px; */
+    /* padding-right: 8px; */
+    /* overflow: auto; */
 }
 
 .playercontrols-spacer{
@@ -40,24 +42,47 @@ div[progress="1"] > md-linear-progress{
     width: 100%;
 }
 
-div[progress="0"] > md-filled-button{
-    display: flex;
-    align-items: center;
+.buttons > md-filled-button{
     margin-left: 4px;
     margin-right: 4px;
 }
 
-div[progress="0"] > md-icon-button{
+.buttons >  md-icon-button{
     margin-left: 4px;
     margin-right: 4px;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .togglebutton-activated {
     color: var(--md-sys-color-primary);
 }
 
+ div[progress="0"]{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 auto;
+}
+
 md-icon{
     font-size: 24px;
     width: 24px;
     height: 24px;
+}
+
+.playercontrols-box-start{
+    display: flex;
+    flex-direction: column;
+    justify-self: left;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* max-width: 33.333333%; */
 }

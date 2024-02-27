@@ -7,7 +7,7 @@ import urllib.parse
 
 
 def strip(a):
-    return urllib.parse.quote(normalize("NFKD", a.lower().replace(" ", "_").replace("(", "").replace(")", "").replace("/", "").replace('"', "_").replace("\'", "_").replace("&", "-").replace(":", "-").replace(";", "-").replace(",", "-").replace("!", "-").replace("?", "-").replace("`", "-")).encode("ASCII", "ignore").decode())
+    return urllib.parse.quote(normalize("NFKD", a.lower().replace(" ", "_").replace("(", "").replace(")", "").replace("/", "").replace('"', "_").replace("\'", "_").replace("&", "-").replace(":", "-").replace(";", "-").replace(",", "-").replace("!", "-").replace("?", "-").replace("`", "-").replace("*", "-").replace("+", "-").replace("=", "-").replace("[", "-").replace("]", "-").replace("{", "-").replace("}", "-").replace("(", "-").replace(")", "-").replace("<", "-").replace(">", "-").replace("|", "-")).encode("ASCII", "ignore").decode())
 
 
 
@@ -61,12 +61,12 @@ for file in os.listdir(directory_path):
                     "albums": {}
                 }
             if albId not in tag_info[artist]["albums"]:
-                tag_info[artist]["albums"][albId] = {
+                tag_info[artist]["albums"][strip(artist) + "_" + albId] = {
                     "displayName": album,
                     "songs": []
                 }
-            tag_info[artist]["albums"][albId]["songs"].append({
-                "id": strip(title),
+            tag_info[artist]["albums"][strip(artist) + "_" + albId]["songs"].append({
+                "id": strip(artist) + "_" + strip(albId) + "_" + strip(title),
                 "title": title,
                 "file": os.path.join(sorted_directory, strip(file))
             })
