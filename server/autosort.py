@@ -4,11 +4,13 @@ import json
 import shutil
 from unicodedata import normalize
 import urllib.parse
+import hashlib
 
-
+"""
 def strip(a):
     return urllib.parse.quote(normalize("NFKD", a.lower().replace(" ", "_").replace("(", "").replace(")", "").replace("/", "").replace('"', "_").replace("\'", "_").replace("&", "-").replace(":", "-").replace(";", "-").replace(",", "-").replace("!", "-").replace("?", "-").replace("`", "-").replace("*", "-").replace("+", "-").replace("=", "-").replace("[", "-").replace("]", "-").replace("{", "-").replace("}", "-").replace("(", "-").replace(")", "-").replace("<", "-").replace(">", "-").replace("|", "-")).encode("ASCII", "ignore").decode())
-
+"""
+    
 
 
 # Replace 'directory_path' with the path to the directory containing the mp3 files
@@ -44,31 +46,33 @@ for file in os.listdir(directory_path):
             artist = audiofile.tag.artist.split("/")[0]
             album = audiofile.tag.album
             title = audiofile.tag.title
-            artistId = strip(artist)
-            albId = strip(album)
             
+            artid = hashlib.md5(artist.encode()).hexdigest()
+            albid = hashlib.md5(album.encode()).hexdigest()
+            sid = hashlib.md5(title.encode()).hexdigest()
+
             # Create the sorted directory structure
-            sorted_directory = os.path.join('music', 'sorted', artistId, albId)
+            sorted_directory = os.path.join('music', 'sorted', artid, albid)
             os.makedirs(sorted_directory, exist_ok=True)
             
             # Move the files to the sorted directory
-            shutil.move(os.path.join(directory_path, file), os.path.join(sorted_directory, strip(file)))
+            shutil.move(os.path.join(directory_path, file), os.path.join(sorted_directory, file))
             # Update the tag_info dictionary
-            if artist not in tag_info:
-                tag_info[artist] = {
-                    "id": artist.lower().replace(" ", "_"),
+            if artid not in tag_info:
+                tag_info[artid] = {
+                    "id": artid,
                     "displayName": artist,
                     "albums": {}
                 }
-            if albId not in tag_info[artist]["albums"]:
-                tag_info[artist]["albums"][strip(artist) + "_" + albId] = {
+            if albid not in tag_info[artid]["albums"]:
+                tag_info[artid]["albums"][artid + "_" + albid] = {
                     "displayName": album,
                     "songs": []
                 }
-            tag_info[artist]["albums"][strip(artist) + "_" + albId]["songs"].append({
-                "id": strip(artist) + "_" + strip(albId) + "_" + strip(title),
+            tag_info[artid]["albums"][artid + "_" + albid]["songs"].append({
+                "id": artid + "_" + albid + "_" + sid,
                 "title": title,
-                "file": os.path.join(sorted_directory, strip(file))
+                "file": os.path.join(sorted_directory, file)
             })
 
 
