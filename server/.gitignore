@@ -15,3 +15,5 @@ images/songs/*
 node_modules
 playlists/*
 playlists.json
+unsorted
+unsorted_backup
