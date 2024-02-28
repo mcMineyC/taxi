@@ -314,35 +314,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
         res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
         return
     }
-    //Attempt to extract image from metadata
-    if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
-        console.log("File doesn't exist, creating...");
-        var v = await new Promise((resolve, reject) => {
-            new jsmt.Reader(path.join(__dirname, file))
-              .read({
-                onSuccess: (tag) => {
-                  console.log('Success!');
-                  resolve(tag);
-                },
-                onError: (error) => {
-                  console.log('Error');
-                  reject(error);
-                }
-            });
-        })
-        var resu = v
-        if(typeof(resu.tags.picture) == "undefined"){
-            console.log("No picture in metadata for "+file)
-            // return
-        }
-        const { data, format } = resu.tags.picture;
-        let base64String = "";
-        for (var i = 0; i < data.length; i++) {
-            base64String += String.fromCharCode(data[i]);
-        }
-        fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
-        console.log("Done!")
-    }
+    await extractSongImage(file, req.params.id);
     console.log("Continuing...")
     //Attempt to infer image based on other songs in album
     if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
@@ -872,7 +844,37 @@ app.listen(port, () => {
 // yet because modules and requiring
 // is annoying so I probably
 // won't move them anytime soon
-
+async function extractSongImage(file, id){
+    if(!(fs.existsSync(path.join(__dirname, "images", "songs", id+".png")))){
+        console.log("File doesn't exist, creating...");
+        var v = await new Promise((resolve, reject) => {
+            new jsmt.Reader(path.join(__dirname, file))
+              .read({
+                onSuccess: (tag) => {
+                  console.log('Success!');
+                  resolve(tag);
+                },
+                onError: (error) => {
+                  console.log('Error');
+                  reject(error);
+                }
+            });
+        })
+        var resu = v
+        if(typeof(resu.tags.picture) == "undefined"){
+            console.log("No picture in metadata for "+file)
+            // return
+        }else{
+            const { data, format } = resu.tags.picture;
+            let base64String = "";
+            for (var i = 0; i < data.length; i++) {
+                base64String += String.fromCharCode(data[i]);
+            }
+            fs.writeFileSync(path.join(__dirname, "images", "songs", id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+            console.log("Done!")
+        }
+    }
+}
 
 async function updateSongs(once, all){
     //This is only needed if the file changed
