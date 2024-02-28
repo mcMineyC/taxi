@@ -59,14 +59,23 @@ if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var songs = undefined
     if(fs.existsSync(path.join(__dirname, "songs.json"))){
         songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
-    }
-    if(songs != undefined){
         songs = JSON.parse(songs);
     }
     var albums_arr = [];
     updateSongs(undefined,all,songs).then(() => {
         console.log("Updated songs.json")
     })
+}else if(fs.existsSync(path.join(__dirname, "songs.json"))){
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    songs = JSON.parse(songs);
+    if(songs["last_updated"] != hash5(JSON.stringify(all))){
+        var albums_arr = [];
+        updateSongs(undefined,all,songs).then(() => {
+            console.log("Updated songs.json")
+        })
+    }
 }
 if(!fs.existsSync(path.join(__dirname, 'albums.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -903,10 +912,13 @@ async function updateSongs(once, all, songs){
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
                         var vv = {}
-                        for(var y = 0; y < songs.length; y++){
-                            if(songs[y]["id"] == v["id"]){
-                                vv = songs[y]
-                                break;
+                        if(songs){
+                            console.log("Have songs data")
+                            for(var y = 0; y < songs.length; y++){
+                                if(songs[y]["id"] == v["id"]){
+                                    vv = songs[y]
+                                    break;
+                                }
                             }
                         }
                         var z = ""
