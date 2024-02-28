@@ -896,7 +896,7 @@ async function updateSongs(once, all){
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
                         var z = ""
-                        if(typeof(v["duration"]) == "undefined"){
+                        if(v["duration"] == undefined){
                             console.log("Probing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
                         var dur = z["format"]["duration"]   
