@@ -333,7 +333,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
         var resu = v
         if(typeof(resu.tags.picture) == "undefined"){
             console.log("No picture in metadata for "+file)
-            return
+            // return
         }
         const { data, format } = resu.tags.picture;
         let base64String = "";
