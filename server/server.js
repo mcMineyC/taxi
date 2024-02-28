@@ -9,6 +9,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
+const  jsmt_read = util.promisify(jsmt.read);
 
 
 const app = express();
@@ -56,7 +57,7 @@ if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
     var albums_arr = [];
-    updateSongs().then(() => {
+    updateSongs(undefined,all).then(() => {
         console.log("Updated songs.json")
     })
 }
@@ -315,24 +316,31 @@ app.get('/info/songs/:id/image', async function (req, res) {
     //Attempt to extract image from metadata
     if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
         console.log("File doesn't exist, creating...");
-        await jsmt.read(fs.readFileSync(path.join(__dirname, file)), {
-            onSuccess: function(resu) {
-                if(typeof(resu.tags.picture) == "undefined"){
-                    console.log("No picture in metadata for "+file)
-                    return
+        var v = await new Promise((resolve, reject) => {
+            new jsmt.Reader(path.join(__dirname, file))
+              .read({
+                onSuccess: (tag) => {
+                  console.log('Success!');
+                  resolve(tag);
+                },
+                onError: (error) => {
+                  console.log('Error');
+                  reject(error);
                 }
-                const { data, format } = resu.tags.picture;
-                let base64String = "";
-                for (var i = 0; i < data.length; i++) {
-                    base64String += String.fromCharCode(data[i]);
-                }
-                fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
-            },
-            onError: function(err) {
-                console.log("Error on "+req.params.id+".")
-                console.log(err);
-            }
+            });
         })
+        var resu = v
+        if(typeof(resu.tags.picture) == "undefined"){
+            console.log("No picture in metadata for "+file)
+            return
+        }
+        const { data, format } = resu.tags.picture;
+        let base64String = "";
+        for (var i = 0; i < data.length; i++) {
+            base64String += String.fromCharCode(data[i]);
+        }
+        fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+        console.log("Done!")
     }
     //Attempt to infer image based on other songs in album
     if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
@@ -354,24 +362,31 @@ app.get('/info/songs/:id/image', async function (req, res) {
 
                 //Attempt to extract image from metadata
                 if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
-                    await jsmt.read(fs.readFileSync(path.join(__dirname, file)), {
-                        onSuccess: function(resu) {
-                            if(typeof(resu.tags.picture) == "undefined"){
-                                console.log("No picture in metadata for "+file)
-                                return
+                    var v = await new Promise((resolve, reject) => {
+                        new jsmt.Reader(path.join(__dirname, file))
+                        .read({
+                            onSuccess: (tag) => {
+                                console.log('Success!');
+                                resolve(tag);
+                            },
+                            onError: (error) => {
+                                console.log('Error');
+                                reject(error);
                             }
-                            const { data, format } = resu.tags.picture;
-                            let base64String = "";
-                            for (var i = 0; i < data.length; i++) {
-                                base64String += String.fromCharCode(data[i]);
-                            }
-                            fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
-                        },
-                        onError: function(err) {
-                            console.log("Error on "+req.params.id+".")
-                            console.log(err);
-                        }
+                        });
                     })
+                    var resu = v
+                    if(typeof(resu.tags.picture) == "undefined"){
+                        console.log("No picture in metadata for "+file)
+                        return
+                    }
+                    const { data, format } = resu.tags.picture;
+                    let base64String = "";
+                    for (var i = 0; i < data.length; i++) {
+                        base64String += String.fromCharCode(data[i]);
+                    }
+                    fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                    console.log("Done!")
                 }
             }
         }
@@ -386,7 +401,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
     }
 });
 
-app.get('/info/albums/:id/image', function (req, res) {
+app.get('/info/albums/:id/image', async function (req, res) {
     if(!(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png")))){
         console.log("File still doesn't exist, extracting...");
         var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
@@ -401,26 +416,34 @@ app.get('/info/albums/:id/image', function (req, res) {
                 file = data["songs"][x]["file"];
                 var success = false
                 //Attempt to extract image from metadata
+                
+                //Attempt to extract image from metadata
                 if(!(fs.existsSync(path.join(__dirname, "images", "albums", req.params.id+".png")))){
-                    jsmt.read(fs.readFileSync(path.join(__dirname, file)), {
-                        onSuccess: function(resu) {
-                            if(typeof(resu.tags.picture) == "undefined"){
-                                console.log("No picture in metadata for "+file)
-                                return
+                    var v = await new Promise((resolve, reject) => {
+                        new jsmt.Reader(path.join(__dirname, file))
+                        .read({
+                            onSuccess: (tag) => {
+                                console.log('Success!');
+                                resolve(tag);
+                            },
+                            onError: (error) => {
+                                console.log('Error');
+                                reject(error);
                             }
-                            const { data, format } = resu.tags.picture;
-                            let base64String = "";
-                            for (var i = 0; i < data.length; i++) {
-                                base64String += String.fromCharCode(data[i]);
-                            }
-                            fs.writeFileSync(path.join(__dirname, "images", "albums", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
-                            success = true
-                        },
-                        onError: function(err) {
-                            console.log("Error on "+req.params.id+".")
-                            console.log(err);
-                        }
+                        });
                     })
+                    var resu = v
+                    if(typeof(resu.tags.picture) == "undefined"){
+                        console.log("No picture in metadata for "+file)
+                        return
+                    }
+                    const { data, format } = resu.tags.picture;
+                    let base64String = "";
+                    for (var i = 0; i < data.length; i++) {
+                        base64String += String.fromCharCode(data[i]);
+                    }
+                    fs.writeFileSync(path.join(__dirname, "images", "albums", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                    console.log("Done!")
                 }
                 if (success){
                     console.log("Success extacting "+req.params.id+".")
@@ -849,8 +872,10 @@ app.listen(port, () => {
 // won't move them anytime soon
 
 
-async function updateSongs(once){
+async function updateSongs(once, all){
     //This is only needed if the file changed
+    console.log("Checking for updates")
+    console.log(JSON.stringify(all,null,4))
     console.log("Updating")
     for(var x = 0; x < (all["entries"].length); x++){
         artist = all["entries"][x]
