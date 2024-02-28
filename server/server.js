@@ -859,7 +859,7 @@ async function updateSongs(once){
         for (var album in artist["albums"]) {
             var albumid = album;
             var album = artist["albums"][album];
-            console.log("\t" + album["displayName"]); //album
+            // console.log("\t" + album["displayName"]); //album
             for(var song in album["songs"]) {
                 var v = album["songs"][song];
                 console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
@@ -868,9 +868,11 @@ async function updateSongs(once){
                     try{
                         var z = ""
                         if(typeof(v["duration"]) == "undefined"){
+                            console.log("Probing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
                         var dur = z["format"]["duration"]   
                         }else{
+                            console.log("Using duration: "+v["duration"])
                             var dur = v["duration"]
                         }
                         
