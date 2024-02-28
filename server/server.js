@@ -56,8 +56,12 @@ if(!fs.existsSync(path.join(__dirname, 'music'))){
 if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
+    var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    if(songs != undefined){
+        songs = JSON.parse(songs);
+    }
     var albums_arr = [];
-    updateSongs(undefined,all).then(() => {
+    updateSongs(undefined,all,songs).then(() => {
         console.log("Updated songs.json")
     })
 }
@@ -876,7 +880,7 @@ async function extractSongImage(file, id){
     }
 }
 
-async function updateSongs(once, all){
+async function updateSongs(once, all, songs){
     //This is only needed if the file changed
     console.log("Checking for updates")
     console.log(JSON.stringify(all,null,4))
@@ -895,14 +899,22 @@ async function updateSongs(once, all){
                 
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
+                        var vv = {}
+                        for(var y = 0; y < songs.length; y++){
+                            if(songs[y]["id"] == v["id"]){
+                                vv = songs[y]
+                                break;
+                            }
+                        }
                         var z = ""
-                        if(v["duration"] == undefined){
+                        var dur = ""
+                        if(vv && vv["duration"] == undefined){
                             console.log("Probing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
-                        var dur = z["format"]["duration"]   
+                            dur = z["format"]["duration"]   
                         }else{
-                            console.log("Using duration: "+v["duration"])
-                            var dur = v["duration"]
+                            console.log("Using duration: "+vv["duration"])
+                            dur = (vv["duration"] == undefined) ? 0 : vv["duration"]
                         }
                         
                         var warr = {
