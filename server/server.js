@@ -859,7 +859,7 @@ async function updateSongs(once){
         for (var album in artist["albums"]) {
             var albumid = album;
             var album = artist["albums"][album];
-            // console.log("\t" + album["displayName"]); //album
+            console.log("\t" + album["displayName"]); //album
             for(var song in album["songs"]) {
                 var v = album["songs"][song];
                 console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
