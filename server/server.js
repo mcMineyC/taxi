@@ -866,8 +866,13 @@ async function updateSongs(once){
                 
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
-                        var z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
-                        var dur = z["format"]["duration"]
+                        var z = ""
+                        if(typeof(v["duration"]) == "undefined"){
+                            z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
+                        var dur = z["format"]["duration"]   
+                        }else{
+                            var dur = v["duration"]
+                        }
                         
                         var warr = {
                             "id": v["id"],
