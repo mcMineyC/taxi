@@ -65,12 +65,14 @@ if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     updateSongs(undefined,all,songs).then(() => {
         console.log("Updated songs.json")
     })
-}else if(fs.existsSync(path.join(__dirname, "songs.json"))){
+}else{
+    console.log("Songs.json exists")
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
     var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     songs = JSON.parse(songs);
     if(songs["last_updated"] != hash5(JSON.stringify(all))){
+        console.log("Updating songs")
         var albums_arr = [];
         updateSongs(undefined,all,songs).then(() => {
             console.log("Updated songs.json")
@@ -911,9 +913,8 @@ async function updateSongs(once, all, songs){
                 
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
-                        var vv = {}
+                        var vv = undefined
                         if(songs){
-                            console.log("Have songs data")
                             for(var y = 0; y < songs.length; y++){
                                 if(songs[y]["id"] == v["id"]){
                                     vv = songs[y]
@@ -923,12 +924,13 @@ async function updateSongs(once, all, songs){
                         }
                         var z = ""
                         var dur = ""
-                        if(vv && vv["duration"] == undefined){
-                            console.log("Probing: "+v["file"])
+
+                        if(vv == undefined || vv["duration"] == undefined){
+                            console.log("\t\t\tProbing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
                             dur = z["format"]["duration"]   
                         }else{
-                            console.log("Using duration: "+vv["duration"])
+                            console.log("\t\t\tUsing duration: "+vv["duration"])
                             dur = (vv["duration"] == undefined) ? 0 : vv["duration"]
                         }
                         
