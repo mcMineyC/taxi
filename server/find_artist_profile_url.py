@@ -17,6 +17,15 @@ r = sp.search(q="artist:"+q, type="artist")
 items = r["artists"]["items"]
 if len(items) > 0:
     artist = items[0]
+    if(artist["images"] == []):
+        s = {
+            "success": False,
+            "name": q,
+            "url": "http://localhost:3000/placeholder",
+            "q": q
+        }
+        print(json.dumps(s))
+        exit(0)
     s = {
         "success": True,
         "name": artist["name"],
