@@ -56,7 +56,10 @@ if(!fs.existsSync(path.join(__dirname, 'music'))){
 if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
-    var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    var songs = undefined
+    if(fs.existsSync(path.join(__dirname, "songs.json"))){
+        songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    }
     if(songs != undefined){
         songs = JSON.parse(songs);
     }
