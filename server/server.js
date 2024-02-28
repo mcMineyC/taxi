@@ -309,6 +309,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
         }
     }
     if(file == ""){
+        console.log("No file associated with "+req.params.id)
         res.sendFile(path.join(__dirname, "images", "placeholder.jpg"));
         return
     }
@@ -327,6 +328,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
                     base64String += String.fromCharCode(data[i]);
                 }
                 fs.writeFileSync(path.join(__dirname, "images", "songs", req.params.id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
+                console.log("Wrote file for "+req.params.id)
             },
             onError: function(err) {
                 console.log("Error on "+req.params.id+".")
@@ -334,6 +336,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
             }
         })
     }
+    console.log("Continuing...")
     //Attempt to infer image based on other songs in album
     if(!(fs.existsSync(path.join(__dirname, "images", "songs", req.params.id+".png")))){
         console.log("File still doesn't exist, trying to infer based on other songs in album...");
