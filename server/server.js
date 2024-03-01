@@ -56,6 +56,7 @@ if(!fs.existsSync(path.join(__dirname, 'music'))){
 if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
     all = JSON.parse(all);
+    fs.writeFileSync(path.join(__dirname, 'songs.json'), JSON.stringify({"last_updated": hash5(JSON.stringify(all))},null,4));
     var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     if(songs != undefined){
         songs = JSON.parse(songs);
@@ -64,6 +65,18 @@ if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     updateSongs(undefined,all,songs).then(() => {
         console.log("Updated songs.json")
     })
+}else{
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    if(songs != undefined){
+        songs = JSON.parse(songs);
+    }
+    if(songs["last_updated"] != hash5(JSON.stringify(all))){
+        updateSongs(undefined,all,songs).then(() => {
+            console.log("Updated songs.json")
+        })
+    }
 }
 if(!fs.existsSync(path.join(__dirname, 'albums.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -295,7 +308,7 @@ app.post('/info/songs', function (req, res) {
 
     //This is only needed if the file changed
     if((data["last_updated"] != hash5(JSON.stringify(all)))){
-        updateSongs()
+        updateSongs({},all,data)
     }
     var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     data = JSON.parse(data);
@@ -885,6 +898,7 @@ async function updateSongs(once, all, songs){
     console.log("Checking for updates")
     console.log(JSON.stringify(all,null,4))
     console.log("Updating")
+    var albums_arr = [];
     for(var x = 0; x < (all["entries"].length); x++){
         artist = all["entries"][x]
         console.log(artist["displayName"]); //artist
@@ -900,20 +914,26 @@ async function updateSongs(once, all, songs){
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
                         var vv = {}
-                        for(var y = 0; y < songs.length; y++){
-                            if(songs[y]["id"] == v["id"]){
-                                vv = songs[y]
-                                break;
+                        var found = false
+                        var songer = songs["songs"]
+                        if(songer != undefined){
+                            for(var y = 0; y < songer.length; y++){
+                                if(songer[y]["id"] == v["id"]){
+                                    vv = songer[y]
+                                    found = true;
+                                    break;
+                                }
+                                // console.log({"id": v["id"], "iidd": songer[y]["id"]})
                             }
                         }
                         var z = ""
                         var dur = ""
-                        if(vv && vv["duration"] == undefined){
-                            console.log("Probing: "+v["file"])
+                        if(!found && vv["duration"] == undefined){
+                            console.log("\t\t\tProbing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
                             dur = z["format"]["duration"]   
                         }else{
-                            console.log("Using duration: "+vv["duration"])
+                            console.log("\t\t\tUsing duration: "+vv["duration"])
                             dur = (vv["duration"] == undefined) ? 0 : vv["duration"]
                         }
                         
@@ -944,31 +964,22 @@ async function updateSongs(once, all, songs){
             };
         }
     }
-    if(once){
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(albums_data), function (err) {
-            if (err) {
-                console.log(err);
-            }
-        })
-    }else{
-        console.log("Writing file...")
-        songs_data = {
-            "last_updated": hash5(JSON.stringify(all)),
-            "songs": albums_arr
-        }
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data,null,4), function (err) {
-            if (err) {
-                console.log(err);
-            }else{
-                console.log("File written")
-            }
-        })
-        return
+    console.log("Writing file...")
+    songs_data = {
+        "last_updated": hash5(JSON.stringify(all)),
+        "songs": albums_arr
     }
+    fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data,null,4), function (err) {
+        if (err) {
+            console.log(err);
+        }else{
+            console.log("File written")
+        }
+    })
 }
 
 function hash5(string){
-    return crypto.createHash('md5').update(string).digest('hex');
+    return crypto.createHash('sha256').update(string).digest('hex');
 }
 
 async function withTimeout(promise, timeoutMs) {

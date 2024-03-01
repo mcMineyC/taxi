@@ -16,7 +16,7 @@ class playercontrols_bottom extends HTMLElement {
                         </div>
                     </div>
                     <div class="buttons child-center">
-                        <m3-toggle-button id="playercontrols-bottom-shuffle" propId="shuffled" icon="shuffle" enabled="false" onclick="this.toggle();handleShuffleClick(this)"></m3-toggle-button>
+                        <m3-toggle-button id="playercontrols-bottom-shuffle" propId="shuffled" icon="shuffle" enabled="${window.localQueue.shuffled ? "true" : "false"}" onclick="this.toggle();handleShuffleClick(this)"></m3-toggle-button>
                         <md-filled-button id="playercontrols-bottom-previous" onclick="handlePrev()">
                             <md-icon>skip_previous</md-icon>
                         </md-filled-button>

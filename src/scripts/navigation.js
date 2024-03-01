@@ -145,27 +145,46 @@ class FetchedData {
             var data = JSON.parse(JSON.stringify(response.data));
             if(data["authorized"] == false || data["authed"] == false){
                 window.location = window.authSettings.getAuthPageUrl()
+                return
             }
             t.artists = data["artists"];
+            t.artists.sort(function(a, b){
+                if(a.displayName < b.displayName) return -1
+                if(a.displayName > b.displayName) return 1
+                return 0
+            })
             axios.post(window.prefs.getBackendUrl()+'/info/albums', authParams)
             .then(function (response) {
                 var data = JSON.parse(JSON.stringify(response.data));
                 if(data["authorized"] == false){
                     window.location = window.authSettings.getAuthPageUrl()
+                    return
                 }
                 t.albums = data["albums"];
+                t.albums.sort(function(a, b){
+                    if(a.displayName < b.displayName) return -1
+                    if(a.displayName > b.displayName) return 1
+                    return 0
+                })
                 axios.post(window.prefs.getBackendUrl()+'/info/songs', authParams)
                 .then(function (response) {
                     var data = JSON.parse(JSON.stringify(response.data));
                     if(data["authorized"] == false){
                         window.location = window.authSettings.getAuthPageUrl()
+                        return
                     }
                     t.songs = data["songs"];
+                    t.songs.sort(function(a, b){
+                        if(a.displayName < b.displayName) return -1
+                        if(a.displayName > b.displayName) return 1
+                        return 0
+                    })
                     axios.post(window.prefs.getBackendUrl()+'/info/all', authParams)
                     .then(function (response) {
                         var data = JSON.parse(JSON.stringify(response.data));
                         if(data["authorized"] == false){
                             window.location = window.authSettings.getAuthPageUrl()
+                            return
                         }
                         console.log(data)
                         t.all = data["entries"];
@@ -412,13 +431,13 @@ async function playlistClick(){
         "location": "playlists",
         "id": window.navigationInfo.get()["id"],
     })
-    getPlaylists()
+    runAsync(getPlaylists)
 }
 
 async function playlistClicked(id){
     console.log("Clicked on playlist: " + id);
     document.getElementById("content").innerHTML = "";
-    getSongsByPlaylist(id);
+    runAsync(getSongsByPlaylist(id));
     window.navigationInfo.addHist("playlistsID")
     window.navigationInfo.set({
         "prev": window.navigationInfo.getHist(),
@@ -507,4 +526,4 @@ async function back(){
             break;
     }
     window.navigationInfo.prevPop()
-}
+}  

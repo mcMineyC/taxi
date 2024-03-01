@@ -1,19 +1,28 @@
 class PlayerQueue {
     constructor(){
-        this.queue = []
+        if(localStorage.getItem("stateLastShuffled") == null){
+            console.log("Setting stateLastShuffled to true")
+            window.localStorage.setItem("stateLastShuffled", true)
+        }
+        if(localStorage.getItem("stateLastLooped") == null){
+            window.localStorage.setItem("stateLastLooped", true)
+        }
+        this.shuffled = (localStorage.getItem("stateLastShuffled") == "true")
+        this.looped = (localStorage.getItem("stateLastLooped") == "true")
         this.pos = 0
-        this.playedPoses = []
-        this.shuffled = true
-        this.looped = true
-        if(localStorage.getItem("stateLastShuffled") != null){
-            this.shuffled = (localStorage.getItem("stateLastShuffled") == "true")
-        }
-        if(localStorage.getItem("stateLastLooped") != null){
-            this.looped = (localStorage.getItem("stateLastLooped") == "true")
-        }
+        this.queue = []
+        this.unshuffled = []
+        this.shuffleLock = false
     }
-    set(queue){
-        this.queue = queue
+    set(queuer){
+        console.log({"shuffled": this.shuffled})
+        if(this.shuffled == true){
+            console.log("Setting shuffled queue")
+            this.queue = this.shuffist(queuer)
+        }else{
+            console.log("Setting unshuffled queue")
+            this.queue = queuer
+        }
     }
     get(){
         return this.queue
@@ -23,7 +32,11 @@ class PlayerQueue {
         showSnackbar("Added " + song + " to queue")
     }
     addList(list){
-        this.queue = this.queue.concat(list)
+        if(this.shuffled == true){
+            this.queue = this.queue.concat(this.shuffist(list))
+        }else{
+            this.queue = this.queue.concat(list)
+        }
         showSnackbar("Added " + list.length + " songs to queue")
     }
     remove(song){
@@ -44,7 +57,6 @@ class PlayerQueue {
     }
     clear(){
         this.queue = []
-        this.playedPoses = []
     }
     setPos(pos){
         if(this.pos+pos > this.queue.length-1){
@@ -53,7 +65,7 @@ class PlayerQueue {
             if(this.looped){
                 console.log("Looped")
                 this.pos = 0
-                this.playedPoses = []
+                this.queue = this.shuffist(this.queue)
                 return true
             }else{
                 console.log("Not looping")
@@ -76,69 +88,40 @@ class PlayerQueue {
         if(this.queue.length == 0){
             return
         }
-        var poses = 0
-        console.log(this.playedPoses)
-        if(this.queue.length == this.playedPoses.length){
-            poses = 0
-        }else{
-            if(this.shuffled && this.queue.length != this.playedPoses.length){
-                console.log("Shuffling, not all songs played")
-                var availPoses = []
-                for(var x = 0; x < this.queue.length; x++){
-                    if(!this.playedPoses.includes(x)){
-                        availPoses.push(this.queue[x])
-                    }else{
-                        availPoses.push("NULL")
-                    }
-                }
-                console.log(availPoses)
-                poses = Math.floor(Math.random() * availPoses.length)
-                // console.log("Choosing random song "+poses)
-                console.log("Choosing song: "+this.queue[poses])
-                // console.log(availPoses[poses] == "NULL")
-                // console.log(!availPoses.includes(this.queue[poses]))
-                while(!availPoses.includes(this.queue[poses]) || availPoses[poses] == "NULL"){
-                    poses = Math.floor(Math.random() * availPoses.length)
-                    console.log("ALready chosen, choosing a new one")
-                    console.log("Choosing random song "+poses)
-                }
-            }else if(this.shuffled && this.queue.length == this.playedPoses.length){
-                console.log("Shuffling, all songs played")
-                this.playedPoses = []
-                var availPoses = []
-                for(var x = 0; x < this.queue.length; x++){
-                    if(!this.playedPoses.includes(x)){
-                        availPoses.push(this.queue[x])
-                    }else{
-                        this.playedPoses.push("NULL")
-                    }
-                }
-                console.log(availPoses)
-                poses = Math.floor(Math.random() * availPoses.length)
-                // console.log("Choosing random song "+poses)
-                console.log("Choosing song: "+this.queue[poses])
-                // console.log(availPoses[poses] == "NULL")
-                // console.log(!availPoses.includes(this.queue[poses]))
-                while(!availPoses.includes(this.queue[poses]) || availPoses[poses] == "NULL"){
-                    poses = Math.floor(Math.random() * availPoses.length)
-                    console.log("Already chosen, choosing a new one")
-                    console.log("Choosing random song "+poses)
-                }
-            }else{
-                poses = this.pos
-            }
-        }
-        this.pos = poses
-        var song = this.queue[poses]
+        var song = this.queue[this.pos]
         playSong(song)
-        this.playedPoses.push(poses)
-        console.log(this.playedPoses)
         this.currentSong = song
         this.changeInfo()
     }
-    shuffle(val){
-        localStorage.setItem("stateLastShuffled", val)
+    async shuffle(val){
+        if(this.shuffleLock == true){
+            return
+        }
+        this.shuffleLock = true
+        window.localStorage.setItem("stateLastShuffled", (val==true))
         this.shuffled = val
+        console.log({"valCheck": window.localStorage.getItem("stateLastShuffled"), "shuffled": this.shuffled, "shuffledCheck": (this.shuffled == true), "shuffledCheck2": (this.shuffled == val)})
+        if(val == true){
+            this.unshuffled = []
+            for(var i = 0; i < this.queue.length; i++){
+                this.unshuffled.push(this.queue[i])
+            }
+            this.queue = this.shuffist(this.queue)
+            console.log("Shuffling, "+(this.unshuffled==this.queue))
+        }else{
+            console.log("Unshuffling, "+(this.unshuffled==this.queue))
+            this.queue = []
+            for(var i = 0; i < this.unshuffled.length; i++){
+                this.queue.push(this.unshuffled[i])
+            }
+        }
+
+        if(window.navigationInfo.get()["location"] == "queue"){
+            reset()
+            getQueue()
+        }
+
+        this.shuffleLock = false
     }
     loop(val){
         localStorage.setItem("stateLastLooped", val)
@@ -169,6 +152,23 @@ class PlayerQueue {
         title.innerHTML = cSong["displayName"]
         album.innerHTML = window.fetchedData.getAlbum(cSong["albumId"])["displayName"]
         artist.innerHTML = window.fetchedData.getArtist(cSong["artistId"])["displayName"]
+    }
+    shuffist(array) {
+        let currentIndex = array.length,  randomIndex;
+      
+        // While there remain elements to shuffle.
+        while (currentIndex > 0) {
+      
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      
+        return array;
     }
 }
 
@@ -228,7 +228,7 @@ window.onscroll = function(ev) {
 
 function handleShuffleClick(th){
     window.localQueue.shuffle(th.getAttribute("enabled") == "true")
-    console.log("Shuffling: "+window.localQueue.shuffled)
+    // console.log("Shuffling: "+window.localQueue.shuffled)
     /*
     if(window.localQueue.shuffled){
         showSnackbar("Shuffling")

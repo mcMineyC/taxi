@@ -47,9 +47,9 @@ for file in os.listdir(directory_path):
             album = audiofile.tag.album
             title = audiofile.tag.title
             
-            artid = hashlib.md5(artist.encode()).hexdigest()
-            albid = hashlib.md5(album.encode()).hexdigest()
-            sid = hashlib.md5(title.encode()).hexdigest()
+            artid = hashlib.sha256(artist.encode()).hexdigest()
+            albid = hashlib.sha256(album.encode()).hexdigest()
+            sid = hashlib.sha256(title.encode()).hexdigest()
 
             # Create the sorted directory structure
             sorted_directory = os.path.join('music', 'sorted', artid, albid)
