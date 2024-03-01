@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npx webpack && surge dist --domain modern-drain.surge.sh"
+    "publish": "npx webpack && surge dist --domain taxi-player.surge.sh"
   },
   "author": "",
   "license": "ISC",
