@@ -65,6 +65,18 @@ if(!fs.existsSync(path.join(__dirname, 'songs.json'))){
     updateSongs(undefined,all,songs).then(() => {
         console.log("Updated songs.json")
     })
+}else{
+    var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+    var songs = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
+    if(songs != undefined){
+        songs = JSON.parse(songs);
+    }
+    if(songs["last_updated"] != hash5(JSON.stringify(all))){
+        updateSongs(undefined,all,songs).then(() => {
+            console.log("Updated songs.json")
+        })
+    }
 }
 if(!fs.existsSync(path.join(__dirname, 'albums.json'))){
     var all = fs.readFileSync(path.join(__dirname, 'all.json'), 'utf-8');
@@ -281,7 +293,7 @@ app.post('/info/artists', function (req, res) {
     res.send(data);
 });
 
-app.post('/info/songs', function (req, res) {
+app.post('/info/songs', async function (req, res) {
     if(checkAuth(req, res) == false){
         return
     }
@@ -296,7 +308,7 @@ app.post('/info/songs', function (req, res) {
 
     //This is only needed if the file changed
     if((data["last_updated"] != hash5(JSON.stringify(all)))){
-        updateSongs({},all,data)
+        await updateSongs({},all,data)
     }
     var data = fs.readFileSync(path.join(__dirname, 'songs.json'), 'utf-8');
     data = JSON.parse(data);
@@ -541,7 +553,7 @@ app.get('/info/songs/:id/audio', function (req, res) {
     }
 })
 
-app.post('/info/albums/by/artist/:id', function(req, res){
+app.post('/info/albums/by/artist/:id', async function(req, res){
     if(checkAuth(req, res) == false){
         return
     }
@@ -576,7 +588,7 @@ app.post('/info/albums/by/artist/:id', function(req, res){
         albums_data["albums"] = albums_arr
         console.log("\n\n")
         console.log(albums_data)
-        fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
+        await fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
             if (err) {
                 console.log(err);
             }
@@ -592,7 +604,7 @@ app.post('/info/albums/by/artist/:id', function(req, res){
     res.send(albums_arr);
 })
 
-app.post('/info/albums/:id', function(req, res){
+app.post('/info/albums/:id', async function(req, res){
     if(checkAuth(req, res) == false){
         return
     }
@@ -627,7 +639,7 @@ app.post('/info/albums/:id', function(req, res){
         albums_data["albums"] = albums_arr
         console.log("\n\n")
         console.log(albums_data)
-        fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
+        await fs.writeFile(path.join(__dirname, 'albums.json'), JSON.stringify(albums_data), function (err) {
             if (err) {
                 console.log(err);
             }
@@ -643,7 +655,7 @@ app.post('/info/albums/:id', function(req, res){
     res.send(albums_arr);
 })
 
-app.post('/info/songs/by/album/:id', function(req, res){
+app.post('/info/songs/by/album/:id', async function(req, res){
     if(checkAuth(req, res) == false){
         return
     }
@@ -684,7 +696,7 @@ app.post('/info/songs/by/album/:id', function(req, res){
         songs_data["songs"] = songs_arr
         console.log("\n\n")
         console.log(songs_data)
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
+        await fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
             if (err) {
                 console.log(err);
             }
@@ -700,7 +712,7 @@ app.post('/info/songs/by/album/:id', function(req, res){
     res.send(songs_arr);
 })
 
-app.post('/info/songs/by/artist/:id', function(req, res){
+app.post('/info/songs/by/artist/:id', async function(req, res){
     if(checkAuth(req, res) == false){
         return
     }
@@ -741,7 +753,7 @@ app.post('/info/songs/by/artist/:id', function(req, res){
         songs_data["songs"] = songs_arr
         console.log("\n\n")
         console.log(songs_data)
-        fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
+        await fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data), function (err) {
             if (err) {
                 console.log(err);
             }
@@ -775,7 +787,7 @@ app.post('/playlists/user/:id', function(req, res){
     res.send(d)
 })
 
-app.post('/playlists/user/:id/modify/:playlist', function(req, res){
+app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     if(checkAuth(req, res) == false){
         res.send({"error": "Not authorized", "authed": false})
         return
@@ -829,7 +841,7 @@ app.post('/playlists/user/:id/modify/:playlist', function(req, res){
         "playlists": d
     }
     console.log("\n\n")
-    fs.writeFile(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
+    await fs.writeFile(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
         if (err) {
             console.log(err);
         }
@@ -902,16 +914,22 @@ async function updateSongs(once, all, songs){
                 if(fs.existsSync(path.join(__dirname, v["file"]))){
                     try{
                         var vv = {}
-                        for(var y = 0; y < songs.length; y++){
-                            if(songs[y]["id"] == v["id"]){
-                                vv = songs[y]
-                                break;
+                        var found = false
+                        var songer = songs["songs"]
+                        if(songer != undefined){
+                            for(var y = 0; y < songer.length; y++){
+                                if(songer[y]["id"] == v["id"]){
+                                    vv = songer[y]
+                                    found = true;
+                                    break;
+                                }
+                                // console.log({"id": v["id"], "iidd": songer[y]["id"]})
                             }
                         }
                         var z = ""
                         var dur = ""
-                        if(vv && vv["duration"] == undefined){
-                            console.log("Probing: "+v["file"])
+                        if(!found && vv["duration"] == undefined){
+                            console.log("\t\t\tProbing: "+v["file"])
                             z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
                             dur = z["format"]["duration"]   
                         }else{
@@ -951,13 +969,8 @@ async function updateSongs(once, all, songs){
         "last_updated": hash5(JSON.stringify(all)),
         "songs": albums_arr
     }
-    fs.writeFile(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data,null,4), function (err) {
-        if (err) {
-            console.log(err);
-        }else{
-            console.log("File written")
-        }
-    })
+    fs.writeFileSync(path.join(__dirname, 'songs.json'), JSON.stringify(songs_data,null,4), 'utf-8');
+    console.log("Done updating songs!")
 }
 
 function hash5(string){
