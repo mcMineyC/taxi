@@ -395,6 +395,27 @@ app.post('/info/songs/by/artist/:id', async function(req, res){
     res.send(songs_arr);
 })
 
+app.post('/playlists', async function(req, res){
+    if(checkAuth(req, res) == false){
+        res.send({"error": "Not authorized", "authed": false})
+        return
+    }
+
+    //Read data
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), 'utf-8');
+    data = JSON.parse(data);
+    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
+    all = JSON.parse(all);
+
+    //Update if needed
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        await updatePlaylists(hash,all)
+    }
+
+    //Send playlists
+    res.sendFile(path.join(__dirname, "config", "playlists", "playlists.json"));
+})
+
 app.post('/playlists/user/:id', function(req, res){
     if(checkAuth(req, res) == false){
         res.send({"error": "Not authorized", "authed": false})
@@ -448,7 +469,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     if(!found){
         try{
             d.push({
-                "id": req.params.playlist,
+                "id": hash(req.params.playlist),
                 "name": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public,
@@ -456,7 +477,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
             })
         }catch(e){
             d.push({
-                "id": req.params.playlist,
+                "id": hash(req.params.playlist),
                 "name": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public
@@ -709,6 +730,14 @@ async function checkDirs(){
     }
     if(!fs.existsSync(path.join(__dirname, "config", 'playlists'))){
         fs.mkdirSync(path.join(__dirname, "config", 'playlists'));
+    }
+}
+
+async function updatePlaylists(hashFunc, all){
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), 'utf-8');
+    data = JSON.parse(data);
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
     }
 }
 
