@@ -16,5 +16,11 @@ window.authSettings.setOnFail(() => {
     document.getElementById("login-root-2").style.display = "none"
     document.getElementById("login-root").style.display = "flex"
 })
+window.authSettings.setOnDown(() => {
+    document.getElementById("login-root-2").style.display = "none"
+    document.getElementById("login-root").style.display = "none"
+    document.getElementById("login-down").style.display = "flex"
+
+})
 document.getElementById("login-root-2").style.display = "flex"
 window.authSettings.loginToken()

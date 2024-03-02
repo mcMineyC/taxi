@@ -1,7 +1,6 @@
 creds.json
 auth.json
 all.json
-all*.json*
 artists.json
 albums.json
 songs.json
@@ -9,11 +8,10 @@ songs.json
 music/*
 unsorted/*
 sorted
-images/artists/*
-images/albums/*
-images/songs/*
 node_modules
-playlists/*
-playlists.json
-unsorted
-unsorted_backup
+config/playlists/*
+config/playlists.json
+config/*.json
+config/images/artists/*
+config/images/albums/*
+config/images/songs/*

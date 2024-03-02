@@ -23,7 +23,7 @@
 #login-box > md-outlined-text-field{
     margin-bottom: 8px;
 }
-#login-box > h1{
+h1{
     color: var(--md-sys-color-on-surface-variant);
 }
 #login-root-2{
@@ -34,4 +34,31 @@
     height: 100vh;
     width: 100vw;
     background: var(--md-sys-color-surface);
+}
+#login-down{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background: var(--md-sys-color-surface);
+}
+#login-down{
+    text-align: center;
+}
+#login-box-down{
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 500px;
+}
+#login-box-down > :nth-child(2){
+    margin-top: 4px;
+}
+#login-box-down > :nth-child(1){
+    margin-bottom: 4px;
 }

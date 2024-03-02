@@ -4,12 +4,15 @@ class AuthSettings{
         this.authPageUrl = authPageUrl
         this.onLogin = () => {}
         this.onFail = () => {}
+        this.onDown = () => {}
         this.onRefreshToken = () => {}
         console.log("Checking for auth token in cookies")
         if(window.getCookie("authToken") != ""){
             this.authToken = window.getCookie("authToken")
+            console.log("Found auth token in cookies: "+this.authToken)
         }else{
             this.authToken = ""
+            console.log("No auth token in cookies")
         }
         if(this.authToken == "" && window.location.href != this.authPageUrl) {
             window.location = this.authPageUrl
@@ -54,6 +57,10 @@ class AuthSettings{
         this.onFail = callback
     }
 
+    setOnDown(callback){
+        this.onDown = callback
+    }
+
     setOnRefreshToken(callback){
         this.onRefreshToken = callback
     }
@@ -77,7 +84,11 @@ class AuthSettings{
                 return false
             })
             .catch((error) => {
-                console.error(error);
+                if (error.code == "ERR_NETWORK"){
+                    this.onDown()
+                }else{
+                    console.error(error);
+                }
             });
         }
     }
@@ -99,7 +110,11 @@ class AuthSettings{
             return false
         })
         .catch((error) => {
-            console.error(error);
+            if (error.code == "ERR_NETWORK"){
+                this.onDown()
+            }else{
+                console.error(error);
+            }
         });
     }
 

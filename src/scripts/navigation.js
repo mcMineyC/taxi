@@ -147,6 +147,10 @@ class FetchedData {
                 window.location = window.authSettings.getAuthPageUrl()
                 return
             }
+            if(data == undefined){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }
             t.artists = data["artists"];
             t.artists.sort(function(a, b){
                 if(a.displayName < b.displayName) return -1
@@ -157,6 +161,10 @@ class FetchedData {
             .then(function (response) {
                 var data = JSON.parse(JSON.stringify(response.data));
                 if(data["authorized"] == false){
+                    window.location = window.authSettings.getAuthPageUrl()
+                    return
+                }
+                if(data == undefined){
                     window.location = window.authSettings.getAuthPageUrl()
                     return
                 }
@@ -173,6 +181,10 @@ class FetchedData {
                         window.location = window.authSettings.getAuthPageUrl()
                         return
                     }
+                    if(data == undefined){
+                        window.location = window.authSettings.getAuthPageUrl()
+                        return
+                    }
                     t.songs = data["songs"];
                     t.songs.sort(function(a, b){
                         if(a.displayName < b.displayName) return -1
@@ -186,12 +198,44 @@ class FetchedData {
                             window.location = window.authSettings.getAuthPageUrl()
                             return
                         }
+                        if(data == undefined){
+                            window.location = window.authSettings.getAuthPageUrl()
+                            return
+                        }
                         console.log(data)
                         t.all = data["entries"];
                         t.onInit()
+                    }).catch(function (error) {
+                        if(error.code == "ERR_NETWORK"){
+                            window.location = window.authSettings.getAuthPageUrl()
+                            return
+                        }else{
+                            console.log(error)
+                        }
                     })
+                }).catch(function (error) {
+                    if(error.code == "ERR_NETWORK"){
+                        window.location = window.authSettings.getAuthPageUrl()
+                        return
+                    }else{
+                        console.log(error)
+                    }
                 })
+            }).catch(function (error) {
+                if(error.code == "ERR_NETWORK"){
+                    window.location = window.authSettings.getAuthPageUrl()
+                    return
+                }else{
+                    console.log(error)
+                }
             })
+        }).catch(function (error) {
+            if(error.code == "ERR_NETWORK"){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }else{
+                console.log(error)
+            }
         })
     }
     getAll(){
