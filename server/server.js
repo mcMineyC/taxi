@@ -18,39 +18,6 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-/// Check all the directories exist
-{
-    if(!fs.existsSync(path.join(__dirname, "config", 'images'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'images'));
-    }
-    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'albums'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'images', 'albums'));
-    }
-    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'artists'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'images', 'artists'));
-    }
-    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'songs'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'images', 'songs'));
-    }
-    if(!fs.existsSync(path.join(__dirname, 'music'))){
-        fs.mkdirSync(path.join(__dirname, 'music'));
-    }
-    if(!fs.existsSync(path.join(__dirname, "config", 'playlists'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'playlists'));
-    }
-}
-
-/// Check info files
-{
-    let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    if(all != undefined){
-        all = JSON.parse(all);
-    }
-    updateAll(hash5, all).then(() => {
-        console.log("Everything up to date")
-    });
-}
-
 app.use('/music', express.static(path.join(__dirname, 'music')));
 
 app.use('/',express.static(path.join(__dirname, 'static')));
@@ -125,8 +92,8 @@ app.post('/info/albums', async function (req, res) {
     all = JSON.parse(all);
 
     //Update if needed
-    if((data["last_updated"]) != hash5(JSON.stringify(all))){
-        await updateAlbums(hash5,all)
+    if((data["last_updated"]) != hash(JSON.stringify(all))){
+        await updateAlbums(hash,all)
         data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8'));
     }
 
@@ -146,8 +113,8 @@ app.post('/info/artists', function (req, res) {
     all = JSON.parse(all);
 
     //Update if needed
-    if((data["last_updated"]) != hash5(JSON.stringify(all))){
-        updateArtists(hash5,all)
+    if((data["last_updated"]) != hash(JSON.stringify(all))){
+        updateArtists(hash,all)
         data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'artists.json'), 'utf-8'));
     }
 
@@ -167,8 +134,8 @@ app.post('/info/songs', async function (req, res) {
     all = JSON.parse(all);
 
     //This is only needed if the file changed
-    if((data["last_updated"] != hash5(JSON.stringify(all)))){
-        await updateSongs(hash5,all,data)
+    if((data["last_updated"] != hash(JSON.stringify(all)))){
+        await updateSongs(hash,all,data)
         data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8'));
     }
 
@@ -186,8 +153,8 @@ app.get('/info/songs/:id/image', async function (req, res) {
     var file = "";
 
     //Reupdate data if needed
-    if(data["last_updated"] != hash5(JSON.stringify(all))){
-        updateSongs(hash5,all,data)
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        updateSongs(hash,all,data)
         data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
         data = JSON.parse(data);
     }
@@ -231,8 +198,8 @@ app.get('/info/albums/:id/image', async function (req, res) {
         all = JSON.parse(all);
 
         //Reupdate data if needed
-        if(data["last_updated"] != hash5(JSON.stringify(all))){
-            updateAlbums(hash5,all,data)
+        if(data["last_updated"] != hash(JSON.stringify(all))){
+            updateAlbums(hash,all,data)
             data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
             data = JSON.parse(data);
         }
@@ -332,8 +299,8 @@ app.post('/info/albums/by/artist/:id', async function(req, res){
     var albums_arr = [];
 
     //This is only needed if the file changed
-    if(data["last_updated"] != hash5(JSON.stringify(all))){
-        updateAlbums(hash5,all,data)
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        updateAlbums(hash,all,data)
         data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
         data = JSON.parse(data);
     }
@@ -358,8 +325,8 @@ app.post('/info/albums/:id', async function(req, res){
     all = JSON.parse(all);
     var albums_arr = [];
 
-    if(data["last_updated"] != hash5(JSON.stringify(all))){
-        updateAlbums(hash5,all,data)
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        updateAlbums(hash,all,data)
         data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
         data = JSON.parse(data);
     }
@@ -386,8 +353,8 @@ app.post('/info/songs/by/album/:id', async function(req, res){
 
     //This is only needed if the file changed
     
-    if(data["last_updated"] != hash5(JSON.stringify(all))){
-        await updateSongs(hash5,all,data)
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        await updateSongs(hash,all,data)
         data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
         data = JSON.parse(data);
     }
@@ -413,8 +380,8 @@ app.post('/info/songs/by/artist/:id', async function(req, res){
 
     var songs_arr = [];
 
-    if(data["last_updated"] != hash5(JSON.stringify(all))){
-        await updateSongs(hash5,all,data)
+    if(data["last_updated"] != hash(JSON.stringify(all))){
+        await updateSongs(hash,all,data)
         data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
         data = JSON.parse(data);
     }
@@ -509,9 +476,19 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     res.send(d)
 })
 
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
-})
+async function main(){
+    await checkup()
+    console.log("Checked and ready to start")
+    app.listen(port, () => {
+        console.log(`App listening on port ${port}`)
+    })
+}
+
+try{
+    main()
+}catch (e){
+    console.log("Error: "+e)
+}
 
 
 // This is just all the random
@@ -622,7 +599,7 @@ async function extractAlbumImage(id, data, dest){
     }
 }
 
-function hash5(string){
+function hash(string){
     return crypto.createHash('sha256').update(string).digest('hex');
 }
 
@@ -711,6 +688,29 @@ async function downloadFile(fileUrl, outputLocationPath) {
 // now, who cares
 
 
+async function checkDirs(){
+    if(!fs.existsSync(path.join(__dirname, "config"))){
+        fs.mkdirSync(path.join(__dirname, "config"));
+    }
+    if(!fs.existsSync(path.join(__dirname, "config", 'images'))){
+        fs.mkdirSync(path.join(__dirname, "config", 'images'));
+    }
+    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'albums'))){
+        fs.mkdirSync(path.join(__dirname, "config", 'images', 'albums'));
+    }
+    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'artists'))){
+        fs.mkdirSync(path.join(__dirname, "config", 'images', 'artists'));
+    }
+    if(!fs.existsSync(path.join(__dirname, "config", 'images', 'songs'))){
+        fs.mkdirSync(path.join(__dirname, "config", 'images', 'songs'));
+    }
+    if(!fs.existsSync(path.join(__dirname, 'music'))){
+        fs.mkdirSync(path.join(__dirname, 'music'));
+    }
+    if(!fs.existsSync(path.join(__dirname, "config", 'playlists'))){
+        fs.mkdirSync(path.join(__dirname, "config", 'playlists'));
+    }
+}
 
 async function updateSongs(hashFunc, all, songs){
     //This is only needed if the file changed
@@ -891,14 +891,14 @@ async function updateAll(hashFunc, all){
 
     /// ALBUMS
     if(!fs.existsSync(path.join(__dirname, "config", 'albums.json'))){
-        await updateAlbums(hash5,all)
+        await updateAlbums(hash,all)
         updated = true
     }else{
         var albums = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
         if(albums != undefined){
             albums = JSON.parse(albums);
-            if(albums["last_updated"] != hash5(JSON.stringify(all))){
-                await updateAlbums(hash5,all)
+            if(albums["last_updated"] != hash(JSON.stringify(all))){
+                await updateAlbums(hash,all)
                 console.log("Updated albums.json")
                 updated = true
             }
@@ -907,16 +907,16 @@ async function updateAll(hashFunc, all){
 
     /// ARTISTS
     if(!fs.existsSync(path.join(__dirname, "config", 'artists.json'))){
-        fs.writeFileSync(path.join(__dirname, 'artists.json'), JSON.stringify({"last_updated": hash5(JSON.stringify(all))},null,4));
-        await updateArtists(hash5,all)
+        fs.writeFileSync(path.join(__dirname, 'artists.json'), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
+        await updateArtists(hash,all)
         console.log("Updated artists.json")
         updated = true
     }else{
         var artists = fs.readFileSync(path.join(__dirname, "config", 'artists.json'), 'utf-8');
         if(artists != undefined){
             artists = JSON.parse(artists);
-            if(artists["last_updated"] != hash5(JSON.stringify(all))){
-                await updateArtists(hash5,all)
+            if(artists["last_updated"] != hash(JSON.stringify(all))){
+                await updateArtists(hash,all)
                 console.log("Updated artists.json")
                 updated = true
             }
@@ -927,13 +927,13 @@ async function updateAll(hashFunc, all){
     if(!fs.existsSync(path.join(__dirname, "config", 'songs.json'))){
         let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
         all = JSON.parse(all);
-        fs.writeFileSync(path.join(__dirname, "config", 'songs.json'), JSON.stringify({"last_updated": hash5(JSON.stringify(all))},null,4));
+        fs.writeFileSync(path.join(__dirname, "config", 'songs.json'), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
         var songs = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
         if(songs != undefined){
             songs = JSON.parse(songs);
         }
         var albums_arr = [];
-        updateSongs(hash5,all,songs).then(() => {
+        updateSongs(hash,all,songs).then(() => {
             console.log("Updated songs.json")
         })
     }else{
@@ -943,8 +943,8 @@ async function updateAll(hashFunc, all){
         if(songs != undefined){
             songs = JSON.parse(songs);
         }
-        if(songs["last_updated"] != hash5(JSON.stringify(all))){
-            updateSongs(hash5,all,songs).then(() => {
+        if(songs["last_updated"] != hash(JSON.stringify(all))){
+            updateSongs(hash,all,songs).then(() => {
                 console.log("Updated songs.json")
             })
         }
@@ -952,7 +952,7 @@ async function updateAll(hashFunc, all){
 
     /// AUTH
     if(!fs.existsSync(path.join(__dirname, "config", 'auth.json'))){
-        fs.writeFileSync(path.join(__dirname, 'auth.json'), JSON.stringify({"users":[]},null,4));
+        fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify({"users":[]},null,4));
     }else{
         var auth = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
         if(auth != undefined){
@@ -967,4 +967,22 @@ async function updateAll(hashFunc, all){
     }
 
     if(updated) console.log("Done updating everything!")
+}
+
+async function checkup(){
+    // CHECK DIRS
+    await checkDirs();
+
+    // Check info files
+    // Make sure all.json exists
+    if(!fs.existsSync(path.join(__dirname, "config", 'all.json'))){
+        fs.writeFileSync(path.join(__dirname, "config", 'all.json'), JSON.stringify({"last_updated": 0,"entries":[]},null,4));
+    }
+
+    // Now update all
+    let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
+    if(all != undefined){
+        all = JSON.parse(all);
+    }
+    await updateAll(hash, all)
 }
