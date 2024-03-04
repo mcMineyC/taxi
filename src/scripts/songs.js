@@ -1,6 +1,6 @@
 function getSongs(){
     var songs = window.fetchedData.getSongs();
-    for (var x = 0; x < songs.length; x++) {
+    for (var x = 0; x < 50; x++) {
         // console.log(songs[x]["displayName"]);
         document.getElementById("content").innerHTML += '<m3-mediacard thingtype="song" thingid="'+songs[x]["id"]+'" image="'+window.prefs.getBackendUrl()+'/info/songs/' + songs[x]["id"] + '/image" text="' + songs[x]["displayName"] + '" onclick="handleSongClick(\'' + songs[x]["id"] + '\')"></m3-mediacard>';
     }

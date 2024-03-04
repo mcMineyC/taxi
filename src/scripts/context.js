@@ -1,5 +1,9 @@
 // Add an event listener for the contextmenu event on the document
 document.addEventListener('contextmenu', function(event) {
+    contextMenu(event)
+});
+
+function contextMenu(event){
     // Prevent the default context menu from appearing
     event.preventDefault();
     console.log(event.target)
@@ -35,6 +39,7 @@ document.addEventListener('contextmenu', function(event) {
             break;
         case "playlist":
             console.log("playlist")
+            console.log("thingid: "+thingid)
             break;
         case "song":
             console.log("song")
@@ -127,7 +132,8 @@ document.addEventListener('contextmenu', function(event) {
                 }
                 break;
             case "addplaylist":
-                console.log("addplaylist")
+                console.log(thingid)
+                window.prefs.addToPlaylist("someotherthing", thingid)
                 break;
             case "share":
                 console.log("share")
@@ -145,4 +151,4 @@ document.addEventListener('contextmenu', function(event) {
         customContextMenu.style.display = 'none';
       }
     });
-  });
+}

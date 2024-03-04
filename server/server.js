@@ -174,7 +174,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
     }
 
     //Extract image
-    await extractSongImage(file, req.params.id);
+    await extractSongImage(file, path.join(__dirname, "config", "images", "songs", req.params.id+".png"));
     if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png")))){
         console.log("File still doesn't exist, trying to infer based on other songs in album...");
         await inferSongImage(file, req.params.id, data);

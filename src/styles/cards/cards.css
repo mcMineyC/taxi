@@ -39,6 +39,13 @@
     word-break: break-all;
 }
 
+.card-context{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+}
+
 #overlay {
     position: absolute;
     top: 0;
@@ -46,6 +53,6 @@
     right: 0;
     bottom: 0;
     background-color: rgba(255,0,0,0);
-    z-index: 999;
+    z-index: 99;
     cursor: pointer;
 }

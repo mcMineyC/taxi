@@ -29,9 +29,11 @@ class PlayerQueue {
     }
     add(song){
         this.queue.push(song)
+        this.unshuffled.push(song)
         showSnackbar("Added " + song + " to queue")
     }
     addList(list){
+        this.unshuffled.push(list)
         if(this.shuffled == true){
             this.queue = this.queue.concat(this.shuffist(list))
         }else{
@@ -219,6 +221,7 @@ window.fetchedData = new FetchedData();
 window.fetchedData.onceInitalized(function(){
     getHome()
 })
+window.visibleContent = new VisibleContent();
 window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
       // you're at the bottom of the page

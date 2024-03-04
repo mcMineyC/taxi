@@ -312,6 +312,36 @@ class FetchedData {
     }
 }
 
+class VisibleContent{
+    constructor(){
+        this.content = document.getElementById("content")
+        this.bottomOfPage = () => {console.log("Bottom of page")}
+        this.counter = 0
+
+      this.bottomVisible = (offset) =>
+        document.getElementById("content-container").scrollTop > document.getElementById("content-container").scrollHeight - offset
+    }
+    getContent(){
+        return this.content
+    }
+    setContent(c){
+        this.content = c
+    }
+    setCounter(c){
+        this.counter = c
+    }
+    getCounter(){
+        return this.counter
+    }
+    bottomOfPage(){
+        this.bottomOfPage()
+    }
+    setBottomOfPage(c){
+        this.bottomOfPage = c
+    }
+    
+}
+
 async function getQueue(){
     if(typeof(window.localQueue) == "undefined"){
         console.log("No queue instance");
@@ -359,7 +389,7 @@ async function getPlaylists(){
         var i = p[x]
         console.log(i["displayName"])
         d.innerHTML += `
-            <m3-mediacard text="${i["displayName"]}" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+'/placeholder'}"></m3-mediacard>
+            <m3-mediacard thingtype="playlist" thingid="${i["id"]}" text="${i["displayName"]}" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+'/placeholder'}"></m3-mediacard>
         `
     }
 
@@ -475,13 +505,13 @@ async function playlistClick(){
         "location": "playlists",
         "id": window.navigationInfo.get()["id"],
     })
-    runAsync(getPlaylists)
+    getPlaylists()
 }
 
 async function playlistClicked(id){
     console.log("Clicked on playlist: " + id);
     document.getElementById("content").innerHTML = "";
-    runAsync(getSongsByPlaylist(id));
+    getSongsByPlaylist(id)
     window.navigationInfo.addHist("playlistsID")
     window.navigationInfo.set({
         "prev": window.navigationInfo.getHist(),
