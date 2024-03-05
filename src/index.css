@@ -46,3 +46,7 @@ m3-playercontrols-bottom{
 *[slot="start"]{
     justify-content: end;
 }
+.vert{
+   transform: rotate(270deg);
+   appearance: slider-vertical;
+}

@@ -101,21 +101,29 @@ class PlayerQueue {
         }
         this.shuffleLock = true
         window.localStorage.setItem("stateLastShuffled", (val==true))
-        this.shuffled = val
         console.log({"valCheck": window.localStorage.getItem("stateLastShuffled"), "shuffled": this.shuffled, "shuffledCheck": (this.shuffled == true), "shuffledCheck2": (this.shuffled == val)})
-        if(val == true){
+        if(val == true && this.shuffled == false){
+            console.log("Copying queue to unshuffled")
+            this.shuffled = val
             this.unshuffled = []
+            console.log("unshuffled: "+this.unshuffled)
             for(var i = 0; i < this.queue.length; i++){
                 this.unshuffled.push(this.queue[i])
+                console.log("Pushing "+this.unshuffled[i])
             }
-            this.queue = this.shuffist(this.queue)
+            this.shuffist(this.queue)
             console.log("Shuffling, "+(this.unshuffled==this.queue))
-        }else{
+        }else if(val == false && this.shuffled == true){
             console.log("Unshuffling, "+(this.unshuffled==this.queue))
+            console.log("Copying unshuffled to queue")
+            this.shuffled = val
             this.queue = []
             for(var i = 0; i < this.unshuffled.length; i++){
                 this.queue.push(this.unshuffled[i])
+                console.log("Pushing "+this.unshuffled[i])
             }
+        }else{
+            print("Already shuffled")
         }
 
         if(window.navigationInfo.get()["location"] == "queue"){
@@ -201,7 +209,66 @@ class Playing {
 }
 
 class Playlists {
-    
+    constructor(){
+        this.playlists = []
+        if(typeof(window.localStorage.getItem("savedPlaylists")) != "undefined"){
+            this.playlists = JSON.parse(window.localStorage.getItem("savedPlaylists"))["playlists"]
+            if(this.playlists == null){
+                this.playlists = []
+            }
+        }
+    }
+
+    add(playlist, sync){
+        this.playlists.push(playlist)
+        window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.playlists}))
+    }
+
+    remove(playlistId, sync){
+        var plist = {}
+        for(var x = 0; x < this.playlists.length; x++){
+            if(this.playlists[x]["id"] == playlistId){
+                plist = this.playlists[x]
+            }
+        }
+        this.playlists.splice(this.playlists.indexOf(plist), 1)
+        window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.playlists}))
+    }
+
+    set(playlists, sync){
+        this.playlists = playlists
+        window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.playlists}))
+    }
+
+    get(){
+        return this.playlists
+    }
+
+    getPlaylist(id){
+        for(var x = 0; x < this.playlists.length; x++){
+            if(this.playlists[x]["id"] == id){
+                return this.playlists[x]
+            }
+        }
+    }
+
+    getPlaylistByName(name){
+        for(var x = 0; x < this.playlists.length; x++){
+            if(this.playlists[x]["displayName"] == name){
+                return this.playlists[x]
+            }
+        }
+    }
+
+    search(name){
+        var ret = []
+        for(var x = 0; x < this.playlists.length; x++){
+            if(this.playlists[x]["displayName"].toLowerCase().includes(name.toLowerCase())){
+                ret.push(this.playlists[x])
+            }
+        }
+        return ret
+    }
 }
 
 setInterval(function() {
@@ -222,6 +289,8 @@ window.fetchedData.onceInitalized(function(){
     getHome()
 })
 window.visibleContent = new VisibleContent();
+window.unsyncedPlaylists = new Playlists();
+
 window.onscroll = function(ev) {
     if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
       // you're at the bottom of the page
@@ -239,7 +308,6 @@ function handleShuffleClick(th){
         showSnackbar("Not shuffling")
     }*/
 }
-
 
 function handleLoopClick(th){
     window.localQueue.loop(th.getAttribute("enabled") == "true")
@@ -314,7 +382,7 @@ function playSong(id) {
     window.howlerInstance = song;
     window.progress = new Position(0);
     window.progress.set(song.seek())
-    window.localPlaying = new Playing(false);
+    window.localPlaying = new Playing(true);
 }
 // Update progress bar on seek/position change
 function setProgress(val){

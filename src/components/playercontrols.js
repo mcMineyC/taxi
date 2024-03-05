@@ -1,5 +1,5 @@
 class playercontrols_bottom extends HTMLElement {
-    static observedAttributes = ["value", "playing", "shuffle", "repeat"];
+    static observedAttributes = ["value", "volume", "playing", "shuffle", "repeat"];
     connectedCallback() {
       this.innerHTML = `
         <div class="playercontrols-bottom">
@@ -28,6 +28,12 @@ class playercontrols_bottom extends HTMLElement {
                         </md-filled-button>
                         <m3-toggle-button id="playercontrols-bottom-loop" propId="looped" icon="loop" enabled="${window.localQueue.looped ? "true" : "false"}" onclick="this.toggle();handleLoopClick(this)"></m3-toggle-button>
                     </div>
+                    <div id="playercontrols-box-volume">
+                        <md-icon-button variant="primary" onclick="handleMuteClick(this)">
+                            <md-icon>volume_up</md-icon>
+                        </md-icon-button>
+                        <md-slider ticks id="playercontrols-bottom-volume" min="0" max="15" value="15"></md-slider>
+                    </div>
                 </div>
                 <div class="playercontrols-spacer"></div>
                 <div progress="1">
@@ -36,6 +42,24 @@ class playercontrols_bottom extends HTMLElement {
             </div>
         </div>
       `;
+      var vs = this.getElementsByTagName("md-slider")[0]
+      vs.onwheel = function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var d = (e.deltaY < 0 ? 1 : -1)
+        var np = vs.value + (d)
+        if(np < 0){
+            np = 0
+        }
+        if(np > 15){
+            np = 15
+        }
+        vs.value = np
+        window.Howler.volume(np / 15)
+      }
+      vs.addEventListener("change", function(){
+          window.Howler.volume(vs.value / 15)
+      })
     }
     attributeChangedCallback(name, oldValue, newValue) {
         if(name == "value"){
@@ -61,6 +85,14 @@ class playercontrols_bottom extends HTMLElement {
             }
             var repeat = newValue
             this.getElementsByTagName("md-icon")[4].innerHTML = (repeat == "true" ? "loop" : "loop");
+        }
+        if(name == "volume"){
+            console.log({"volume": newValue})
+            if (this.getElementsByTagName("md-slider").length == 0){
+                return
+            }
+            var volume = newValue
+            this.getElementsByTagName("md-slider")[0].setAttribute("value", volume);
         }
     }
   }

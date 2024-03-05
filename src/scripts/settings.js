@@ -211,7 +211,7 @@ class UserPreferences{
     }
 
     getPlaylists(){
-        return this.savedPlaylists
+        return window.unsyncedPlaylists.get()
     }
 
     getPlaylist(playlist_id){

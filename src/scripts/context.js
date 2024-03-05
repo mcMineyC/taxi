@@ -38,7 +38,13 @@ function contextMenu(event){
             inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
             break;
         case "playlist":
-            console.log("playlist")
+            inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
+            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+                inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
+                contextMenuHeight = 158;
+            }
+            inhtml += `<li value="delete"><md-icon>delete</md-icon>Delete</li>`
+            inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
             console.log("thingid: "+thingid)
             break;
         case "song":

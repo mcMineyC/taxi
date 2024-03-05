@@ -372,7 +372,7 @@ async function getPlaylists(){
     reset()
     var d = document.getElementById("content")
     console.log("Getting playlists...")
-    var p = window.prefs.getPlaylists()["playlists"]
+    var p = window.prefs.getPlaylists()
     console.log("Playlists: " + p.length)
     console.log(p)
     d.innerHTML = `

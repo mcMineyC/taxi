@@ -27,3 +27,8 @@ function handleScroll(event){
     window.progress.set(np)
     window.howlerInstance.seek(np)
 }
+function handleMuteClick(t){
+    t.getElementsByTagName("md-icon")[0].innerText = window.Howler.muted ? "volume_up" : "volume_off"
+    window.Howler.muted = !window.Howler.muted
+    window.Howler.mute(!window.Howler._muted) 
+}

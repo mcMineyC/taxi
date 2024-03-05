@@ -86,3 +86,15 @@ md-icon{
     text-overflow: ellipsis;
     /* max-width: 33.333333%; */
 }
+
+#playercontrols-box-volume{
+    display: flex;
+    justify-self: end;
+    align-items: center;
+}
+#playercontrols-box-volume > md-icon-button{
+    font-size: 24px;
+    /* width: 24px; */
+    /* height: 24px; */
+}
+    
