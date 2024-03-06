@@ -11,8 +11,22 @@ class PlayerQueue {
         this.looped = (localStorage.getItem("stateLastLooped") == "true")
         this.pos = 0
         this.queue = []
-        this.unshuffled = []
         this.shuffleLock = false
+        let loadedQueue = false
+        if(localStorage.getItem("stateLastQueue") != null){
+            try{
+                this.queue = JSON.parse(localStorage.getItem("stateLastQueue"))
+                this.pos = parseInt(localStorage.getItem("stateLastPos"))
+                console.log("Loaded queue from local storage")
+                loadedQueue = true
+            }catch(e){
+                console.log("Failed to load queue from local storage")
+            }
+        }
+        if(loadedQueue){
+            console.log("Force updating queue")
+            this.update(true)
+        }
     }
     set(queuer){
         console.log({"shuffled": this.shuffled})
@@ -29,11 +43,9 @@ class PlayerQueue {
     }
     add(song){
         this.queue.push(song)
-        this.unshuffled.push(song)
         showSnackbar("Added " + song + " to queue")
     }
     addList(list){
-        this.unshuffled.push(list)
         if(this.shuffled == true){
             this.queue = this.queue.concat(this.shuffist(list))
         }else{
@@ -95,36 +107,13 @@ class PlayerQueue {
         this.currentSong = song
         this.changeInfo()
     }
-    async shuffle(val){
+    async shuffle(){
         if(this.shuffleLock == true){
             return
         }
         this.shuffleLock = true
-        window.localStorage.setItem("stateLastShuffled", (val==true))
-        console.log({"valCheck": window.localStorage.getItem("stateLastShuffled"), "shuffled": this.shuffled, "shuffledCheck": (this.shuffled == true), "shuffledCheck2": (this.shuffled == val)})
-        if(val == true && this.shuffled == false){
-            console.log("Copying queue to unshuffled")
-            this.shuffled = val
-            this.unshuffled = []
-            console.log("unshuffled: "+this.unshuffled)
-            for(var i = 0; i < this.queue.length; i++){
-                this.unshuffled.push(this.queue[i])
-                console.log("Pushing "+this.unshuffled[i])
-            }
-            this.shuffist(this.queue)
-            console.log("Shuffling, "+(this.unshuffled==this.queue))
-        }else if(val == false && this.shuffled == true){
-            console.log("Unshuffling, "+(this.unshuffled==this.queue))
-            console.log("Copying unshuffled to queue")
-            this.shuffled = val
-            this.queue = []
-            for(var i = 0; i < this.unshuffled.length; i++){
-                this.queue.push(this.unshuffled[i])
-                console.log("Pushing "+this.unshuffled[i])
-            }
-        }else{
-            print("Already shuffled")
-        }
+        
+        this.queue = this.shuffist(this.queue)
 
         if(window.navigationInfo.get()["location"] == "queue"){
             reset()
@@ -179,6 +168,12 @@ class PlayerQueue {
         }
       
         return array;
+    }
+    save(){
+        localStorage.setItem("stateLastQueue", JSON.stringify(this.queue))
+        localStorage.setItem("stateLastPos", this.pos)
+        localStorage.setItem("stateLastShuffled", this.shuffled)
+        localStorage.setItem("stateLastLooped", this.looped)
     }
 }
 
@@ -279,34 +274,34 @@ setInterval(function() {
     }
 }, 1000);
 
-window.setProgress = setProgress
-document.getElementById("playercontrols-bottom").onwheel = handleScroll
-window.localQueue = new PlayerQueue();
-window.prefs = new UserPreferences();
-window.authSettings = new AuthSettings(window.prefs.getBackendUrl(), window.prefs.getFrontendUrl()+"/login.html")
-window.fetchedData = new FetchedData();
-window.fetchedData.onceInitalized(function(){
-    getHome()
+document.addEventListener('DOMContentLoaded', function(){
+    window.setProgress = setProgress
+    document.getElementById("playercontrols-bottom").onwheel = handleScroll
+    window.prefs = new UserPreferences();
+    window.authSettings = new AuthSettings(window.prefs.getBackendUrl(), window.prefs.getFrontendUrl()+"/login.html")
+    window.fetchedData = new FetchedData();
+    window.fetchedData.onceInitalized(function(){
+        getHome()
+        window.localQueue = new PlayerQueue();
+    })
+    window.visibleContent = new VisibleContent();
+    window.unsyncedPlaylists = new Playlists();
+    
+    window.onscroll = function(ev) {
+        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+            // you're at the bottom of the page
+            console.log("Bottom of page");
+        }
+    };  
 })
-window.visibleContent = new VisibleContent();
-window.unsyncedPlaylists = new Playlists();
 
-window.onscroll = function(ev) {
-    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-      // you're at the bottom of the page
-      console.log("Bottom of page");
+async function saveQueueClick(){
+    if(typeof(window.localQueue) == "undefined"){
+        console.log("No queue instance");
+        window.localQueue = new PlayerQueue();
     }
-};
-
-function handleShuffleClick(th){
-    window.localQueue.shuffle(th.getAttribute("enabled") == "true")
-    // console.log("Shuffling: "+window.localQueue.shuffled)
-    /*
-    if(window.localQueue.shuffled){
-        showSnackbar("Shuffling")
-    }else{
-        showSnackbar("Not shuffling")
-    }*/
+    window.localQueue.save()
+    console.log("Saving queue")
 }
 
 function handleLoopClick(th){

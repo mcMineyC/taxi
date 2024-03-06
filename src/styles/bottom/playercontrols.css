@@ -91,6 +91,7 @@ md-icon{
     display: flex;
     justify-self: end;
     align-items: center;
+    background: var(--md-sys-color-surface-variant);
 }
 #playercontrols-box-volume > md-icon-button{
     font-size: 24px;

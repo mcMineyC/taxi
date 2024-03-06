@@ -32,3 +32,7 @@ function handleMuteClick(t){
     window.Howler.muted = !window.Howler.muted
     window.Howler.mute(!window.Howler._muted) 
 }
+
+function handleShuffleClick(){
+    window.localQueue.shuffle()
+}

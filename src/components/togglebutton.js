@@ -1,9 +1,14 @@
 class toggle_button extends HTMLElement {
     static observedAttributes = ["enabled"];
     connectedCallback() {
+        var v = {}
+        v[this.getAttribute("propId")] = "false"
+        if(window.localQueue != undefined){
+            v[this.getAttribute("propId")] = window.localQueue[this.getAttribute("propId")]
+        }
       this.innerHTML = `
         <md-icon-button>
-            <md-icon ${window.localQueue[this.getAttribute("propId")] ? "class='togglebutton-activated'" : ""}>${this.getAttribute("icon")}</md-icon>
+            <md-icon ${v[this.getAttribute("propId")] ? "class='togglebutton-activated'" : ""}>${this.getAttribute("icon")}</md-icon>
         </md-icon-button>
       `;
     }
