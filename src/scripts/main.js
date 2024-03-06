@@ -69,8 +69,25 @@ class PlayerQueue {
             }
         }
     }
-    clear(){
+    clear(click){
         this.queue = []
+
+        if(click == true){
+            window.localStorage.removeItem("stateLastQueue")
+            window.localStorage.removeItem("stateLastPos")
+            window.localStorage.removeItem("stateLastShuffled")
+            window.localStorage.removeItem("stateLastLooped")
+        
+            this.changeInfo(true)
+            this.update(true)
+            Howler.stop()
+            window.localPlaying.set(false)
+        }
+
+        if(window.navigationInfo.get()["location"] == "queue"){
+            reset()
+            getQueue()
+        }
     }
     setPos(pos){
         if(this.pos+pos > this.queue.length-1){
@@ -136,12 +153,20 @@ class PlayerQueue {
             this.update(true)
         }
     }
-    changeInfo(){
+    changeInfo(clear){
         document.getElementById("playercontrols-box-info").style.visibility = "visible"
         document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
         var title = document.getElementById("playercontrols-info-title")
         var album = document.getElementById("playercontrols-info-album")
         var artist = document.getElementById("playercontrols-info-artist")
+        if(this.currentSong == undefined || clear == true){
+            document.getElementById("playercontrols-box-info").style.visibility = "hidden"
+            document.getElementById("playercontrols-box-info").style.pointerEvents = "none"
+            return
+        }else{
+            document.getElementById("playercontrols-box-info").style.visibility = "visible"
+            document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
+        }
         var cSong = window.fetchedData.getSong(this.currentSong)
         
         title.setAttribute("thingid", cSong["id"])
