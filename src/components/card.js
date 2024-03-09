@@ -22,8 +22,10 @@ class mediacard extends HTMLElement {
         inn += `</div>`
         this.innerHTML = inn
         if(m == true){
-            this.getElementsByTagName("md-icon-button")[0].addEventListener("click", function(){
-                contextMenu(this)
+            this.getElementsByTagName("md-icon-button")[0].addEventListener("click", function(e){
+                e.preventDefault()
+                e.stopPropagation()
+                contextMenu(e)
             })
         }
     }

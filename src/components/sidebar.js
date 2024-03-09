@@ -18,7 +18,7 @@ class sidebar extends HTMLElement {
                     <md-icon-button onclick="saveQueueClick()">
                         <md-icon>save</md-icon>
                     </md-icon-button>
-                    <md-icon-button onclick="window.localQueue.clear(true)">
+                    <md-icon-button onclick="window.localPlayer.clearQueue(true)">
                         <md-icon>clear</md-icon>
                     </md-icon-button>
                 </div>

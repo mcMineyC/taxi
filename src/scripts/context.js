@@ -15,12 +15,11 @@ function contextMenu(event){
     var inhtml = `<ul class="context-menu">`
     var contextMenuWidth = 202;
     var contextMenuHeight = 122;
-
     switch(event.target.getAttribute("thingtype")){
         case "album":
             console.log("album")
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
-            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+            if(typeof(window.localPlayer) != "undefined" && window.localPlayer.getPlaying() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
                 contextMenuHeight = 158;
             }
@@ -30,16 +29,18 @@ function contextMenu(event){
         case "artist":
             console.log("artist")
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
-            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+            if(typeof(window.localPlayer) != "undefined" && window.localPlayer.getPlaying() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
                 contextMenuHeight = 158;
             }
-            inhtml += `<li value="addplaylist"><md-icon>playlist_add</md-icon>Add to playlist</li>`
-            inhtml += `<li value="share"><md-icon>share</md-icon>Share</li>`
+            inhtml +=  `<li value="addplaylist" id="addplaylist-popout"><md-icon>playlist_add</md-icon>Add to playlist<md-icon slot="ended">chevron_right</md-icon></li>
+                        <ul id="addplaylist-popout-menu" class="popout-menu context-menu-color">
+                        </ul>`
+            inhtml +=  `<li value="share"><md-icon>share</md-icon>Share</li>`
             break;
         case "playlist":
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
-            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+            if(typeof(window.localPlayer) != "undefined" && window.localPlayer.getPlaying() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
                 contextMenuHeight = 158;
             }
@@ -50,7 +51,7 @@ function contextMenu(event){
         case "song":
             console.log("song")
             inhtml += `<li value="play"><md-icon>play_circle</md-icon>Play</li>`
-            if(typeof(window.localPlaying) != "undefined" && window.localPlaying.get() == true){
+            if(typeof(window.localPlayer) != "undefined" && window.localPlayer.getPlaying() == true){
                 inhtml += `<li value="queue"><md-icon>add_to_queue</md-icon>Add to queue</li>`
                 contextMenuHeight = 158;
             }
@@ -101,11 +102,11 @@ function contextMenu(event){
                 switch(thingtype){
                     case "album":
                         console.log("album")
-                        playList(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                        window.localPlayer.playList(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
                         break;
                     case "artist":
                         console.log("artist")
-                        playList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                        window.localPlayer.playList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
                         break;
                     case "playlist":
                         console.log("playlist")
@@ -113,7 +114,7 @@ function contextMenu(event){
                         break;
                     case "song":
                         console.log("song")
-                        playList([thingid])
+                        window.localPlayer.playList([thingid])
                         break;
                 }
                 break;
@@ -121,11 +122,11 @@ function contextMenu(event){
                 switch(thingtype){
                     case "album":
                         console.log("album")
-                        window.localQueue.addList(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                        window.localPlayer.addListToQueue(window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
                         break;
                     case "artist":
                         console.log("artist")
-                        window.localQueue.addList(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                        window.localPlayer.addListToQueue(window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
                         break;
                     case "playlist":
                         console.log("playlist")
@@ -133,7 +134,10 @@ function contextMenu(event){
                         break;
                     case "song":
                         console.log("song")
-                        window.localQueue.addList([thingid])
+                        window.localPlayer.addToQueue(thingid)
+                        break;
+                    default:
+                        console.log("default")
                         break;
                 }
                 break;
@@ -157,4 +161,18 @@ function contextMenu(event){
         customContextMenu.style.display = 'none';
       }
     });
+
+
+    // Add event listeners for the custom context menu popouts, currently only playlists
+    customContextMenu.querySelector("#addplaylist-popout").addEventListener("mouseover", function(){
+        customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex"
+    })
+    customContextMenu.querySelector("#addplaylist-popout").addEventListener("mouseout", function(){
+        setTimeout(() => {
+            if(!customContextMenu.querySelector("#addplaylist-popout-menu").matches(":hover")){
+                customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
+            }
+        }, 100);
+       
+    })
 }

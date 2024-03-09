@@ -8,7 +8,6 @@ import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/materia
 window.frontendUrl = "http://localhost:8000"
 window.backendUrl = "http://localhost:3000"
 
-
 function applyThemeColor(){
   var themeColor = localStorage.getItem("configuredThemeColor")
 if(themeColor == null || themeColor == undefined || themeColor == "" || themeColor == "null" || themeColor == "undefined"){

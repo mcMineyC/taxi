@@ -1,207 +1,3 @@
-class PlayerQueue {
-    constructor(){
-        if(localStorage.getItem("stateLastShuffled") == null){
-            console.log("Setting stateLastShuffled to true")
-            window.localStorage.setItem("stateLastShuffled", true)
-        }
-        if(localStorage.getItem("stateLastLooped") == null){
-            window.localStorage.setItem("stateLastLooped", true)
-        }
-        this.shuffled = (localStorage.getItem("stateLastShuffled") == "true")
-        this.looped = (localStorage.getItem("stateLastLooped") == "true")
-        this.pos = 0
-        this.queue = []
-        this.shuffleLock = false
-        let loadedQueue = false
-        if(localStorage.getItem("stateLastQueue") != null){
-            try{
-                this.queue = JSON.parse(localStorage.getItem("stateLastQueue"))
-                this.pos = parseInt(localStorage.getItem("stateLastPos"))
-                console.log("Loaded queue from local storage")
-                loadedQueue = true
-            }catch(e){
-                console.log("Failed to load queue from local storage")
-            }
-        }
-        if(loadedQueue){
-            console.log("Force updating queue")
-            this.update(true)
-        }
-    }
-    set(queuer){
-        console.log({"shuffled": this.shuffled})
-        if(this.shuffled == true){
-            console.log("Setting shuffled queue")
-            this.queue = this.shuffist(queuer)
-        }else{
-            console.log("Setting unshuffled queue")
-            this.queue = queuer
-        }
-    }
-    get(){
-        return this.queue
-    }
-    add(song){
-        this.queue.push(song)
-        showSnackbar("Added " + song + " to queue")
-    }
-    addList(list){
-        if(this.shuffled == true){
-            this.queue = this.queue.concat(this.shuffist(list))
-        }else{
-            this.queue = this.queue.concat(list)
-        }
-        showSnackbar("Added " + list.length + " songs to queue")
-    }
-    remove(song){
-        var q = this.queue
-        if(q.length == 0){
-            return
-        }
-        if(q[0] == song){
-            q.shift()
-        }else{
-            for(var i = 0; i < q.length; i++){
-                if(q[i] == song){
-                    q.splice(0, i)
-                    break
-                }
-            }
-        }
-    }
-    clear(click){
-        this.queue = []
-
-        if(click == true){
-            window.localStorage.removeItem("stateLastQueue")
-            window.localStorage.removeItem("stateLastPos")
-            window.localStorage.removeItem("stateLastShuffled")
-            window.localStorage.removeItem("stateLastLooped")
-        
-            this.changeInfo(true)
-            this.update(true)
-            Howler.stop()
-            window.localPlaying.set(false)
-        }
-
-        if(window.navigationInfo.get()["location"] == "queue"){
-            reset()
-            getQueue()
-        }
-    }
-    setPos(pos){
-        if(this.pos+pos > this.queue.length-1){
-            console.log("At the end of the queue")
-            showSnackbar("At the end of the queue")
-            if(this.looped){
-                console.log("Looped")
-                this.pos = 0
-                this.queue = this.shuffist(this.queue)
-                return true
-            }else{
-                console.log("Not looping")
-                return false
-            }
-        }else{
-            this.pos = this.pos + pos
-            return true
-        }
-    }
-    getPos(){
-        return this.pos
-    }
-    async update(force){
-        if (typeof(window.localPlaying) == "undefined") {
-            console.log("Not playing");
-        }else if(window.localPlaying.get() && (typeof(force) == "undefined" || force == false)){
-            return
-        }
-        if(this.queue.length == 0){
-            return
-        }
-        var song = this.queue[this.pos]
-        playSong(song)
-        this.currentSong = song
-        this.changeInfo()
-    }
-    async shuffle(){
-        if(this.shuffleLock == true){
-            return
-        }
-        this.shuffleLock = true
-        
-        this.queue = this.shuffist(this.queue)
-
-        if(window.navigationInfo.get()["location"] == "queue"){
-            reset()
-            getQueue()
-        }
-
-        this.shuffleLock = false
-    }
-    loop(val){
-        localStorage.setItem("stateLastLooped", val)
-        this.looped = val
-    }
-    next(){
-        if(this.setPos(1)){
-            this.update(true)
-        }
-    }
-    previous(){
-        if(this.setPos(-1)){
-            this.update(true)
-        }
-    }
-    changeInfo(clear){
-        document.getElementById("playercontrols-box-info").style.visibility = "visible"
-        document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
-        var title = document.getElementById("playercontrols-info-title")
-        var album = document.getElementById("playercontrols-info-album")
-        var artist = document.getElementById("playercontrols-info-artist")
-        if(this.currentSong == undefined || clear == true){
-            document.getElementById("playercontrols-box-info").style.visibility = "hidden"
-            document.getElementById("playercontrols-box-info").style.pointerEvents = "none"
-            return
-        }else{
-            document.getElementById("playercontrols-box-info").style.visibility = "visible"
-            document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
-        }
-        var cSong = window.fetchedData.getSong(this.currentSong)
-        
-        title.setAttribute("thingid", cSong["id"])
-        album.setAttribute("thingid", cSong["albumId"])
-        artist.setAttribute("thingid", cSong["artistId"])
-
-        title.innerHTML = cSong["displayName"]
-        album.innerHTML = window.fetchedData.getAlbum(cSong["albumId"])["displayName"]
-        artist.innerHTML = window.fetchedData.getArtist(cSong["artistId"])["displayName"]
-    }
-    shuffist(array) {
-        let currentIndex = array.length,  randomIndex;
-      
-        // While there remain elements to shuffle.
-        while (currentIndex > 0) {
-      
-          // Pick a remaining element.
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-      
-          // And swap it with the current element.
-          [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
-        }
-      
-        return array;
-    }
-    save(){
-        localStorage.setItem("stateLastQueue", JSON.stringify(this.queue))
-        localStorage.setItem("stateLastPos", this.pos)
-        localStorage.setItem("stateLastShuffled", this.shuffled)
-        localStorage.setItem("stateLastLooped", this.looped)
-    }
-}
-
 class Position {
     constructor(currPos){
         this.pos = currPos
@@ -212,19 +8,6 @@ class Position {
     }
     get(){
         return this.pos
-    }
-}
-
-class Playing {
-    constructor(currState){
-        this.state = currState
-    }
-    set(state){
-        this.state = state
-        document.getElementById("playercontrols-bottom").setAttribute("playing", state);
-    }
-    get(){
-        return this.state
     }
 }
 
@@ -299,111 +82,355 @@ setInterval(function() {
     }
 }, 1000);
 
+class Player{
+    constructor(){
+        this.volume = 1
+        this.muted = false
+        this.doing = false
+        this.thinking = false
+        this.canPlay = false
+
+        if(localStorage.getItem("stateLastShuffled") == null){
+            console.log("Setting stateLastShuffled to true")
+            window.localStorage.setItem("stateLastShuffled", true)
+        }
+        if(localStorage.getItem("stateLastLooped") == null){
+            window.localStorage.setItem("stateLastLooped", true)
+        }
+        this.looped = (localStorage.getItem("stateLastLooped") == "true")
+        this.pos = 0
+        this.queue = []
+        this.shuffleLock = false
+        let loadedQueue = false
+        if(localStorage.getItem("stateLastQueue") != null){
+            try{
+                this.queue = JSON.parse(localStorage.getItem("stateLastQueue"))
+                this.pos = parseInt(localStorage.getItem("stateLastPos"))
+                console.log("Loaded queue from local storage")
+                loadedQueue = true
+            }catch(e){
+                console.log("Failed to load queue from local storage")
+            }
+        }
+        if(loadedQueue){
+            console.log("Force updating queue")
+            this.canPlay = true
+            this.update(true)
+        }
+        console.log("Player created")
+    }
+    setVolume(vol){
+        this.volume = vol
+        window.howlerInstance.volume(vol)
+    }
+    getVolume(){
+        return this.volume
+    }
+
+    //TODO Fix AI borks
+    setMuted(muted){
+        this.muted = muted
+        if(muted){
+            window.howlerInstance.mute()
+        } else {
+            window.howlerInstance.unmute()
+        }
+    }
+    getMuted(){
+        return this.muted
+    }
+    setPlaying(state){
+        this.doing = state
+        document.getElementById("playercontrols-bottom").setAttribute("playing", state);
+    }
+    getPlaying(){
+        return (this.doing || this.thinking)
+    }
+    setThinking(state){
+        this.thinking = state
+    }
+    getThinking(){
+        return this.thinking
+    }
+    playList(list){
+        this.clearQueue()
+        this.setQueue(list)
+        this.update(true)
+    }
+    setQueue(queuer){
+        this.queue = queuer
+        this.pos = 0
+    }
+    getQueue(){
+        return this.queue
+    }
+    addToQueue(song){
+        this.queue.push(song)
+        showSnackbar("Added " + song + " to queue")
+    }
+    addListToQueue(list){
+        this.queue = this.queue.concat(list)
+        showSnackbar("Added " + list.length + " songs to queue. new length: " + this.queue.length)
+    }
+    removeFromQueue(song){
+        var q = this.queue
+        if(q.length == 0){
+            return
+        }
+        if(q[0] == song){
+            q.shift()
+        }else{
+            for(var i = 0; i < q.length; i++){
+                if(q[i] == song){
+                    q.splice(0, i)
+                    break
+                }
+            }
+        }
+    }
+    clearQueue(click){
+        this.queue = []
+        this.pos = 0
+
+        if(click == true){
+            window.localStorage.removeItem("stateLastQueue")
+            window.localStorage.removeItem("stateLastPos")
+            window.localStorage.removeItem("stateLastShuffled")
+            window.localStorage.removeItem("stateLastLooped")
+        
+            this.changeInfo(true)
+            this.update(true)
+            Howler.stop()
+            this.setPlaying(false)
+            this.setThinking(false)
+        }
+    }
+    setQueuePos(pos){
+        if(this.pos+pos > this.queue.length-1){
+            console.log("At the end of the queue")
+            showSnackbar("At the end of the queue")
+            if(this.looped){
+                console.log("Looped")
+                this.pos = 0
+                this.queue = this.shuffist(this.queue)
+                return true
+            }else{
+                console.log("Not looping")
+                return false
+            }
+        }else if(this.pos+pos < 0){
+            console.log("At the beginning of the queue")
+            showSnackbar("At the beginning of the queue")
+            if(this.looped){
+                console.log("Looped")
+                this.pos = this.queue.length-1
+                return true
+            }else{
+                console.log("Not looping")
+                return false
+            }
+        }else{
+            this.pos = this.pos + pos
+            return true
+        }
+    }
+    getQueuePos(){
+        return this.pos
+    }
+    async update(force){
+        if (this.getPlaying() == false) {
+            console.log("Not playing");
+        }else if(this.getPlaying() && (typeof(force) == "undefined" || force == false)){
+            return
+        }
+        if(this.queue.length == 0){
+            return
+        }
+        var song = this.queue[this.pos]
+        this.playSong(song)
+        this.currentSong = song
+        this.changeInfo()
+    }
+    async shuffle(){
+        if(this.shuffleLock == true){
+            return
+        }
+        this.shuffleLock = true
+        
+        this.queue = this.shuffist(this.queue)
+        this.pos = 0
+        this.update(true)
+
+        if(window.navigationInfo.get()["location"] == "queue"){
+            reset()
+            getQueue()
+        }
+
+        this.shuffleLock = false
+    }
+    loop(val){
+        localStorage.setItem("stateLastLooped", val)
+        this.looped = val
+    }
+    next(){
+        if(this.setQueuePos(1)){
+            this.update(true)
+        }
+    }
+    previous(){
+        if(this.setQueuePos(-1)){
+            this.update(true)
+        }
+    }
+    changeInfo(clear){
+        document.getElementById("playercontrols-box-info").style.visibility = "visible"
+        document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
+        var title = document.getElementById("playercontrols-info-title")
+        var album = document.getElementById("playercontrols-info-album")
+        var artist = document.getElementById("playercontrols-info-artist")
+        if(this.currentSong == undefined || clear == true){
+            document.getElementById("playercontrols-box-info").style.visibility = "hidden"
+            document.getElementById("playercontrols-box-info").style.pointerEvents = "none"
+            if(window.navigationInfo.get()["location"] == "queue"){
+                reset()
+                getQueue()
+            }
+            return
+        }else{
+            document.getElementById("playercontrols-box-info").style.visibility = "visible"
+            document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
+        }
+        var cSong = window.fetchedData.getSong(this.currentSong)
+        
+        title.setAttribute("thingid", cSong["id"])
+        album.setAttribute("thingid", cSong["albumId"])
+        artist.setAttribute("thingid", cSong["artistId"])
+
+        title.innerHTML = cSong["displayName"]
+        album.innerHTML = window.fetchedData.getAlbum(cSong["albumId"])["displayName"]
+        artist.innerHTML = window.fetchedData.getArtist(cSong["artistId"])["displayName"]
+
+        if(window.navigationInfo.get()["location"] == "queue"){
+            console.log("Refetching queue")
+            reset()
+            getQueue()
+        }
+        
+    }
+    shuffist(array) {
+        let currentIndex = array.length,  randomIndex;
+      
+        // While there remain elements to shuffle.
+        while (currentIndex > 0) {
+      
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      
+        return array;
+    }
+    async saveQueue(){
+        localStorage.setItem("stateLastQueue", JSON.stringify(this.queue))
+        localStorage.setItem("stateLastPos", this.pos)
+        localStorage.setItem("stateLastShuffled", this.shuffled)
+        localStorage.setItem("stateLastLooped", this.looped)
+    }
+    playSong(id) {
+        if(typeof(window.howlerInstance) == "undefined"){
+            console.log("No howler instance");
+        }else{
+            window.howlerInstance.stop();
+            window.howlerInstance.off("play")
+            window.howlerInstance.off("pause")
+            window.howlerInstance.off("end")
+            window.howlerInstance.off("load")
+        }
+        if(typeof(window.howlerId) == "undefined"){
+            console.log("No howler playing");
+        }
+        var song = new Howl({
+            src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio'],
+            html5: true
+        })
+        var i = song.play();
+        var tt = this
+        song.on('play', function() {
+            console.log("Playing song")
+            tt.setPlaying(true);
+        })
+        song.on('pause', function() {
+            console.log("Paused song")
+            tt.setPlaying(false);
+        })
+        song.on('end', function() {
+            console.log("Ended song")
+            tt.setPlaying(false);
+            if(tt.setQueuePos(1)) tt.update(true)
+            setProgress(0)
+        })
+        song.once('load', function() {
+            console.log("Loaded song")
+            window.duration = song.duration();
+            tt.setThinking(false)
+        })
+    
+        window.localId = i
+        window.howlerInstance = song;
+        window.progress = new Position(0);
+        window.progress.set(song.seek())
+        tt.setThinking(true)
+    }
+
+}
+
 document.addEventListener('DOMContentLoaded', function(){
     window.setProgress = setProgress
-    document.getElementById("playercontrols-bottom").onwheel = handleScroll
+    document.getElementById("playercontrols-bottom").onwheel = scrollThrottled
     window.prefs = new UserPreferences();
     window.authSettings = new AuthSettings(window.prefs.getBackendUrl(), window.prefs.getFrontendUrl()+"/login.html")
     window.fetchedData = new FetchedData();
     window.fetchedData.onceInitalized(function(){
         getHome()
-        window.localQueue = new PlayerQueue();
+        window.localPlayer = new Player();
     })
     window.visibleContent = new VisibleContent();
     window.unsyncedPlaylists = new Playlists();
-    
-    window.onscroll = function(ev) {
-        if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
-            // you're at the bottom of the page
-            console.log("Bottom of page");
-        }
-    };  
 })
 
 async function saveQueueClick(){
-    if(typeof(window.localQueue) == "undefined"){
+    if(typeof(this) == "undefined"){
         console.log("No queue instance");
-        window.localQueue = new PlayerQueue();
+        window.localPlayer = new Player();
     }
-    window.localQueue.save()
+    window.localPlayer.saveQueue()
     console.log("Saving queue")
 }
 
 function handleLoopClick(th){
-    window.localQueue.loop(th.getAttribute("enabled") == "true")
-    console.log("Looping: "+window.localQueue.shuffled)
-    /*
-    if(window.localQueue.looped){
-        showSnackbar("Looping")
-    }else{
-        showSnackbar("Not looping")
-    }*/
+    window.localPlayer.loop(th.getAttribute("enabled") == "true")
+    console.log("Looping: "+window.localPlayer.looped)
 }
 
 function handleSongClick(id) {
-    if(typeof(window.localQueue) == "undefined"){
+    if(typeof(this) == "undefined"){
         console.log("No queue instance");
-        window.localQueue = new PlayerQueue();
+        window.localPlayer = new Player();
     }
     var f = false
     if(!window.prefs.getAddToQueue()){
-        window.localQueue.clear()
+        window.localPlayer.clearQueue()
         f = true
     }
     console.log("Added " + id + " to queue")
-    window.localQueue.add(id)
-    window.localQueue.update(f)
+    window.localPlayer.addToQueue(id)
+    window.localPlayer.update(f)
 }
 
-function playList(list){
-    if(typeof(window.localQueue) == "undefined"){
-        console.log("No queue instance");
-        window.localQueue = new PlayerQueue();
-    }
-    window.localQueue.clear()
-    window.localQueue.set(list)
-    window.localQueue.update(true)
-}
-
-function playSong(id) {
-    if(typeof(window.howlerInstance) == "undefined"){
-        console.log("No howler instance");
-    }else{
-        window.howlerInstance.stop();
-        window.howlerInstance.off("play")
-        window.howlerInstance.off("pause")
-        window.howlerInstance.off("end")
-        window.howlerInstance.off("load")
-    }
-    if(typeof(window.howlerId) == "undefined"){
-        console.log("No howler playing");
-    }
-    var song = new Howl({
-        src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio'],
-        html5: true
-    })
-    var i = song.play();
-    song.on('play', function() {
-        window.localPlaying.set(true);
-    })
-    song.on('pause', function() {
-        window.localPlaying.set(false);
-    })
-    song.on('end', function() {
-        window.localPlaying.set(false)
-        if(window.localQueue.setPos(1)) window.localQueue.update()
-        setProgress(0)
-    })
-    song.once('load', function() {
-        window.duration = song.duration();
-    })
-
-    window.localId = i
-    window.howlerInstance = song;
-    window.progress = new Position(0);
-    window.progress.set(song.seek())
-    window.localPlaying = new Playing(true);
-}
 // Update progress bar on seek/position change
 function setProgress(val){
     var p = val / window.duration;

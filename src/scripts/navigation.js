@@ -343,9 +343,9 @@ class VisibleContent{
 }
 
 async function getQueue(){
-    if(typeof(window.localQueue) == "undefined"){
+    if(typeof(window.localPlayer) == "undefined"){
         console.log("No queue instance");
-    }else if(window.localQueue.get().length == 0){
+    }else if(window.localPlayer.getQueue().length == 0){
         console.log("Queue is empty")
         reset()
         document.getElementById("content").innerHTML = `
@@ -354,8 +354,8 @@ async function getQueue(){
     }else{
         reset()
         var innerhtml = "";
-        for(var x = 0; x < window.localQueue.get().length; x++){
-            var sInfo = window.fetchedData.getSong(window.localQueue.get()[x])
+        for(var x = 0; x < window.localPlayer.getQueue().length; x++){
+            var sInfo = window.fetchedData.getSong(window.localPlayer.getQueue()[x])
             innerhtml += `
                 <m3-queue-list-item image="${window.prefs.getBackendUrl()+"/info/songs/" + sInfo["id"] + "/image"}" song="${sInfo["displayName"]}" album="${sInfo["albumId"]}" artist="${sInfo["artistId"]}" albumClick="albumClick('${sInfo["albumId"]}')" artistClick="artistClick('${sInfo["artistId"]}')" duration="${Math.floor(Math.round(sInfo["duration"]) / 60)+":"+Math.round(sInfo["duration"] % 60).toString().padStart(2, '0')}"></m3-queue-list-item>`
         }

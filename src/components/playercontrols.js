@@ -26,7 +26,7 @@ class playercontrols_bottom extends HTMLElement {
                         <md-filled-button id="playercontrols-bottom-next" onclick="handleNext()">
                             <md-icon>skip_next</md-icon>
                         </md-filled-button>
-                        <m3-toggle-button id="playercontrols-bottom-loop" propId="looped" icon="loop" enabled="${(window.localQueue == undefined ? {"looped": false} : window.localQueue).looped ? "true" : "false"}" onclick="this.toggle();handleLoopClick(this)"></m3-toggle-button>
+                        <m3-toggle-button id="playercontrols-bottom-loop" propId="looped" icon="loop" enabled="${(window.localPlayer == undefined ? {"looped": false} : window.localPlayer).looped ? "true" : "false"}" onclick="this.toggle();handleLoopClick(this)"></m3-toggle-button>
                     </div>
                     <div id="playercontrols-box-volume">
                         <md-icon-button variant="primary" onclick="handleMuteClick(this)">
@@ -43,19 +43,11 @@ class playercontrols_bottom extends HTMLElement {
         </div>
       `;
       var vs = this.getElementsByTagName("md-slider")[0]
-      vs.onwheel = function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        var d = (e.deltaY < 0 ? 1 : -1)
-        var np = vs.value + (d)
-        if(np < 0){
-            np = 0
-        }
-        if(np > 15){
-            np = 15
-        }
-        vs.value = np
-        window.Howler.volume(np / 15)
+      vs.onwheel = (eve) => {
+        console.log(eve)
+        eve.preventDefault()
+        eve.stopPropagation()
+        volumeScrollThrottled(vs,eve)
       }
       vs.addEventListener("change", function(){
           window.Howler.volume(vs.value / 15)

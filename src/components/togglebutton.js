@@ -3,8 +3,8 @@ class toggle_button extends HTMLElement {
     connectedCallback() {
         var v = {}
         v[this.getAttribute("propId")] = "false"
-        if(window.localQueue != undefined){
-            v[this.getAttribute("propId")] = window.localQueue[this.getAttribute("propId")]
+        if(window.localPlayer != undefined){
+            v[this.getAttribute("propId")] = window.localPlayer[this.getAttribute("propId")]
         }
       this.innerHTML = `
         <md-icon-button>
