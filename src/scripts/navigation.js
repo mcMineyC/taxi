@@ -431,8 +431,13 @@ async function settingsClick(){
         </md-list-item>
         <md-divider></md-divider>
         <md-list-item>
-            <span slot="start">Add song to queue when playing another one</span>
-            <md-switch id="settings-toggle-add-to-queue" class="settings-switch" ${(window.prefs.getAddToQueue() ? "selected" : "")} slot="end"></md-switch>
+            <span slot="start">Save queue on exit</span>
+            <md-switch id="settings-toggle-save-queue-exit" class="settings-switch" ${(window.prefs.getSaveQueueOnExit() ? "selected" : "")} slot="end"></md-switch>
+        </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
+            <span slot="start">Save queue on change</span>
+            <md-switch id="settings-toggle-save-queue-change" class="settings-switch" ${(window.prefs.getSaveQueueOnChange() ? "selected" : "")} slot="end"></md-switch>
         </md-list-item>
         <md-divider></md-divider>
         <md-list-item>

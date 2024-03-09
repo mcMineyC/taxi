@@ -125,8 +125,11 @@ class UserPreferences{
         if(window.localStorage.getItem("configuredDarkMode") == null){
             window.localStorage.setItem("configuredDarkMode", false)
         }
-        if(window.localStorage.getItem("configuredAddToQueue") == null){
-            window.localStorage.setItem("configuredAddToQueue", false)
+        if(window.localStorage.getItem("configuredSaveQueueOnExit") == null){
+            window.localStorage.setItem("configuredSaveQueueOnExit", false)
+        }
+        if(window.localStorage.getItem("configuredSaveQueueOnChange") == null){
+            window.localStorage.setItem("configuredSaveQueueOnChange", false)
         }
         if(window.localStorage.getItem("configuredHomeScreen") == null){
             window.localStorage.setItem("configuredHomeScreen", "artists")
@@ -145,8 +148,10 @@ class UserPreferences{
                 "playlists": []
             }))
         }
+        this.addToQueue = false
         this.darkMode = window.localStorage.getItem("configuredDarkMode") == "true"
-        this.addToQueue = window.localStorage.getItem("configuredAddToQueue") == "true"
+        this.saveQueueOnExit = window.localStorage.getItem("configuredSaveQueueOnExit") == "true"
+        this.saveQueueOnChange = window.localStorage.getItem("configuredSaveQueueOnChange") == "true"
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
         this.backendUrl = window.localStorage.getItem("configuredBackendUrl")
@@ -154,15 +159,25 @@ class UserPreferences{
         this.savedPlaylists = JSON.parse(window.localStorage.getItem("savedPlaylists"))
     }
 
+    setAddToQueue(addToQueue){
+        return
+    }
+
+
     setDarkMode(darkMode){
         this.darkMode = darkMode
         window.localStorage.setItem("configuredDarkMode", darkMode)
         window.apc()
     }
 
-    setAddToQueue(addToQueue){
-        window.localStorage.setItem("configuredAddToQueue", addToQueue)
-        this.addToQueue = addToQueue
+    setSaveQueueOnExit(addToQueue){
+        this.saveQueueOnExit = addToQueue
+        window.localStorage.setItem("configuredSaveQueueOnExit", addToQueue)
+    }
+
+    setSaveQueueOnChange(saveQueueOnChange){
+        this.saveQueueOnChange = saveQueueOnChange
+        window.localStorage.setItem("configuredSaveQueueOnChange", saveQueueOnChange)
     }
 
     setHomeScreen(homeScreen){
@@ -192,6 +207,14 @@ class UserPreferences{
 
     getAddToQueue(){
         return this.addToQueue
+    }
+
+    getSaveQueueOnExit(){
+        return this.saveQueueOnExit
+    }
+
+    getSaveQueueOnChange(){
+        return this.saveQueueOnChange
     }
 
     getHomeScreen(){
@@ -247,6 +270,16 @@ class UserPreferences{
         }
     }
 
+    addListToPlaylist(playlist_id, songs){
+        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
+            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
+                this.savedPlaylists["playlists"][i]["songs"] = this.savedPlaylists["playlists"][i]["songs"].concat(songs)
+                this.setPlaylists(this.savedPlaylists)
+                return
+            }
+        }
+    }
+
     removeFromPlaylist(playlist_id, index){
         for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
             if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
@@ -263,7 +296,7 @@ class UserPreferences{
     }
 
     savePlaylists(){
-        
+        window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.savedPlaylists}))
     }
 
     toggleDarkMode(){
@@ -271,7 +304,15 @@ class UserPreferences{
     }
 
     toggleAddToQueue(){
-        this.setAddToQueue(!this.getAddToQueue())
+        return
+    }
+
+    toggleSaveQueueOnExit(){
+        this.setSaveQueueOnExit(!this.getSaveQueueOnExit())
+    }
+
+    toggleSaveQueueOnChange(){
+        this.setSaveQueueOnChange(!this.getSaveQueueOnChange())
     }
 
 }
@@ -342,8 +383,11 @@ function addSettingsActions(){
     document.getElementById("settings-toggle-dark-mode").addEventListener("change", function(){
         window.prefs.toggleDarkMode()
     })
-    document.getElementById("settings-toggle-add-to-queue").addEventListener("change", function(){
-        window.prefs.toggleAddToQueue()
+    document.getElementById("settings-toggle-save-queue-exit").addEventListener("change", function(){
+        window.prefs.toggleSaveQueueOnExit()
+    })
+    document.getElementById("settings-toggle-save-queue-change").addEventListener("change", function(){
+        window.prefs.toggleSaveQueueOnChange()
     })
     document.getElementById("settings-theme-hex-code-save").addEventListener("click", function(){
         window.prefs.setThemeColor(document.getElementById("settings-theme-hex-code").value)

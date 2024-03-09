@@ -32,7 +32,7 @@ class playercontrols_bottom extends HTMLElement {
                         <md-icon-button variant="primary" onclick="handleMuteClick(this)">
                             <md-icon>volume_up</md-icon>
                         </md-icon-button>
-                        <md-slider ticks id="playercontrols-bottom-volume" min="0" max="15" value="15"></md-slider>
+                        <md-slider ticks id="playercontrols-bottom-volume" min="0" max="15" value="${(window.localPlayer == undefined ? {"volume": 0} : window.localPlayer).volume}"></md-slider>
                     </div>
                 </div>
                 <div class="playercontrols-spacer"></div>
@@ -50,7 +50,7 @@ class playercontrols_bottom extends HTMLElement {
         volumeScrollThrottled(vs,eve)
       }
       vs.addEventListener("change", function(){
-          window.Howler.volume(vs.value / 15)
+          window.localPlayer.setVolume(vs.value / 15)
       })
     }
     attributeChangedCallback(name, oldValue, newValue) {

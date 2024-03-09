@@ -89,6 +89,9 @@ class Player{
         this.doing = false
         this.thinking = false
         this.canPlay = false
+        this.pos = 0
+        this.queue = []
+        this.shuffleLock = false
 
         if(localStorage.getItem("stateLastShuffled") == null){
             console.log("Setting stateLastShuffled to true")
@@ -97,15 +100,24 @@ class Player{
         if(localStorage.getItem("stateLastLooped") == null){
             window.localStorage.setItem("stateLastLooped", true)
         }
+        if(localStorage.getItem("stateLastVolume") == null){
+            window.localStorage.setItem("stateLastVolume", 1)
+        }
+
+        this.setVolume(parseFloat(localStorage.getItem("stateLastVolume")))
+
         this.looped = (localStorage.getItem("stateLastLooped") == "true")
-        this.pos = 0
-        this.queue = []
-        this.shuffleLock = false
+
         let loadedQueue = false
         if(localStorage.getItem("stateLastQueue") != null){
             try{
                 this.queue = JSON.parse(localStorage.getItem("stateLastQueue"))
                 this.pos = parseInt(localStorage.getItem("stateLastPos"))
+                if(localStorage.getItem("stateLastSeek") != null){
+                    this.dur = parseInt(localStorage.getItem("stateLastSeek"))
+                }else{
+                    this.dur = 0
+                }
                 console.log("Loaded queue from local storage")
                 loadedQueue = true
             }catch(e){
@@ -120,8 +132,10 @@ class Player{
         console.log("Player created")
     }
     setVolume(vol){
+        console.log("Setting volume to "+vol)
         this.volume = vol
-        window.howlerInstance.volume(vol)
+        Howler.volume(vol)
+        document.getElementById("playercontrols-bottom").setAttribute("volume", vol*15);
     }
     getVolume(){
         return this.volume
@@ -339,6 +353,8 @@ class Player{
         localStorage.setItem("stateLastPos", this.pos)
         localStorage.setItem("stateLastShuffled", this.shuffled)
         localStorage.setItem("stateLastLooped", this.looped)
+        localStorage.setItem("stateLastSeek", window.howlerInstance.seek())
+        localStorage.setItem("stateLastVolume", this.volume)
     }
     playSong(id) {
         if(typeof(window.howlerInstance) == "undefined"){
@@ -360,8 +376,14 @@ class Player{
         var i = song.play();
         var tt = this
         song.on('play', function() {
+            if(tt.canPlay == true && tt.dur != undefined){
+                song.seek(tt.dur)
+                Howler.volume(tt.volume)
+                tt.dur = undefined
+            }
             console.log("Playing song")
             tt.setPlaying(true);
+            tt.canPlay = false
         })
         song.on('pause', function() {
             console.log("Paused song")
@@ -379,7 +401,7 @@ class Player{
             tt.setThinking(false)
         })
     
-        window.localId = i
+        window.howlerId = i
         window.howlerInstance = song;
         window.progress = new Position(0);
         window.progress.set(song.seek())
@@ -400,6 +422,12 @@ document.addEventListener('DOMContentLoaded', function(){
     })
     window.visibleContent = new VisibleContent();
     window.unsyncedPlaylists = new Playlists();
+})
+
+window.addEventListener('beforeunload', function(){
+    if(window.prefs.getSaveQueueOnExit()){
+        window.localPlayer.saveQueue()
+    }
 })
 
 async function saveQueueClick(){

@@ -2,17 +2,20 @@ function handlePrev(){
     window.localPlayer.previous()
 }
 function handlePause(){
-    if(typeof(window.localPlayer) != "undefined" && window.localPlayer.canPlay == true){
-        window.localPlayer.update(true)
-        return
-    }
+    console.log("Handle pausing")
     if(typeof(window.howlerInstance) == "undefined"){
         console.log("No howler instance");
         return
     }
-    if (window.localPlayer.getPlaying()) {
+    if(window.localPlayer != undefined && window.localPlayer.canPlay == true){
+        window.localPlayer.update(true)
+        return
+    }
+    if (window.localPlayer.getPlaying() == true) {
+        console.log("Pausing")
         window.howlerInstance.pause()
     } else {
+        console.log("Playing")
         window.howlerInstance.play()
     }
 }
@@ -52,8 +55,7 @@ function handleVolumeScroll(vs,e){
     if(np > 15){
         np = 15
     }
-    vs.value = np
-    window.Howler.volume(np / 15)
+    window.localPlayer.setVolume(np/15)
   }
 
 const volumeScrollThrottled = _.throttle(handleVolumeScroll, 128, {trailing: false})
