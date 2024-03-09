@@ -119,7 +119,7 @@ function contextMenu(event){
                         break;
                     case "playlist":
                         console.log("playlist")
-                        showSnackbar("Not implemented.  How did you even click that?")
+                        window.localPlayer.playList(window.prefs.getPlaylist(thingid).songs)
                         break;
                     case "song":
                         console.log("song")
@@ -139,7 +139,7 @@ function contextMenu(event){
                         break;
                     case "playlist":
                         console.log("playlist")
-                        showSnackbar("Not implemented.  This should be inaccessible. #$%#%$@#$%!")
+                        window.localPlayer.addListToQueue(window.prefs.getPlaylist(thingid).songs)
                         break;
                     case "song":
                         console.log("song")
@@ -160,6 +160,7 @@ function contextMenu(event){
       });
     });
   
+    
     // Add an event listener to close the custom context menu when clicking outside of it
     document.addEventListener('click', function(event) {
       if (!customContextMenu.contains(event.target)) {
@@ -179,22 +180,24 @@ function contextMenu(event){
     customContextMenu.querySelector("#addplaylist-popout").addEventListener("mouseover", function(){
         console.log("Playlist moused")
         var inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-        customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex"
-        try{
-            var p = window.prefs.getPlaylists();
-            if(p.length == 0){
-                inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
-                return
+        customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex";
+        (()=>{
+            try{
+                var p = window.prefs.getPlaylists();
+                if(p.length == 0){
+                    inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
+                    customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
+                    return
+                }
+                for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
+                    inHtml += `<li value="addplaylist" vvalue="${p[x]["id"]}">${p[x]["displayName"]}</li>`
+                }
+                inHtml += `<li value="more"><md-icon>more_horiz</md-icon>More</li>`
+            }catch(e){
+                console.log(e)
+                inHtml = "No playlists"
             }
-            for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
-                inHtml += `<li value="addplaylist" vvalue="${p[x]["id"]}">${p[x]["displayName"]}</li>`
-            }
-            inHtml += `<li value="more"><md-icon>more_horiz</md-icon>More</li>`
-        }catch(e){
-            console.log(e)
-            inHtml = "No playlists"
-        }
+        })();
         customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
 
         customContextMenu.querySelector("#addplaylist-popout-menu").querySelectorAll("li").forEach(element => {

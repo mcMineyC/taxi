@@ -525,6 +525,76 @@ async function playlistClicked(id){
     })
 }
 
+async function createPlaylistDialog(type, id){
+    addPlaylistClick((d) => {
+        console.log("Created playlist: " + d.displayName)
+        switch(type){
+            case "album":
+                console.log("album")
+                window.prefs.addListToPlaylist(d.id, window.fetchedData.getSongsByAlbum(id).map(entry => entry.id))
+                break;
+            case "artist":
+                console.log("artist")
+                window.prefs.addListToPlaylist(d.id, window.fetchedData.getSongsByArtist(id).map(entry => entry.id))
+                break;
+            case "playlist":
+                console.log("playlist")
+                break;
+            case "song":
+                console.log("song")
+                window.prefs.addToPlaylist(d.id, id)
+                break;
+        }
+    })
+}
+
+async function addPlaylistClick(doNext){
+    let inHtml = `
+        <md-dialog id="dialogger">
+            <div slot="headline">
+              Add playlist
+            </div>
+            <form slot="content" id="add-playlist-form" method="dialog">
+                <md-outlined-text-field id="playlist-name" label="Playlist name"></md-outlined-text-field>
+                <md-switch id="playlist-public">Public</md-switch>
+            </form>
+            <div slot="actions">
+              <md-text-button onclick="closeDialog()">Create</md-text-button>
+            </div>
+        </md-dialog>
+    `
+    let d = document.querySelector("#dialog-box")
+    d.innerHTML = inHtml
+    document.querySelector("#dialogger").open = true
+    document.querySelector("#dialogger").addEventListener("closed", async ()=>{
+        let d = document.querySelector("#dialog-box").querySelector("md-dialog")
+        let name = d.querySelector("md-outlined-text-field#playlist-name").value
+        let public = d.querySelector("md-switch#playlist-public").selected
+        let u = window.authSettings.getUsername()
+
+        var id = u+"_"+name
+        var hashed = await hash(id)
+        var data = {
+            "id": hashed, 
+            "displayName": name, 
+            "public": public,
+            "songs": []
+        }
+        console.log(data)
+        d.close(data)
+        window.prefs.addPlaylist(data)
+        if(doNext != undefined){
+            doNext(data)
+        }
+    })
+    await getPromiseFromEvent(document.querySelector("#dialogger"), "closed")
+    // console.log("Dialog result: " + t)
+}
+
+function closeDialog(){
+    document.querySelector("#dialogger").close()
+}
+
 async function getHome(place) {
     reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
@@ -606,3 +676,24 @@ async function back(){
     }
     window.navigationInfo.prevPop()
 }  
+
+function getPromiseFromEvent(item, event) {
+    return new Promise((resolve) => {
+      const listener = () => {
+        item.removeEventListener(event, listener);
+        resolve();
+      }
+      item.addEventListener(event, listener);
+    })
+}
+
+    
+async function hash(string) {
+    const utf8 = new TextEncoder().encode(string);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((bytes) => bytes.toString(16).padStart(2, '0'))
+      .join('');
+    return hashHex;
+  }

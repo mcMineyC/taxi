@@ -27,10 +27,12 @@ app.post('/auth', function (req, res) {
     data = JSON.parse(data);
     var authed = false
     var authtoken = "";
+    var username = ""
     for(var x = 0; x < data["users"].length; x++){
         if(data["users"][x]["loginName"] == req.body.username){
             if(data["users"][x]["password"] == req.body.password){
-                console.log("Authorizing user "+data["users"][x]["displayName"])
+                username = data["users"][x]["loginName"]
+                console.log("Authorizing user "+username)
                 authed = true
                 authtoken = crypto.randomBytes(64).toString('hex');
                 data["users"][x]["authtoken"] = authtoken;
@@ -47,7 +49,7 @@ app.post('/auth', function (req, res) {
             }
         }
     }
-    res.send({"authorized": authed, "authtoken": authtoken})
+    res.send({"authorized": authed, "authtoken": authtoken, "username": username})
 });
 
 app.post('/authtoken', function (req, res) {
@@ -55,9 +57,11 @@ app.post('/authtoken', function (req, res) {
     data = JSON.parse(data);
     var authed = false
     var authtoken = ""
+    var username = ""
     for(var x = 0; x < data["users"].length; x++){
         if(data["users"][x]["authtoken"] == req.body.authtoken){
-            console.log("Authorizing user "+data["users"][x]["displayName"]+" based on auth token")
+            username = data["users"][x]["loginName"]
+            console.log("Authorizing user "+username+" based on auth token")
             authed = true
             authtoken = crypto.randomBytes(64).toString('hex');
             data["users"][x]["authtoken"] = authtoken;
@@ -65,7 +69,20 @@ app.post('/authtoken', function (req, res) {
             break
         }
     }
-    res.send({"authorized": authed, "authtoken": authtoken})
+    res.send({"authorized": authed, "authtoken": authtoken, "username": username})
+})
+
+app.post('/username', function (req, res) {
+    var data = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
+    data = JSON.parse(data);
+    var username = ""
+    for(var x = 0; x < data["users"].length; x++){
+        if(data["users"][x]["authtoken"] == req.body.authtoken){
+            username = data["users"][x]["loginName"]
+            break
+        }
+    }
+    res.send({"authorized": true, "username": username})
 })
 
 app.post('/info/all', function (req, res) {

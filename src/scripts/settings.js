@@ -1,5 +1,6 @@
 class AuthSettings{
     constructor(url, authPageUrl){
+        this.username = "BANANAS ARE GR8!!!"
         this.authUrl = url
         this.authPageUrl = authPageUrl
         this.onLogin = () => {}
@@ -16,6 +17,9 @@ class AuthSettings{
         }
         if(this.authToken == "" && window.location.href != this.authPageUrl) {
             window.location = this.authPageUrl
+        }
+        if(window.localStorage.getItem("savedUsername") != null){
+            this.username = window.localStorage.getItem("savedUsername")
         }
         console.log("Initialized auth settings with url "+this.authUrl)
     }
@@ -41,6 +45,7 @@ class AuthSettings{
             console.log(response.data);
             if(response.data["authorized"] == true){
                 this.setAuthToken(response.data["authtoken"])
+                this.setUsername(response.data["username"])
                 this.onRefreshToken()
             }
         })
@@ -76,6 +81,7 @@ class AuthSettings{
                 console.log(response.data);
                 if(response.data["authorized"] == true){
                     this.setAuthToken(response.data["authtoken"])
+                    this.setUsername(response.data["username"])
                     this.onLogin()
                     return true
                 }else{
@@ -102,6 +108,7 @@ class AuthSettings{
             console.log(response.data);
             if(response.data["authorized"] == true){
                 this.setAuthToken(response.data["authtoken"])
+                this.setUsername(response.data["username"])
                 this.onLogin()
                 return true
             }else{
@@ -116,6 +123,32 @@ class AuthSettings{
                 console.error(error);
             }
         });
+    }
+
+    getUsername(){
+        if(this.username == "BANANAS ARE GR8!!!"){
+            let usp = new URLSearchParams()
+            usp.append('authtoken', this.authToken);
+            console.log("Posting /username")
+            var tt = this
+            axios.post(this.authUrl+"/username", usp).then((response) => {
+                if(response.data["authorized"] == true){
+                    tt.setUsername(response.data["username"])
+                }
+            }).catch((error) => {
+                if (error.code == "ERR_NETWORK"){
+                    this.onDown()
+                }else{
+                    console.error(error);
+                }
+            });
+        }
+        return this.username
+    }
+
+    setUsername(username){
+        this.username = username
+        localStorage.setItem("savedUsername", username)
     }
 
 }
@@ -234,7 +267,7 @@ class UserPreferences{
     }
 
     getPlaylists(){
-        return window.unsyncedPlaylists.get()
+        return this.savedPlaylists["playlists"]
     }
 
     getPlaylist(playlist_id){
@@ -252,7 +285,7 @@ class UserPreferences{
 
     addPlaylist(playlist){
         this.savedPlaylists["playlists"].push(playlist)
-        this.setPlaylists(this.savedPlaylists)
+        window.localStorage.setItem("savedPlaylists", JSON.stringify(this.savedPlaylists))
     }
 
     removePlaylist(playlist){
