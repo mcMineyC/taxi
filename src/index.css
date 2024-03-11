@@ -3,6 +3,7 @@
 @import url("styles/theme.css");
 
 @import url("styles/snackbar.css");
+@import url("styles/playlists.css");
 @import url("styles/context-menu.css");
 @import url("styles/cards/cards.css");
 @import url("styles/bottom/playercontrols.css");
@@ -10,6 +11,7 @@
 @import url("styles/top/header.css");
 @import url("styles/settings.css");
 @import url("styles/queue.css");
+@import url("styles/list-item.css");
 @import url("styles/login.css");
 
 
@@ -37,7 +39,7 @@
 }
 m3-playercontrols-bottom{
     position: fixed;
-    z-index: 999999999;
+    z-index: 999;
 }
 
 *[slot="end"]{

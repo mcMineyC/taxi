@@ -1,3 +1,8 @@
+:root {
+    --md-ref-typeface-brand: 'Poppins';
+    --md-ref-typeface-plain: 'Poppins';
+}
+
 #content{
     margin-top: 0px !important;
     padding-top: 16px;
@@ -15,9 +20,12 @@ body{
     margin: 0px;
 }
 
-
-h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,input,span {
+/*
+h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-button,md-outlined-text-field,input,span,md-chip-set,md-assist-chip,* {
     font-family: "Poppins" !important;
+}*/
+md-icon{
+    font-family: "Material Symbols Outlined" !important;
 }
 
 .loading-text-placeholder{
@@ -26,6 +34,10 @@ h1,h2,h3,h4,h5,h6,span,md-primary-tab,md-filled-button,md-outlined-text-field,in
     text-align: center;
     width: 100%;
     margin-top: 0px;
+}
+
+span{
+    color: var(--md-sys-color-on-surface-variant);
 }
 
 .input{
@@ -81,4 +93,12 @@ html{
 }
 md-dialog{
     --md-dialog-container-color: var(--md-sys-color-surface-variant)
+}
+.list-item-hover{
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 8px;
+}
+#queue-list > :first-child{
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-variant) 95%, var(--md-sys-color-on-primary) 50%);
+    border-radius: 24px;
 }

@@ -1,5 +1,5 @@
 import "./togglebutton"
-
+import "./list-item"
 import "./sidebar"
 import "./playercontrols"
 import "./card"

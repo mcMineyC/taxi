@@ -52,6 +52,9 @@
     max-width: 158px;
     min-width: 158px;
 }
+.popout-menu > li{
+    width: calc(158px - 12px);
+}
 li > md-icon[slot="ended"]{
     position: absolute;
     right: 2px;

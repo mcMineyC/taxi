@@ -1,0 +1,53 @@
+#list{
+    width: 100%;
+    margin-top: -8px;
+}
+
+#list-item{
+    margin-right: 0px !important;
+    width: 100%;
+    margin-right: 16px !important;
+    /* margin-bottom: 0px !important; */
+    /* background-color: red; */
+}
+#list-item  > span.list-header{
+    font-size: 20px;
+}
+#list-item > img, #image-container > img{
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 8px;
+}
+#list-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* background-color: purple; */
+}
+#list-item{
+    height: 74px;
+}
+#list-item > div{
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+#list-item > div#start-container{
+    top: 0px;
+    left: 84px;
+}
+#list-item > div#end-container{
+    position: absolute;
+    top: 0px;
+    right: 24px;
+}
+.pseudo-link:hover{
+    /* text-decoration: underline; */
+    cursor: pointer;
+    color: color-mix(in srgb, var(--md-sys-color-on-primary-container), var(--md-sys-color-primary) 80%);
+    transition: color 0.2s ease-in-out;
+}
+.pseudo-link{
+    transition: color 0.2s ease-in-out;
+}

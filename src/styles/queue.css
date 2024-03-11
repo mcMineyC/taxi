@@ -1,5 +1,6 @@
 #queue-list{
     width: 100%;
+    margin-top: -8px;
 }
 
 #queue-list-item{
@@ -41,6 +42,31 @@
     top: 0px;
     right: 24px;
 }
+#queue-header{
+    /* display: flex; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+}
+#queue-header-left, .queue-header-left{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    position: absolute;
+    left: 86px;
+}
+#queue-header-right, .queue-header-right{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    right: 36px;
+}
+
+
 .pseudo-link:hover{
     /* text-decoration: underline; */
     cursor: pointer;
@@ -54,6 +80,8 @@
     /* width: 100%; */
     font-size: 16px; /* Adjust the font size as needed */
     /* line-height: 16px; Set the same value as the font size */
-    overflow: hidden; /* Optional: hide any overflow text */
     white-space: nowrap; /* Optional: prevent wrapping */
-  }
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden; /* Optional: hide any overflow text */
+}

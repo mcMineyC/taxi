@@ -174,6 +174,7 @@ class Player{
     setQueue(queuer){
         this.queue = queuer
         this.pos = 0
+        this.dur = undefined
     }
     getQueue(){
         return this.queue
@@ -205,6 +206,7 @@ class Player{
     clearQueue(click){
         this.queue = []
         this.pos = 0
+        this.dur = undefined
 
         if(click == true){
             window.localStorage.removeItem("stateLastQueue")
@@ -277,7 +279,7 @@ class Player{
 
         if(window.navigationInfo.get()["location"] == "queue"){
             reset()
-            getQueue()
+            getQueue(0, this.queue.length)
         }
 
         this.shuffleLock = false
@@ -315,7 +317,11 @@ class Player{
             document.getElementById("playercontrols-box-info").style.pointerEvents = "all"
         }
         var cSong = window.fetchedData.getSong(this.currentSong)
-        
+        if(cSong == undefined){
+            document.getElementById("playercontrols-box-info").style.visibility = "hidden"
+            document.getElementById("playercontrols-box-info").style.pointerEvents = "none"
+            return
+        }
         title.setAttribute("thingid", cSong["id"])
         album.setAttribute("thingid", cSong["albumId"])
         artist.setAttribute("thingid", cSong["artistId"])
@@ -324,10 +330,14 @@ class Player{
         album.innerHTML = window.fetchedData.getAlbum(cSong["albumId"])["displayName"]
         artist.innerHTML = window.fetchedData.getArtist(cSong["artistId"])["displayName"]
 
+        tippy(title, {content: cSong["displayName"]})
+        tippy(album, {content: window.fetchedData.getAlbum(cSong["albumId"])["displayName"]})
+        tippy(artist, {content: window.fetchedData.getArtist(cSong["artistId"])["displayName"]})
+
         if(window.navigationInfo.get()["location"] == "queue"){
             console.log("Refetching queue")
             reset()
-            getQueue()
+            getQueue(this.getQueuePos(),this.queue.length)
         }
         
     }
@@ -355,6 +365,7 @@ class Player{
         localStorage.setItem("stateLastLooped", this.looped)
         localStorage.setItem("stateLastSeek", window.howlerInstance.seek())
         localStorage.setItem("stateLastVolume", this.volume)
+        showSnackbar("Saved queue")
     }
     playSong(id) {
         if(typeof(window.howlerInstance) == "undefined"){
@@ -377,7 +388,7 @@ class Player{
         var tt = this
         song.on('play', function() {
             if(tt.canPlay == true && tt.dur != undefined){
-                song.seek(tt.dur)
+                song.seek(Math.abs(tt.dur))
                 Howler.volume(tt.volume)
                 tt.dur = undefined
             }

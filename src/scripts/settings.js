@@ -151,6 +151,11 @@ class AuthSettings{
         localStorage.setItem("savedUsername", username)
     }
 
+    logout(){
+        this.username = "BANANAS ARE GR8!!!"
+        window.setCookie("authToken", "", 999999999999999999999999999999999)
+        window.location = this.authPageUrl
+    }
 }
 
 class UserPreferences{
@@ -289,6 +294,7 @@ class UserPreferences{
     }
 
     removePlaylist(playlist){
+        var playlist = this.getPlaylist(playlist)
         this.savedPlaylists["playlists"].splice(this.savedPlaylists["playlists"].indexOf(playlist), 1)
         this.setPlaylists(this.savedPlaylists)
     }
@@ -313,11 +319,29 @@ class UserPreferences{
         }
     }
 
-    removeFromPlaylist(playlist_id, index){
+    removeFromPlaylist(playlist_id, song_id){
         for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
             if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
                 for(var j = 0; j < this.savedPlaylists["playlists"][i]["songs"].length; j++){
+                    if(this.savedPlaylists["playlists"][i]["songs"][j] == song_id){
+                        this.savedPlaylists["playlists"][i]["songs"].splice(j, 1)
+                        this.setPlaylists(this.savedPlaylists)
+                        return
+                    }
+                }
+                return
+            }
+        }
+    }
+
+    removeFromPlaylistIndex(playlist_id, index){
+        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
+            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
+                console.log("using "+this.savedPlaylists["playlists"][i]["songs"].length)
+                for(var j = 0; j < this.savedPlaylists["playlists"][i]["songs"].length; j++){
+                    console.log(j+" "+index)
                     if(j == index){
+                        console.log(j+" "+index)
                         this.savedPlaylists["playlists"][i]["songs"].splice(j, 1)
                         this.setPlaylists(this.savedPlaylists)
                         return
@@ -434,4 +458,7 @@ function addSettingsActions(){
         if(confirm("Frontend URL changed.\nReload?")) window.location.reload()
     })
 
+    document.getElementById("logout-button").addEventListener("click", function(){
+        window.authSettings.logout()
+    })
 }

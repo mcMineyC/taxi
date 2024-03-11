@@ -6,12 +6,11 @@ class mediacard extends HTMLElement {
                 <img class="card-image" src="${this.getAttribute('image')}">
             </div>
             <div class="card-caption">
-                <h1 class="card-title">${this.getAttribute('text')}</h1>
+                <h1 class="card-title oneline" data-tippy-content="${this.getAttribute('text')}">${this.getAttribute('text')}</h1>
             </div>
-            <div id="overlay" thingtype="${this.getAttribute('thingtype')}" thingid="${this.getAttribute('thingid')}"></div>
+            <div data-tippy-content="${this.getAttribute('text')}" id="overlay" thingtype="${this.getAttribute('thingtype')}" thingid="${this.getAttribute('thingid')}" ${this.getAttribute('thingindex') ? "thingindex='"+this.getAttribute('thingindex')+"'" : ""}></div>
         `;
         var m = (navigator.userAgent.includes("iPad") || navigator.userAgent.includes("Android"))
-        console.log("Mobile: "+m)
         if(m == true){
             console.log("Adding context menu")
             inn += `

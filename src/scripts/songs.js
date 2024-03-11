@@ -23,6 +23,9 @@ function getSongsByPlaylist(id){
     var songs = window.prefs.getPlaylist(id)["songs"];
     for (var x = 0; x < songs.length; x++) {
         var song = window.fetchedData.getSong(songs[x])
-        document.getElementById("content").innerHTML += '<m3-mediacard thingtype="song" thingid="'+song["id"]+'" image="'+window.prefs.getBackendUrl()+'/info/songs/' + song["id"] + '/image" text="' + song["displayName"] + '" onclick="handleSongClick(\'' + song["id"] + '\')"></m3-mediacard>';
+        if(song == null || song == undefined){
+            continue
+        }
+        document.getElementById("content").innerHTML += '<m3-mediacard thingtype="song" thingid="'+song["id"]+'" thingindex="'+x+'" image="'+window.prefs.getBackendUrl()+'/info/songs/' + song["id"] + '/image" text="' + song["displayName"] + '" onclick="handleSongClick(\'' + song["id"] + '\')"></m3-mediacard>';
     }
 }

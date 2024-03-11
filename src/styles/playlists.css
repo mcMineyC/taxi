@@ -1,0 +1,35 @@
+#dialogger{}
+
+.dialog-form{
+    width: 100%;
+    background-color: var(--md-sys-color-surface-variant);
+    display: flex;
+    flex-direction: column;
+}
+.dialog-form > div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+.dialog-form > div > label{
+    /* padding-left: 8px; */
+    font-size: 16px;
+}
+
+
+#add-playlist-choose-form{
+    display: flex;
+    flex-direction: column;
+}
+.add-playlist-choose-item{
+    display: flex;
+    align-items: center;
+    padding: 6px;
+}
+.add-playlist-choose-item > label{
+    margin-left: 8px;
+}

@@ -30,9 +30,14 @@ function handleScroll(event){
     }
     d = (event.deltaY < 0 ? 1 : -1)
     var seekScale = 8
-    var np = window.progress.get() + (d * seekScale)
-    window.progress.set(np)
-    window.howlerInstance.seek(np)
+    var np = window.howlerInstance.seek() + (d * seekScale)
+    if(np < 0){
+        window.howlerInstance.seek(0)
+        window.progress.set(0)
+    }else{
+        window.howlerInstance.seek(np)
+        window.progress.set(np)
+    }
 }
 function handleMuteClick(t){
     t.getElementsByTagName("md-icon")[0].innerText = window.Howler.muted ? "volume_up" : "volume_off"

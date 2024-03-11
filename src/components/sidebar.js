@@ -15,12 +15,13 @@ class sidebar extends HTMLElement {
                     <md-icon-button onclick="downloadClick()">
                         <md-icon>download</md-icon>
                     </md-icon-button>
+                    <!--
                     <md-icon-button onclick="saveQueueClick()">
                         <md-icon>save</md-icon>
                     </md-icon-button>
                     <md-icon-button onclick="window.localPlayer.clearQueue(true)">
                         <md-icon>clear</md-icon>
-                    </md-icon-button>
+                    </md-icon-button>-->
                 </div>
                 <div id="b" style="display: none">                
                     <md-slider id="volume-slider" min="0" max="100" value="100" class="vert" orient="vertical"></md-slider>

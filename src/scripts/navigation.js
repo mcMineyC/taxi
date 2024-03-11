@@ -53,6 +53,7 @@ class Location {
             default:
                 break;
         }
+        this.addTooltips()
     }
 
     setHeader(h){
@@ -117,17 +118,23 @@ class Location {
             default:
                 break;
         }
+        this.addTooltips()
     }
 
     setHome(val){
         this.home = val
     }
+
     getHome(){
         return this.home
     }
 
     get(){
         return this.loc
+    }
+
+    addTooltips(){
+        tippy("[data-tippy-content]")
     }
 }
 
@@ -342,7 +349,7 @@ class VisibleContent{
     
 }
 
-async function getQueue(){
+async function getQueue(currPlaying, end){
     if(typeof(window.localPlayer) == "undefined"){
         console.log("No queue instance");
     }else if(window.localPlayer.getQueue().length == 0){
@@ -354,12 +361,24 @@ async function getQueue(){
     }else{
         reset()
         var innerhtml = "";
-        for(var x = 0; x < window.localPlayer.getQueue().length; x++){
+        for(var x = currPlaying; x < (typeof(end) == "undefined" ? window.localPlayer.getQueue().length : end); x++){
             var sInfo = window.fetchedData.getSong(window.localPlayer.getQueue()[x])
             innerhtml += `
                 <m3-queue-list-item image="${window.prefs.getBackendUrl()+"/info/songs/" + sInfo["id"] + "/image"}" song="${sInfo["displayName"]}" album="${sInfo["albumId"]}" artist="${sInfo["artistId"]}" albumClick="albumClick('${sInfo["albumId"]}')" artistClick="artistClick('${sInfo["artistId"]}')" duration="${Math.floor(Math.round(sInfo["duration"]) / 60)+":"+Math.round(sInfo["duration"] % 60).toString().padStart(2, '0')}"></m3-queue-list-item>`
         }
         document.getElementById("content").innerHTML = `
+            <div id="queue-header">
+                <div id="queue-header-left" class="oneline">
+                    <span>Save queue</span>
+                    <md-chip-set>
+                        <md-assist-chip id="queue-save-button" onclick="window.localPlayer.saveQueue()" label="To this browser"></md-assist-chip>
+                        <md-assist-chip id="queue-save-playlist-button" onclick="saveQueueToPlaylistDialog()" label="To playlist"></md-assist-chip>
+                    </md-chip-set>
+                </div>
+                <div id="queue-header-right">
+                    <md-outlined-button id="queue-clear-button" onclick="window.localPlayer.clearQueue(true)">Clear Queue</md-outlined-button>
+                </div>
+            </div>
             <md-list id="queue-list">
                 ${innerhtml}
             </md-list>
@@ -385,13 +404,24 @@ async function getPlaylists(){
         return
     }
     reset()
+    var inhtml = ``
     for(var x = 0; x < p.length; x++){
         var i = p[x]
         console.log(i["displayName"])
-        d.innerHTML += `
-            <m3-mediacard thingtype="playlist" thingid="${i["id"]}" text="${i["displayName"]}" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+'/placeholder'}"></m3-mediacard>
+        inhtml += `
+            <m3-list-item thingtype="playlist" thingid="${i["id"]}" text="${i["displayName"]}" endText="" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+"/placeholder"}"></m3-list-item>
         `
+        if(x != p.length-1){
+            inhtml += `
+                <md-divider style="margin-left: 8px; margin-right: 8px; width: calc(100% - 16px);"></md-divider>
+            `
+        }
     }
+    d.innerHTML = `
+        <md-list id="list">
+            ${inhtml}
+        </md-list>
+    `
 
 }
 
@@ -466,6 +496,11 @@ async function settingsClick(){
             <md-filled-button id="settings-frontend-url-save" slot="end">Save</md-filled-button>
             <md-outlined-text-field id="settings-frontend-url" label="" value="${window.prefs.getFrontendUrl()}" slot="end"></md-outlined-text-field>
         </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
+            <span slot="start">Clear authtoken and username</span>
+            <md-filled-button id="logout-button" slot="end">Logout</md-filled-button>
+        </md-list-item>
     </md-list>
     `
     console.log("Adding settings actions")
@@ -481,6 +516,7 @@ async function settingsClick(){
 async function queueClick(){
     console.log("Opening queue");
     reset()
+    getQueue(window.localPlayer.getQueuePos(),window.localPlayer.getQueue().length)
     window.navigationInfo.setHeader("Queue")
     window.navigationInfo.addHist(window.navigationInfo.get()["location"])
     window.navigationInfo.set({
@@ -488,7 +524,6 @@ async function queueClick(){
         "location": "queue",
         "id": window.navigationInfo.get()["id"],
     })
-    getQueue()
 }
 
 async function downloadClick(){
@@ -503,6 +538,7 @@ async function searchClick(){
 async function playlistClick(){
     console.log("Opening playlists");
     reset()
+    getPlaylists()
     window.navigationInfo.setHeader("Playlists")
     window.navigationInfo.addHist(window.navigationInfo.get()["location"])
     window.navigationInfo.set({
@@ -510,7 +546,6 @@ async function playlistClick(){
         "location": "playlists",
         "id": window.navigationInfo.get()["id"],
     })
-    getPlaylists()
 }
 
 async function playlistClicked(id){
@@ -548,15 +583,79 @@ async function createPlaylistDialog(type, id){
     })
 }
 
+async function saveQueueToPlaylistDialog(){
+    
+    var listHtml = ``
+    var p = window.prefs.getPlaylists();
+    if(p.length == 0){
+        //listHtml = `<md-list-item value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
+        return
+    }
+    for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
+        listHtml += `
+                    <div class="add-playlist-choose-item">
+                        <md-radio id="${p[x]["id"]}" name="addplaylist" value="${p[x]["id"]}"></md-radio>
+                        <label for="${p[x]["id"]}">${p[x]["displayName"]}</label>
+                    </div>`
+    }
+    listHtml += `
+    <div class="add-playlist-choose-item">
+        <md-radio id="createPlaylist" name="addplaylist" value="new"></md-radio>
+        <label for="createPlaylist">New</label>
+    </div>`
+    let inHtml = `
+        <md-dialog id="dialogger">
+            <div slot="headline">
+              Add to playlist
+            </div>
+            <form slot="content" id="add-playlist-choose-form">
+                ${listHtml}
+            </form>
+            <div slot="actions">
+              <md-text-button onclick="closeDialog()">Add</md-text-button>
+            </div>
+        </md-dialog>
+    `
+    let d = document.querySelector("#dialog-box")
+    d.innerHTML = inHtml
+    document.querySelector("#dialogger").open = true
+    document.querySelector("#dialogger").addEventListener("closed", async ()=>{
+        let d = document.querySelector("#dialog-box").querySelector("md-dialog")
+        let selId = ""
+        for (let x = 0; x < d.querySelectorAll("md-radio[name=addplaylist]").length; x++) {
+            if(d.querySelectorAll("md-radio[name=addplaylist]")[x].checked){
+                selId = d.querySelectorAll("md-radio[name=addplaylist]")[x].value
+            }
+        }
+        console.log({"id":selId})
+        if(selId == ""){
+            showSnackbar("Please choose a playlist")
+            return
+        }else if(selId == "new"){
+            console.log("Creating new playlist")
+            addPlaylistClick((d) => {
+                console.log("Created playlist: " + d.displayName)
+                window.prefs.addToPlaylist(d.id, window.localPlayer.getQueue())
+            })
+        }else{
+            console.log("Adding to playlist: " + window.prefs.getPlaylist(selId)["displayName"])
+            window.prefs.addListToPlaylist(selId, window.localPlayer.getQueue())
+        }
+    })
+}
+
 async function addPlaylistClick(doNext){
     let inHtml = `
         <md-dialog id="dialogger">
             <div slot="headline">
-              Add playlist
+              Create playlist
             </div>
-            <form slot="content" id="add-playlist-form" method="dialog">
-                <md-outlined-text-field id="playlist-name" label="Playlist name"></md-outlined-text-field>
-                <md-switch id="playlist-public">Public</md-switch>
+            <form slot="content" id="add-playlist-form" method="dialog" class="dialog-form">
+                <md-outlined-text-field id="playlist-name" label="Name"></md-outlined-text-field>
+                <div>
+                    <label for="playlist-public-switch">Public</label>
+                    <md-switch id="playlist-public-switch">Public</md-switch>
+                </div>
             </form>
             <div slot="actions">
               <md-text-button onclick="closeDialog()">Create</md-text-button>
@@ -566,12 +665,16 @@ async function addPlaylistClick(doNext){
     let d = document.querySelector("#dialog-box")
     d.innerHTML = inHtml
     document.querySelector("#dialogger").open = true
-    document.querySelector("#dialogger").addEventListener("closed", async ()=>{
+    var closedHandler = async ()=>{
         let d = document.querySelector("#dialog-box").querySelector("md-dialog")
         let name = d.querySelector("md-outlined-text-field#playlist-name").value
-        let public = d.querySelector("md-switch#playlist-public").selected
+        let public = d.querySelector("md-switch#playlist-public-switch").selected
         let u = window.authSettings.getUsername()
-
+        if(name == ""){
+            showSnackbar("Please enter a name")
+            addPlaylistClick()
+            return
+        }
         var id = u+"_"+name
         var hashed = await hash(id)
         var data = {
@@ -586,7 +689,11 @@ async function addPlaylistClick(doNext){
         if(doNext != undefined){
             doNext(data)
         }
+    }
+    document.querySelector("#dialogger").addEventListener("cancel", ()=>{
+        document.querySelector("#dialogger").removeEventListener("closed", closedHandler)
     })
+    document.querySelector("#dialogger").addEventListener("closed", closedHandler)
     await getPromiseFromEvent(document.querySelector("#dialogger"), "closed")
     // console.log("Dialog result: " + t)
 }
@@ -605,14 +712,6 @@ async function getHome(place) {
     }
     var homeScreen = place
 
-    window.navigationInfo = new Location()
-    window.navigationInfo.setHome(true)
-    window.navigationInfo.set({
-        "prev": ["home"],
-        "location": "home",
-        "id": "MURP"
-    })
-
     switch (homeScreen) {
         case "artists":
             getArtists()
@@ -628,7 +727,14 @@ async function getHome(place) {
             console.log("Unknown screen: " + homeScreen)
             break;
     }
-    
+
+    window.navigationInfo = new Location()
+    window.navigationInfo.setHome(true)
+    window.navigationInfo.set({
+        "prev": ["home"],
+        "location": "home",
+        "id": "MURP"
+    })
 }
 
 async function reset(){
@@ -665,6 +771,7 @@ async function back(){
             break;
         case "queue":
             window.navigationInfo.setHeader("Queue")
+            getQueue(0,window.localPlayer.getQueue().length)
             break;
         case "playlists":
             getPlaylists()
@@ -675,6 +782,7 @@ async function back(){
             break;
     }
     window.navigationInfo.prevPop()
+    window.navigationInfo.addTooltips()
 }  
 
 function getPromiseFromEvent(item, event) {
@@ -696,4 +804,4 @@ async function hash(string) {
       .map((bytes) => bytes.toString(16).padStart(2, '0'))
       .join('');
     return hashHex;
-  }
+}
