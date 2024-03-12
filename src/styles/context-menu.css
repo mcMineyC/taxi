@@ -1,13 +1,13 @@
-.context-menu-container{
-    background-color: var(--md-sys-color-surface-variant);
-    border: 1.5px solid var(--md-sys-color-outline);
-    color: var(--md-sys-color-on-primary-container);
-    border-radius: 10px;
+.context-menu-container, .context-menu-list{
+    background-color: var(--md-sys-color-surface-variant) !important;
+    border: 1.5px solid var(--md-sys-color-outline) !important;
+    color: var(--md-sys-color-on-primary-container) !important;
+    border-radius: 10px !important;
     /* background-color: brown; */
     position: absolute;
     margin: 0px;
     width: 200px;
-    z-index: 999999999999999;
+    z-index: 999999999999999 !important;
     display: none;
 }
 .context-menu-color{
@@ -16,14 +16,14 @@
     color: var(--md-sys-color-on-primary-container);
     border-radius: 10px;
 }
-.context-menu{
+.context-menu, .context-menu-list{
     list-style: none;
     padding: 0px;
     margin: 0px;
     border-radius: 10px;
     margin: 6px;
 }
-.context-menu > li, .popout-menu > li{
+.context-menu > li, .popout-menu > li, .context-menu-list > li{
     list-style: none;
     padding: 6px;
     cursor: pointer;
@@ -58,4 +58,11 @@
 li > md-icon[slot="ended"]{
     position: absolute;
     right: 2px;
+}
+.mdicon{
+    content: "<md-icon>chevron_right</md-icon>";
+}
+
+.murrrp{
+    background-color: red !important;
 }

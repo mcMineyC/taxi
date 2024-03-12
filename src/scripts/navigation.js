@@ -712,22 +712,6 @@ async function getHome(place) {
     }
     var homeScreen = place
 
-    switch (homeScreen) {
-        case "artists":
-            getArtists()
-            break;
-        case "albums":
-            getAlbums()
-            break;
-        case "songs":
-            getSongs()
-            break;
-    
-        default:
-            console.log("Unknown screen: " + homeScreen)
-            break;
-    }
-
     window.navigationInfo = new Location()
     window.navigationInfo.setHome(true)
     window.navigationInfo.set({
@@ -735,6 +719,23 @@ async function getHome(place) {
         "location": "home",
         "id": "MURP"
     })
+    switch (homeScreen) {
+        case "artists":
+            await getArtists()
+            break;
+        case "albums":
+            await getAlbums()
+            break;
+        case "songs":
+            await getSongs()
+            break;
+    
+        default:
+            console.log("Unknown screen: " + homeScreen)
+            break;
+    }
+    // console.log(document.querySelectorAll("#overlay"))
+    murple()
 }
 
 async function reset(){

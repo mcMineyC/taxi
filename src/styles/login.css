@@ -21,6 +21,8 @@
     margin-bottom: 16px;
 }
 #login-box > md-outlined-text-field{
+    margin-left: 24px;
+    margin-right: 24px;
     margin-bottom: 8px;
 }
 h1{

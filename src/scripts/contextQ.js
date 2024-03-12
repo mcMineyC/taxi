@@ -1,6 +1,6 @@
 // Add an event listener for the contextmenu event on the document
 document.addEventListener('contextmenu', function(event) {
-    contextMenu(event)
+    // contextMenu(event)
 }); 
 
 function contextMenu(event){
@@ -305,4 +305,38 @@ function contextMenu(event){
     customContextMenu.querySelector("#addplaylist-popout").addEventListener("click", function(){
         customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex"
     })
+}
+
+
+function murple(){
+    // make button open the menu
+    document.querySelectorAll("#overlay").forEach(element => {
+
+        $(element).on('contextmenu', function(e) {
+            e.preventDefault();
+            $('.context-menu-one').contextMenu({x: e.clientX, y: e.clientY});
+            // or $('.context-menu-one').trigger("contextmenu");
+            // or $('.context-menu-one').contextMenu({x: 100, y: 100});
+        });
+    });
+
+    $.contextMenu({
+        selector: '.context-menu-one', 
+        trigger: 'none',
+        // autoHide: true,
+        delay: 300,
+        callback: function(key, options) {
+            var m = "clicked: " + key;
+            window.console && console.log(m) || alert(m); 
+        },
+        items: {
+            "edit": {type: "html", isHtmlName: true, name: "<div class='murrrp'>Edit</div>"},
+            "cut": {name: "Cut", icon: "cut"},
+            "copy": {name: "Copy", icon: "copy"},
+            "paste": {name: "Paste", icon: "paste"},
+            "delete": {name: "Delete", icon: "mdicon"},
+            "sep1": "---------",
+            "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+        }
+    });
 }
