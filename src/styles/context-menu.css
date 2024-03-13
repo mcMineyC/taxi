@@ -16,6 +16,9 @@
     color: var(--md-sys-color-on-primary-container);
     border-radius: 10px;
 }
+.context-menu-color > li > span{
+    color: var(--md-sys-color-on-primary-container) !important;
+}
 .context-menu, .context-menu-list{
     list-style: none;
     padding: 0px;
@@ -61,8 +64,4 @@ li > md-icon[slot="ended"]{
 }
 .mdicon{
     content: "<md-icon>chevron_right</md-icon>";
-}
-
-.murrrp{
-    background-color: red !important;
 }

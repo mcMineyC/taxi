@@ -586,23 +586,22 @@ async function createPlaylistDialog(type, id){
 async function saveQueueToPlaylistDialog(){
     
     var listHtml = ``
-    var p = window.prefs.getPlaylists();
-    if(p.length == 0){
-        //listHtml = `<md-list-item value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-        return
-    }
-    for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
-        listHtml += `
-                    <div class="add-playlist-choose-item">
-                        <md-radio id="${p[x]["id"]}" name="addplaylist" value="${p[x]["id"]}"></md-radio>
-                        <label for="${p[x]["id"]}">${p[x]["displayName"]}</label>
-                    </div>`
-    }
     listHtml += `
     <div class="add-playlist-choose-item">
-        <md-radio id="createPlaylist" name="addplaylist" value="new"></md-radio>
+        <md-radio id="createPlaylist" name="addplaylist" value="new" checked></md-radio>
         <label for="createPlaylist">New</label>
     </div>`
+    var p = window.prefs.getPlaylists();
+    if(p.length > 0){
+        //listHtml = `<md-list-item value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
+        for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
+            listHtml += `
+                        <div class="add-playlist-choose-item">
+                            <md-radio id="${p[x]["id"]}" name="addplaylist" value="${p[x]["id"]}"></md-radio>
+                            <label for="${p[x]["id"]}">${p[x]["displayName"]}</label>
+                        </div>`
+        }
+    }
     let inHtml = `
         <md-dialog id="dialogger">
             <div slot="headline">
@@ -635,7 +634,7 @@ async function saveQueueToPlaylistDialog(){
             console.log("Creating new playlist")
             addPlaylistClick((d) => {
                 console.log("Created playlist: " + d.displayName)
-                window.prefs.addToPlaylist(d.id, window.localPlayer.getQueue())
+                window.prefs.addListToPlaylist(d.id, window.localPlayer.getQueue())
             })
         }else{
             console.log("Adding to playlist: " + window.prefs.getPlaylist(selId)["displayName"])
@@ -655,6 +654,10 @@ async function addPlaylistClick(doNext){
                 <div>
                     <label for="playlist-public-switch">Public</label>
                     <md-switch id="playlist-public-switch">Public</md-switch>
+                </div>
+                <div>
+                    <label for="playlist-sync-switch">Sync playlist</label>
+                    <md-switch id="playlist-sync-switch"></md-switch>
                 </div>
             </form>
             <div slot="actions">
@@ -735,11 +738,13 @@ async function getHome(place) {
             break;
     }
     // console.log(document.querySelectorAll("#overlay"))
-    murple()
+    tippy("[data-tippy-content]")
 }
 
 async function reset(){
+    tippy.hideAll()
     document.getElementById("content").innerHTML = "";
+    document.querySelectorAll("#overlay").forEach(x => x._tippy.destroy())
 }
 
 async function back(){

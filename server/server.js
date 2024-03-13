@@ -419,18 +419,14 @@ app.post('/playlists', async function(req, res){
     }
 
     //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), 'utf-8');
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
     data = JSON.parse(data);
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    all = JSON.parse(all);
 
     //Update if needed
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        await updatePlaylists(hash,all)
-    }
+    await updatePlaylists(hash,data)
 
     //Send playlists
-    res.sendFile(path.join(__dirname, "config", "playlists", "playlists.json"));
+    res.sendFile(path.join(__dirname, "config", "playlists.json"));
 })
 
 app.post('/playlists/user/:id', function(req, res){
@@ -439,6 +435,9 @@ app.post('/playlists/user/:id', function(req, res){
         return
     }
     var u = getUser(req.body.authtoken);
+    if(u["loginName"] != req.params.id){
+        res.send({"error": "Not authorized", "success": false})
+    }
 
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
     data = JSON.parse(data);
@@ -465,6 +464,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     data = JSON.parse(data);
     var d = [];
     var found = false
+    var index = 0
     for(var x = 0; x < data["playlists"].length; x++){
         if(data["playlists"][x]["id"] == req.params.playlist){
             if(req.body.name != undefined){
@@ -477,16 +477,25 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
             }
             if(req.body.public != undefined){
                 console.log("Public: "+req.body.public)
-                data["playlists"][x]["public"] = req.body.public
+                data["playlists"][x]["public"] = JSON.parse(req.body.public)
+            }
+            if(req.body.songs != undefined){
+                // console.log("Songs: "+req.body.songs)
+                try{
+                    data["playlists"][x]["songs"] = JSON.parse(req.body.songs)
+                }catch(e){
+                    data["playlists"][x]["songs"] = []
+                }
             }
             found = true
+            index = x
         }
         d[x] = data["playlists"][x]
     }
     if(!found){
         try{
             d.push({
-                "id": hash(req.params.playlist),
+                "id": req.params.playlist,
                 "name": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public,
@@ -494,10 +503,11 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
             })
         }catch(e){
             d.push({
-                "id": hash(req.params.playlist),
+                "id": req.params.playlist,
                 "name": req.body.name,
                 "description": req.body.description,
-                "public": req.body.public
+                "public": req.body.public,
+                "songs": []
             })
         }
     }
@@ -505,13 +515,40 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         "playlists": d
     }
     console.log("\n\n")
-    await fs.writeFile(path.join(__dirname, "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
+    await fs.writeFile(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
         if (err) {
+            console.log("Error writing modified playlists: ")
             console.log(err);
         }
     })
 
     res.send(d)
+    updatePlaylists(hash, data)
+})
+
+app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
+    if(checkAuth(req, res) == false){
+        res.send({"error": "Not authorized", "authed": false})
+        return
+    }
+    var u = getUser(req.body.authtoken);
+    if(u["loginName"] != req.params.id){
+        res.send({"error": "Not authorized", "success": false})
+    }
+
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
+    data = JSON.parse(data);
+
+    var p = {"success": false}
+    for(var x = 0; x < data["playlists"].length; x++){
+        if(data["playlists"][x]["id"] == req.params.playlist){
+            p = data["playlists"].splice(x, 1)
+            p.success = true
+        }
+    }
+    fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
+    res.send(p)
+    updatePlaylists(hash, data)
 })
 
 async function main(){
@@ -751,10 +788,30 @@ async function checkDirs(){
 }
 
 async function updatePlaylists(hashFunc, all){
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), 'utf-8');
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
     data = JSON.parse(data);
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists.json"), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
+    if(true){
+        var p = []
+        var files = fs.readdirSync(path.join(__dirname, "config", "playlists"))
+        for (const file of files) {
+            try{
+                var d = fs.readFileSync(path.join(__dirname, "config", "playlists", file), 'utf-8');
+                d = JSON.parse(d);
+                for(const x of d["playlists"]){
+                    if(JSON.parse(x.public) == true){
+                        p.push(x)
+                    }
+                }
+            }catch(err){
+                console.log(err)
+                continue
+            }
+        }
+        data = {
+            "last_updated": hashFunc(JSON.stringify(all)),
+            "playlists": p
+        }
+        fs.writeFileSync(path.join(__dirname, "config", "playlists.json"), JSON.stringify(data, null, 4));
     }
 }
 

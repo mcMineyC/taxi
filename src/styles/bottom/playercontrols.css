@@ -10,7 +10,7 @@
     /* left: 0; */
     padding-top: 16px;
     padding-bottom: 16px;
-    z-index: 2;
+    z-index: 9999;
 }
 
 .playercontrols-box{

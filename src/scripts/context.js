@@ -16,6 +16,7 @@ function contextMenu(event){
     var inhtml = `<ul class="context-menu">`
     var contextMenuWidth = 202;
     var contextMenuHeight = 122;
+
     switch(event.target.getAttribute("thingtype")){
         case "album":
             console.log("album")
@@ -75,6 +76,7 @@ function contextMenu(event){
             return
             break;
     }
+
     var leftPos = ''
     var topPos  = ''
 
@@ -201,80 +203,80 @@ function contextMenu(event){
     })
     
     // Add event listeners for the custom context menu popouts, currently only addplaylistconsole.log("Playlist moused")
-        var inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`;
-        var cnt = (()=>{
-            try{
-                var p = window.prefs.getPlaylists();
-                if(p.length == 0){
-                    inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-                    customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
-                    return 1
-                }
-                var cntr = 0
-                for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
-                    cntr++
-                    inHtml += `<li value="addplaylist" vvalue="${p[x]["id"]}"><span class="oneline">${p[x]["displayName"]}</span></li>`
-                }
-                inHtml += `<li value="more"><md-icon>more_horiz</md-icon>More</li>`
-                return 1+cntr
-            }catch(e){
-                console.log(e)
-                inHtml = "No playlists"
+    var inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`;
+    var cnt = (()=>{
+        try{
+            var p = window.prefs.getPlaylists();
+            if(p.length == 0){
+                inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
+                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
+                return 1
             }
-        })();
-        customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
-        var popMenuHeight = (cnt*36);
-        console.log({"my": popMenuHeight})
-        var leftPos = ''
-        // var rightPos = '-172px'
-        var topPos  = ''
-
-        console.log({"cx": event.clientX, "wx": window.innerWidth - contextMenuWidth - 158 - 14, "cy": event.clientY, "wy": window.innerHeight - contextMenuHeight})
-        if (event.clientX < window.innerWidth - contextMenuWidth - 158 - 14) {
-          leftPos = `${158+(14*3)}px`;
-        } else {
-          leftPos = `${-1*(158+14)}px`;
+            var cntr = 0
+            for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
+                cntr++
+                inHtml += `<li value="addplaylist" vvalue="${p[x]["id"]}"><span class="oneline">${p[x]["displayName"]}</span></li>`
+            }
+            inHtml += `<li value="more"><md-icon>more_horiz</md-icon>More</li>`
+            return 1+cntr
+        }catch(e){
+            console.log(e)
+            inHtml = "No playlists"
         }
+    })();
+    customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
+    var popMenuHeight = (cnt*36);
+    console.log({"my": popMenuHeight})
+    var leftPos = ''
+    // var rightPos = '-172px'
+    var topPos  = ''
 
-        if (event.clientY < window.innerHeight - popMenuHeight - 44 - 12) {
-            topPos = `${-44}px`;
-          } else {
-            topPos = `${(-1*popMenuHeight)-44}px`;
-          }
-        var pm = customContextMenu.querySelector("#addplaylist-popout-menu")
-        pm.style.left = leftPos
-        pm.style.marginTop = topPos
-        // pm.style.right = rightPos
-        console.log("Add playlist click")
-        customContextMenu.querySelector("#addplaylist-popout-menu").querySelectorAll("li").forEach(element => {
-            element.addEventListener("click", function(e){
-                console.log("Playlist click")
-                var el = e.target
-                if(el.getAttribute("value") == "addplaylist" && el.getAttribute("vvalue") != undefined){
-                    switch(thingtype){
-                        case "album":
-                            console.log("album")
-                            window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
-                            break;
-                        case "artist":
-                            console.log("artist")
-                            window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
-                            break;
-                        case "playlist":
-                            console.log("playlist")
-                            break;
-                        case "song":
-                            console.log("song")
-                            window.prefs.addToPlaylist(el.getAttribute("vvalue"), thingid)
-                            break;
-                    }
-                    customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
-                }else if (el.getAttribute("value") == "createPlaylist"){
-                    console.log("create playlist")
-                    createPlaylistDialog(thingtype, thingid)
+    console.log({"cx": event.clientX, "wx": window.innerWidth - contextMenuWidth - 158 - 14, "cy": event.clientY, "wy": window.innerHeight - contextMenuHeight})
+    if (event.clientX < window.innerWidth - contextMenuWidth - 158 - 14) {
+      leftPos = `${158+(14*3)}px`;
+    } else {
+      leftPos = `${-1*(158+14)}px`;
+    }
+
+    if (event.clientY < window.innerHeight - popMenuHeight - 44 - 12) {
+        topPos = `${-44}px`;
+      } else {
+        topPos = `${(-1*popMenuHeight)-44}px`;
+      }
+    var pm = customContextMenu.querySelector("#addplaylist-popout-menu")
+    pm.style.left = leftPos
+    pm.style.marginTop = topPos
+    // pm.style.right = rightPos
+    
+    pm.querySelectorAll("li").forEach(element => {
+        element.addEventListener("click", function(e){
+            console.log("Playlist click")
+            var el = e.target
+            if(el.getAttribute("value") == "addplaylist" && el.getAttribute("vvalue") != undefined){
+                switch(thingtype){
+                    case "album":
+                        console.log("album")
+                        window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                        break;
+                    case "artist":
+                        console.log("artist")
+                        window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                        break;
+                    case "playlist":
+                        console.log("playlist")
+                        break;
+                    case "song":
+                        console.log("song")
+                        window.prefs.addToPlaylist(el.getAttribute("vvalue"), thingid)
+                        break;
                 }
-            })
+                customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
+            }else if (el.getAttribute("value") == "createPlaylist"){
+                console.log("create playlist")
+                createPlaylistDialog(thingtype, thingid)
+            }
         })
+    })
     customContextMenu.querySelector("#addplaylist-popout").addEventListener("mouseover", function(){
         customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex";
         customContextMenu.querySelector("#addplaylist-popout-menu").addEventListener("mouseout", function(){
