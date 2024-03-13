@@ -140,6 +140,12 @@ class Location {
 
 class FetchedData {
     constructor(){
+        this.artists = []
+        this.albums = []
+        this.songs = []
+        this.playlists = []
+        this.userPlaylists = []
+        this.all = []
         console.log("Initializing fetched data with backend url "+window.prefs.getBackendUrl())
         var t = this
         var authParams = new URLSearchParams(
@@ -211,7 +217,49 @@ class FetchedData {
                         }
                         console.log(data)
                         t.all = data["entries"];
-                        t.onInit()
+                        axios.post(window.prefs.getBackendUrl()+'/playlists', authParams)
+                        .then(function (response) {
+                            var data = JSON.parse(JSON.stringify(response.data));
+                            if(data["authorized"] == false){
+                                window.location = window.authSettings.getAuthPageUrl()
+                                return
+                            }
+                            if(data == undefined){
+                                window.location = window.authSettings.getAuthPageUrl()
+                                return
+                            }
+                            console.log(data)
+                            t.playlists = data["playlists"];
+                            axios.post(window.prefs.getBackendUrl()+'/playlists/user/'+window.authSettings.getUsername(), authParams)
+                            .then(function (response) {
+                                    var data = JSON.parse(JSON.stringify(response.data));
+                                    if(data["authorized"] == false){
+                                        window.location = window.authSettings.getAuthPageUrl()
+                                        return
+                                    }
+                                    if(data == undefined){
+                                        window.location = window.authSettings.getAuthPageUrl()
+                                        return
+                                    }
+                                    console.log(data)
+                                    t.userPlaylists = data;
+                                    t.onInit()
+                            }).catch(function (error) {
+                                if(error.code == "ERR_NETWORK"){
+                                    window.location = window.authSettings.getAuthPageUrl()
+                                    return
+                                }else{
+                                    console.log(error)
+                                }
+                            })
+                        }).catch(function (error) {
+                            if(error.code == "ERR_NETWORK"){
+                                window.location = window.authSettings.getAuthPageUrl()
+                                return
+                            }else{
+                                console.log(error)
+                            }
+                        })
                     }).catch(function (error) {
                         if(error.code == "ERR_NETWORK"){
                             window.location = window.authSettings.getAuthPageUrl()
