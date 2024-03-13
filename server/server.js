@@ -469,7 +469,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         if(data["playlists"][x]["id"] == req.params.playlist){
             if(req.body.name != undefined){
                 console.log("Name: "+req.body.public)
-                data["playlists"][x]["name"] = req.body.name
+                data["playlists"][x]["displayName"] = req.body.name
             }
             if(req.body.description != undefined){
                 console.log("Description: "+req.body.public)
@@ -496,7 +496,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         try{
             d.push({
                 "id": req.params.playlist,
-                "name": req.body.name,
+                "displayName": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public,
                 "songs": JSON.parse(req.body.songs)
@@ -504,7 +504,7 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         }catch(e){
             d.push({
                 "id": req.params.playlist,
-                "name": req.body.name,
+                "displayName": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public,
                 "songs": []

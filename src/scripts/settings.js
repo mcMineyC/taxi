@@ -195,6 +195,7 @@ class UserPreferences{
         this.backendUrl = window.localStorage.getItem("configuredBackendUrl")
         this.frontendUrl = window.localStorage.getItem("configuredFrontendUrl")
         this.savedPlaylists = JSON.parse(window.localStorage.getItem("savedPlaylists"))
+        this.allPlaylists = []
     }
 
     setAddToQueue(addToQueue){
@@ -272,13 +273,14 @@ class UserPreferences{
     }
 
     getPlaylists(){
-        return this.savedPlaylists["playlists"]
+        this.allPlaylists = [...this.savedPlaylists["playlists"], ...window.fetchedData.getUserPlaylists(), ...window.fetchedData.getPlaylists()]
+        return this.allPlaylists
     }
 
     getPlaylist(playlist_id){
-        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
-            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
-                return this.savedPlaylists["playlists"][i]
+        for(var i = 0; i < this.allPlaylists.length; i++){
+            if(this.allPlaylists[i]["id"] == playlist_id){
+                return this.allPlaylists[i]
             }
         }
     }
@@ -290,6 +292,7 @@ class UserPreferences{
 
     addPlaylist(playlist){
         this.savedPlaylists["playlists"].push(playlist)
+        window.fetchedData.modUserPlaylist(playlist)
         window.localStorage.setItem("savedPlaylists", JSON.stringify(this.savedPlaylists))
     }
 

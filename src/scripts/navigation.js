@@ -365,6 +365,40 @@ class FetchedData {
         }
         return songs
     }
+    getUserPlaylists(){
+        return this.userPlaylists
+    }
+    getPlaylists(){
+        return this.playlists
+    }
+    modUserPlaylist(playlist){
+        var usp = new URLSearchParams({
+            "id": playlist["id"],
+            "name": playlist["displayName"],
+            "public": playlist["public"],
+            "description": playlist["description"],
+            "songs": JSON.stringify(playlist["songs"])
+        })
+        axios.post(window.prefs.getBackendUrl()+'/playlists/user/'+window.authSettings.getUsername()+"/"+playlist["id"], usp).then(function (response) {
+            var data = JSON.parse(JSON.stringify(response.data));
+            if(data["authorized"] == false){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }
+            if(data == undefined){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }
+            console.log(data)
+        }).catch(function (error) {
+            if(error.code == "ERR_NETWORK"){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }else{
+                console.log(error)
+            }
+        })
+    }
 }
 
 class VisibleContent{
