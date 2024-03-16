@@ -273,7 +273,8 @@ class UserPreferences{
     }
 
     getPlaylists(){
-        this.allPlaylists = [...this.savedPlaylists["playlists"], ...window.fetchedData.getUserPlaylists(), ...window.fetchedData.getPlaylists()]
+        this.allPlaylists = this.savedPlaylists["playlists"].concat(window.fetchedData.getUserPlaylists()).unique()
+        this.allPlaylists = this.allPlaylists.concat(window.fetchedData.getPlaylists()).unique()
         return this.allPlaylists
     }
 
@@ -465,3 +466,22 @@ function addSettingsActions(){
         window.authSettings.logout()
     })
 }
+
+const merge = (a, b, predicate = (a, b) => a === b) => {
+    const c = [...a]; // copy to avoid side effects
+    // add all items from B to copy C if they're not already present
+    b.forEach((bItem) => (c.some((cItem) => predicate(bItem, cItem)) ? null : c.push(bItem)))
+    return c;
+}
+
+Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i]["id"] === a[j]["id"])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+};
