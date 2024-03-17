@@ -21,11 +21,11 @@ oldArtists = artistCount
 oldAlbums = albumCount
 oldSongs = songCount
 
-if(not os.path.exists(os.path.join(os.getcwd(), 'configger', 'all.json'))):
+if(not os.path.exists(os.path.join(os.getcwd(), 'configged', 'all.json'))):
     print(json.dumps(oldInfo))
     os._exit(0)
 
-f = json.load(open("configger/all.json", "r"))
+f = json.load(open("configged/all.json", "r"))
 
 artistCount = 0
 albumCount = 0

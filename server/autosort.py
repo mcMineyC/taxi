@@ -83,12 +83,12 @@ for file in os.listdir(directory_path):
 
 count = len(list(tag_info.values()))
 
-if(os.path.exists("all.json")):
+if(os.path.exists("config/all.json")):
     if(count < 1):
         print("Nothing new, skipping")
         exit(0)
     print("all.json exists")
-    f = open("all.json", "r")
+    f = open("config/all.json", "r")
     data = json.load(f)
     f.close()
 
@@ -135,8 +135,8 @@ if(os.path.exists("all.json")):
         # "entries": data["entries"] + list(tag_info.values())
     # }
 
-    print("adding: " + json.dumps(merged, indent=4))
-    f = open("all.json", "w")
+    # print("adding: " + json.dumps(merged, indent=4))
+    f = open("config/all.json", "w")
     json.dump({"entries":merged}, f, indent=4)
     f.close()
 else:
@@ -144,7 +144,7 @@ else:
         print("Nothing new, skipping")
         exit(0)
     print("all.json does not exist")
-    f = open("all.json", "w")
+    f = open("config/all.json", "w")
     json.dump({"entries":list(tag_info.values())}, f, indent=4)
     f.close()
 
