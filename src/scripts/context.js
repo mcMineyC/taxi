@@ -209,7 +209,9 @@ async function contextMenu(event){
             var pm = customContextMenu.querySelector("#addplaylist-popout-menu")
             if(p.length == 0){
                 inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtmlpm.querySelectorAll("li").forEach(element => {
+                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
+                var pm = customContextMenu.querySelector("#addplaylist-popout-menu")
+                pm.querySelectorAll("li").forEach(element => {
                     element.addEventListener("click", function(e){
                         console.log("Playlist click")
                         var el = e.target
@@ -253,8 +255,8 @@ async function contextMenu(event){
             inHtml = "No playlists"
         }
     })();
-    var pm = customContextMenu.querySelector("#addplaylist-popout-menu")
-    pm.innerHTML = inHtml
+    var pm = customContextMenu.querySelector("#addplaylist-popout-menu");
+    pm.innerHTML = inHtml;
     pm.querySelectorAll("li").forEach(element => {
         element.addEventListener("click", function(e){
             console.log("Playlist click")

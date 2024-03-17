@@ -10,6 +10,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const { type } = require('os');
+const { ChildProcess } = require('child_process');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 
 
@@ -23,9 +24,31 @@ app.use(express.urlencoded({
     extended: true
 }))*/
 
-app.use('/music', express.static(path.join(__dirname, 'music')));
-
 app.use('/',express.static(path.join(__dirname, 'static')));
+
+app.post('/latestCommit', async function (req, res) {
+    ChildProcess.exec('git rev-parse HEAD', (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.send({"commit": "error"})
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.send({"commit": "error"})
+            return;
+        }
+        res.send({"commit": stdout})
+    })
+})
+
+app.post('/status', function (req, res) {
+    res.send({"status": "ok"})
+})
+
+app.get('/status', function (req, res) {
+    res.send({"status": "ok"})
+})
 
 app.post('/auth', function (req, res) {
     var data = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
@@ -459,7 +482,7 @@ app.post('/playlists/user/:id', function(req, res){
 
 app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     if(checkAuth(req, res) == false){
-        res.send({"error": "Not authorized", "authed": false})
+        res.send({"error": "Not authorized", "authorized": false})
         return
     }
     var gData = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
@@ -528,7 +551,8 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         }
     }
     data = {
-        "playlists": d
+        "playlists": d,
+        "success": true
     }
     await fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
 
