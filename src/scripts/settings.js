@@ -305,14 +305,14 @@ class UserPreferences{
         if(d.data["playlists"] == null){
             return []
         }
-        if(du.data == null){
+        if(du == null){
             return []
         }
         for(var x = 0; x < d.data["playlists"].length; x++){
             app[d.data["playlists"][x]["id"]] = d.data["playlists"][x]
         }
-        for(var x = 0; x < du.data.length; x++){
-            app[du.data[x]["id"]] = du.data[x]
+        for(var x = 0; x < du.length; x++){
+            app[du[x]["id"]] = du[x]
         }
         Object.keys(app).forEach((key,value) => {
             ap.push(app[key])

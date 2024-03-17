@@ -542,18 +542,28 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
         return
     }
     var u = getUser(req.body.authtoken);
-    if(u["loginName"] != req.params.id){
-        res.send({"error": "Not authorized", "success": false})
-    }
+    var gData = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
+    gData = JSON.parse(gData);
+    var fToCheck = ""
+    for(var x = 0; x < gData["playlists"].length; x++){
+        if(gData["playlists"][x]["id"] == req.params.playlist){
+            if(gData["playlists"][x]["owner"] != u["loginName"]){
+                res.send({"error": "Not authorized", "success": false})
+                return
+            }else{
+                fToCheck = gData["playlists"][x]["owner"]
+            }
+        }
+    }    
 
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
     data = JSON.parse(data);
 
-    console.log("Removing playlist "+req.params.playlist+" for user "+req.params.id)
+    console.log("Removing playlist "+req.params.playlist+" for user "+u["loginName"])
 
     var p = {"success": false}
     for(var x = 0; x < data["playlists"].length; x++){
-        if(data["playlists"][x]["id"] == req.params.playlist && data["playlists"][x]["owner"] == u){
+        if(data["playlists"][x]["id"] == req.params.playlist && data["playlists"][x]["owner"] == u["loginName"]){
             p = data["playlists"].splice(x, 1)
             p.success = true
         }

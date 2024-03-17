@@ -380,7 +380,7 @@ class FetchedData {
             }
         
         var du = await axios.post(window.prefs.getBackendUrl()+"/playlists/user/"+window.authSettings.getUsername(), authParams)
-        return du
+        return du.data
     }
     async modUserPlaylist(playlist){
         console.log(typeof(playlist.songs))
@@ -407,7 +407,6 @@ class FetchedData {
                 console.log(error)
             }
         }
-        console.log({"response": response.data})
         var data = response.data;
         if(data["authorized"] == false){
             window.location = window.authSettings.getAuthPageUrl()
@@ -417,7 +416,14 @@ class FetchedData {
             window.location = window.authSettings.getAuthPageUrl()
             return
         }
-        console.log({"data": data})
+        if(data["success"] == true){
+            /*
+            showSnackbar("Modified playlist " + playlist["displayName"])
+            console.log("Modified playlist " + playlist["displayName"])
+            */
+        }else{
+            showSnackbar("Couldn't modify playlist.<br>Reason: " + data["error"])
+        }
         await window.prefs.getPlaylists()
     }
     removeUserPlaylist(playlist){
@@ -435,11 +441,14 @@ class FetchedData {
                 return
             }
             if(data["success"] == true){
+                showSnackbar("Removed playlist " + playlist["displayName"])
                 console.log("Removed playlist " + playlist["displayName"])
                 await window.prefs.getPlaylists()
                 if(window.navigationInfo.get()["location"].substring(0, 9) == "playlist"){
                     // getPlaylists()
                 }
+            }else{
+                showSnackbar("Couldn't remove playlist.<br>Reason: " + data["error"])
             }
         }).catch(function (error) {
             if(error.code == "ERR_NETWORK"){
