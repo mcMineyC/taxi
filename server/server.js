@@ -545,7 +545,7 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
 
     var p = {"success": false}
     for(var x = 0; x < data["playlists"].length; x++){
-        if(data["playlists"][x]["id"] == req.params.playlist){
+        if(data["playlists"][x]["id"] == req.params.playlist && data["playlists"][x]["owner"] == u){
             p = data["playlists"].splice(x, 1)
             p.success = true
         }
@@ -806,6 +806,8 @@ async function updatePlaylists(hashFunc, all){
                 d = JSON.parse(d);
                 for(const x of d["playlists"]){
                     if(JSON.parse(x.public) == true){
+                        var uname = file.split("_")[1].substring(0,file.split("_")[1].length-5)
+                        x["owner"] = uname
                         p.push(x)
                     }
                 }
