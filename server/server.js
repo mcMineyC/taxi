@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
@@ -8,15 +9,19 @@ const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
+const { type } = require('os');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 
 
 const app = express();
 const port = 3000;
 app.use(cors());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
+/*
 app.use(express.urlencoded({
     extended: true
-}))
+}))*/
 
 app.use('/music', express.static(path.join(__dirname, 'music')));
 
@@ -120,6 +125,7 @@ app.post('/info/albums', async function (req, res) {
 
 app.post('/info/artists', function (req, res) {
     if(checkAuth(req, res) == false){
+        res.send({"error": "No authtoken provided", "authorized": false})
         return
     }
     
@@ -437,6 +443,7 @@ app.post('/playlists/user/:id', function(req, res){
     var u = getUser(req.body.authtoken);
     if(u["loginName"] != req.params.id){
         res.send({"error": "Not authorized", "success": false})
+        return
     }
 
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
@@ -458,35 +465,32 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
     var u = getUser(req.body.authtoken);
     if(u["loginName"] != req.params.id){
         res.send({"error": "Not authorized", "success": false})
+        return
     }
-
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
     data = JSON.parse(data);
+    console.log("Attempting to modify playlist "+req.params.playlist)
     var d = [];
     var found = false
     var index = 0
     for(var x = 0; x < data["playlists"].length; x++){
         if(data["playlists"][x]["id"] == req.params.playlist){
-            if(req.body.name != undefined){
-                console.log("Name: "+req.body.public)
+            if(req.body.name !== undefined){
+                console.log("Name: "+req.body.name)
                 data["playlists"][x]["displayName"] = req.body.name
             }
-            if(req.body.description != undefined){
+            if(req.body.description !== undefined){
                 console.log("Description: "+req.body.public)
                 data["playlists"][x]["description"] = req.body.description
             }
-            if(req.body.public != undefined){
+            if(req.body.public !== undefined){
                 console.log("Public: "+req.body.public)
                 data["playlists"][x]["public"] = JSON.parse(req.body.public)
             }
-            if(req.body.songs != undefined){
-                // console.log("Songs: "+req.body.songs)
-                try{
-                    data["playlists"][x]["songs"] = JSON.parse(req.body.songs)
-                }catch(e){
-                    data["playlists"][x]["songs"] = []
-                }
+            if(typeof req.body.songs !== "undefined" && req.body.songs != null && req.body.songs.length > 0){
+                data["playlists"][x]["songs"] = req.body.songs
             }
+            // console.log("JSON: "+JSON.stringify(s))
             found = true
             index = x
         }
@@ -499,9 +503,12 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
                 "displayName": req.body.name,
                 "description": req.body.description,
                 "public": req.body.public,
-                "songs": JSON.parse(req.body.songs)
+                "songs": req.body.songs
             })
+            console.log("Adding new playlist")
+            console.log(req.body.songs)
         }catch(e){
+            console.log(e)
             d.push({
                 "id": req.params.playlist,
                 "displayName": req.body.name,
@@ -509,21 +516,16 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
                 "public": req.body.public,
                 "songs": []
             })
+            console.log("Error occurred, adding new playlist")
         }
     }
     data = {
         "playlists": d
     }
-    console.log("\n\n")
-    await fs.writeFile(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4), function (err) {
-        if (err) {
-            console.log("Error writing modified playlists: ")
-            console.log(err);
-        }
-    })
+    await fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
 
     res.send(d)
-    updatePlaylists(hash, data)
+    await updatePlaylists(hash, data)
 })
 
 app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
@@ -539,6 +541,8 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
     data = JSON.parse(data);
 
+    console.log("Removing playlist "+req.params.playlist+" for user "+req.params.id)
+
     var p = {"success": false}
     for(var x = 0; x < data["playlists"].length; x++){
         if(data["playlists"][x]["id"] == req.params.playlist){
@@ -547,8 +551,11 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
         }
     }
     fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
+    data = JSON.parse(data);
+    
+    await updatePlaylists(hash, data)
     res.send(p)
-    updatePlaylists(hash, data)
 })
 
 async function main(){

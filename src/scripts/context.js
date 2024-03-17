@@ -3,7 +3,7 @@ document.addEventListener('contextmenu', function(event) {
     contextMenu(event)
 }); 
 
-function contextMenu(event){
+async function contextMenu(event){
     // Prevent the default context menu from appearing
     event.preventDefault();
     event.stopPropagation();
@@ -105,7 +105,7 @@ function contextMenu(event){
     
     // Add event listeners for the custom context menu options
     customContextMenu.querySelectorAll('li').forEach(option => {
-      option.addEventListener('click', function() {
+      option.addEventListener('click', async function() {
         // Perform action based on the selected option
         var a = option.getAttribute('value')
         console.log('Selected option:', a);
@@ -173,11 +173,12 @@ function contextMenu(event){
         console.log("Resetting")
         if(a == "delete" && window.navigationInfo.get()["location"] == "songsID" && window.navigationInfo.getHist()[window.navigationInfo.getHist().length-1].substring(0, 8) == "playlist"){
             console.log("Updating playlist")
+            await window.prefs.getPlaylists()
             reset()
             getSongsByPlaylist(window.navigationInfo.get()["id"])
         }else if(a == "delete" && window.navigationInfo.get()["location"].substring(0, 8) == "playlist"){
             console.log("Showing all playlists")
-            reset()
+            await window.prefs.getPlaylists()
             getPlaylists()
         }
 
@@ -204,9 +205,9 @@ function contextMenu(event){
     
     // Add event listeners for the custom context menu popouts, currently only addplaylistconsole.log("Playlist moused")
     var inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`;
-    var cnt = (()=>{
+    var cnt = await (async ()=>{
         try{
-            var p = window.prefs.getPlaylists();
+            var p = await window.prefs.getPlaylists();
             if(p.length == 0){
                 inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
                 customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml

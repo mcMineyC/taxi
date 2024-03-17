@@ -71,10 +71,11 @@ class AuthSettings{
     }
 
     login(username, password){
-        var usp = new URLSearchParams()
         if(typeof(username) != "undefined" && typeof(password) != "undefined") {
-            usp.append('username', username);
-            usp.append('password', password);
+            var usp = {
+                "username": username,
+                "password": password
+            }
             console.log("Logging in with username and password")
             axios.post(this.authUrl+"/auth",usp)
             .then((response) => {
@@ -100,8 +101,9 @@ class AuthSettings{
     }
 
     loginToken(){
-        var usp = new URLSearchParams()
-        usp.append('authtoken', this.authToken);
+        var usp = {
+            "authtoken": this.authToken
+        }
         console.log("Logging in with token")
         axios.post(this.authUrl+"/authtoken",usp)
         .then((response) => {
@@ -127,8 +129,9 @@ class AuthSettings{
 
     getUsername(){
         if(this.username == "BANANAS ARE GR8!!!"){
-            let usp = new URLSearchParams()
-            usp.append('authtoken', this.authToken);
+            let usp = {
+                "authtoken": this.authToken
+            }
             console.log("Posting /username")
             var tt = this
             axios.post(this.authUrl+"/username", usp).then((response) => {
@@ -272,10 +275,37 @@ class UserPreferences{
         return this.frontendUrl
     }
 
-    getPlaylists(){
-        this.allPlaylists = this.savedPlaylists["playlists"].concat(window.fetchedData.getUserPlaylists()).unique()
-        this.allPlaylists = this.allPlaylists.concat(window.fetchedData.getPlaylists()).unique()
-        return this.allPlaylists
+    async getPlaylists(){
+        var ap = []
+        var app = {}
+        var d = await window.fetchedData.getPlaylists()
+        var du = await window.fetchedData.getUserPlaylists()
+        console.log({"playlists": d.data})
+        if(d.error){
+            console.log(d.error)
+            return []
+        }
+        if(du.error){
+            console.log(d.error)
+            return []
+        }
+        if(d.data["playlists"] == null){
+            return []
+        }
+        if(du.data == null){
+            return []
+        }
+        for(var x = 0; x < d.data["playlists"].length; x++){
+            app[d.data["playlists"][x]["id"]] = d.data["playlists"][x]
+        }
+        for(var x = 0; x < du.data.length; x++){
+            app[du.data[x]["id"]] = du.data[x]
+        }
+        Object.keys(app).forEach((key,value) => {
+            ap.push(app[key])
+        })
+        this.allPlaylists = ap
+        return ap
     }
 
     getPlaylist(playlist_id){
@@ -286,50 +316,51 @@ class UserPreferences{
         }
     }
 
-    setPlaylists(savedPlaylists){
+    /*setPlaylists(savedPlaylists){
         this.savedPlaylists = savedPlaylists
         window.localStorage.setItem("savedPlaylists", JSON.stringify(this.savedPlaylists))
-    }
+    }*/
 
-    addPlaylist(playlist){
-        this.savedPlaylists["playlists"].push(playlist)
-        window.fetchedData.modUserPlaylist(playlist)
-        window.localStorage.setItem("savedPlaylists", JSON.stringify(this.savedPlaylists))
+    async addPlaylist(playlist){
+        await window.fetchedData.modUserPlaylist(playlist)
     }
 
     removePlaylist(playlist){
-        var playlist = this.getPlaylist(playlist)
-        this.savedPlaylists["playlists"].splice(this.savedPlaylists["playlists"].indexOf(playlist), 1)
-        this.setPlaylists(this.savedPlaylists)
+        window.fetchedData.removeUserPlaylist(playlist)
     }
 
     addToPlaylist(playlist_id, song){
-        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
-            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
-                this.savedPlaylists["playlists"][i]["songs"].push(song)
-                this.setPlaylists(this.savedPlaylists)
+        for(var i = 0; i < this.allPlaylists.length; i++){
+            if(this.allPlaylists[i]["id"] == playlist_id){
+                console.log(this.allPlaylists[i])
+                this.allPlaylists[i]["songs"].push(song)
+                console.log(this.allPlaylists[i])
+                window.fetchedData.modUserPlaylist(this.allPlaylists[i])
                 return
             }
         }
     }
 
     addListToPlaylist(playlist_id, songs){
-        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
-            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
-                this.savedPlaylists["playlists"][i]["songs"] = this.savedPlaylists["playlists"][i]["songs"].concat(songs)
-                this.setPlaylists(this.savedPlaylists)
+        for(var i = 0; i < this.allPlaylists.length; i++){
+            if(this.allPlaylists[i]["id"] == playlist_id){
+                console.log("Found playlist")
+                console.log({"playlist": this.allPlaylists[i], "type": typeof(this.allPlaylists[i]["songs"])})
+                this.allPlaylists[i]["songs"] = this.allPlaylists[i]["songs"].concat(songs)
+                console.log({"playlist": this.allPlaylists[i], "type": typeof(this.allPlaylists[i]["songs"])})
+                window.fetchedData.modUserPlaylist(this.allPlaylists[i])
                 return
             }
         }
     }
 
     removeFromPlaylist(playlist_id, song_id){
-        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
-            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
-                for(var j = 0; j < this.savedPlaylists["playlists"][i]["songs"].length; j++){
-                    if(this.savedPlaylists["playlists"][i]["songs"][j] == song_id){
-                        this.savedPlaylists["playlists"][i]["songs"].splice(j, 1)
-                        this.setPlaylists(this.savedPlaylists)
+        for(var i = 0; i < this.allPlaylists.length; i++){
+            if(this.allPlaylists[i]["id"] == playlist_id){
+                for(var j = 0; j < this.allPlaylists[i]["songs"].length; j++){
+                    if(this.allPlaylists[i]["songs"][j] == song_id){
+                        this.allPlaylists[i]["songs"].splice(j, 1)
+                        window.fetchedData.modUserPlaylist(this.allPlaylists[i])
                         return
                     }
                 }
@@ -339,15 +370,15 @@ class UserPreferences{
     }
 
     removeFromPlaylistIndex(playlist_id, index){
-        for(var i = 0; i < this.savedPlaylists["playlists"].length; i++){
-            if(this.savedPlaylists["playlists"][i]["id"] == playlist_id){
-                console.log("using "+this.savedPlaylists["playlists"][i]["songs"].length)
-                for(var j = 0; j < this.savedPlaylists["playlists"][i]["songs"].length; j++){
+        for(var i = 0; i < this.allPlaylists.length; i++){
+            if(this.allPlaylists[i]["id"] == playlist_id){
+                console.log("using "+this.allPlaylists[i]["songs"].length)
+                for(var j = 0; j < this.allPlaylists[i]["songs"].length; j++){
                     console.log(j+" "+index)
                     if(j == index){
                         console.log(j+" "+index)
-                        this.savedPlaylists["playlists"][i]["songs"].splice(j, 1)
-                        this.setPlaylists(this.savedPlaylists)
+                        this.allPlaylists[i]["songs"].splice(j, 1)
+                        window.fetchedData.modUserPlaylist(this.allPlaylists[i])
                         return
                     }
                 }
@@ -357,7 +388,7 @@ class UserPreferences{
     }
 
     savePlaylists(){
-        window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.savedPlaylists}))
+        //window.localStorage.setItem("savedPlaylists", JSON.stringify({"playlists": this.savedPlaylists}))
     }
 
     toggleDarkMode(){
@@ -474,6 +505,7 @@ const merge = (a, b, predicate = (a, b) => a === b) => {
     return c;
 }
 
+/*
 Array.prototype.unique = function() {
     var a = this.concat();
     for(var i=0; i<a.length; ++i) {
@@ -485,3 +517,4 @@ Array.prototype.unique = function() {
 
     return a;
 };
+*/
