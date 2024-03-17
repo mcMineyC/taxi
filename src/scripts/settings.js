@@ -158,6 +158,12 @@ class AuthSettings{
         this.username = "BANANAS ARE GR8!!!"
         window.setCookie("authToken", "", 999999999999999999999999999999999)
         window.location = this.authPageUrl
+        localStorage.removeItem("savedUsername")
+        localStorage.removeItem("stateLastQueue")
+        localStorage.removeItem("stateLastPos")
+        localStorage.removeItem("stateLastSeek")
+        localStorage.removeItem("stateLastShuffled")
+        localStorage.removeItem("stateLastLooped")
     }
 }
 
@@ -172,6 +178,9 @@ class UserPreferences{
         if(window.localStorage.getItem("configuredSaveQueueOnChange") == null){
             window.localStorage.setItem("configuredSaveQueueOnChange", false)
         }
+        if(window.localStorage.getItem("configuredShuffleOnLoop") == null){
+            window.localStorage.setItem("configuredShuffleOnLoop", false)
+        }
         if(window.localStorage.getItem("configuredHomeScreen") == null){
             window.localStorage.setItem("configuredHomeScreen", "artists")
         }
@@ -184,15 +193,11 @@ class UserPreferences{
         if(window.localStorage.getItem("configuredFrontendUrl") == null){
             window.localStorage.setItem("configuredFrontendUrl", window.location.origin)
         }
-        if(window.localStorage.getItem("savedPlaylists") == null){
-            window.localStorage.setItem("savedPlaylists", JSON.stringify({
-                "playlists": []
-            }))
-        }
         this.addToQueue = false
         this.darkMode = window.localStorage.getItem("configuredDarkMode") == "true"
         this.saveQueueOnExit = window.localStorage.getItem("configuredSaveQueueOnExit") == "true"
         this.saveQueueOnChange = window.localStorage.getItem("configuredSaveQueueOnChange") == "true"
+        this.shuffleOnLoop = window.localStorage.getItem("configuredShuffleOnLoop") == "true"
         this.homeScreen = window.localStorage.getItem("configuredHomeScreen")
         this.themeColor = window.localStorage.getItem("configuredThemeColor")
         this.backendUrl = window.localStorage.getItem("configuredBackendUrl")
@@ -204,7 +209,6 @@ class UserPreferences{
     setAddToQueue(addToQueue){
         return
     }
-
 
     setDarkMode(darkMode){
         this.darkMode = darkMode
@@ -220,6 +224,11 @@ class UserPreferences{
     setSaveQueueOnChange(saveQueueOnChange){
         this.saveQueueOnChange = saveQueueOnChange
         window.localStorage.setItem("configuredSaveQueueOnChange", saveQueueOnChange)
+    }
+
+    setShuffleOnLoop(shuffleOnLoop){
+        this.shuffleOnLoop = shuffleOnLoop
+        window.localStorage.setItem("configuredShuffleOnLoop", shuffleOnLoop)
     }
 
     setHomeScreen(homeScreen){
@@ -257,6 +266,10 @@ class UserPreferences{
 
     getSaveQueueOnChange(){
         return this.saveQueueOnChange
+    }
+
+    getShuffleOnLoop(){
+        return this.shuffleOnLoop
     }
 
     getHomeScreen(){
@@ -407,6 +420,10 @@ class UserPreferences{
         this.setSaveQueueOnChange(!this.getSaveQueueOnChange())
     }
 
+    toggleShuffleOnLoop(){
+        this.setShuffleOnLoop(!this.getShuffleOnLoop())
+    }
+
 }
 
 function setCookie(cname, cvalue, exdays) {
@@ -480,6 +497,9 @@ function addSettingsActions(){
     })
     document.getElementById("settings-toggle-save-queue-change").addEventListener("change", function(){
         window.prefs.toggleSaveQueueOnChange()
+    })
+    document.getElementById("settings-toggle-shuffle-on-loop").addEventListener("change", function(){
+        window.prefs.toggleShuffleOnLoop()
     })
     document.getElementById("settings-theme-hex-code-save").addEventListener("click", function(){
         window.prefs.setThemeColor(document.getElementById("settings-theme-hex-code").value)

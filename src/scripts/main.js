@@ -228,7 +228,9 @@ class Player{
             if(this.looped){
                 console.log("Looped")
                 this.pos = 0
-                this.queue = this.shuffist(this.queue)
+                if(window.prefs.getShuffleOnLoop()){
+                    this.queue = this.shuffist(this.queue)
+                }
                 return true
             }else{
                 console.log("Not looping")

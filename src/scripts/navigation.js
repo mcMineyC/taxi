@@ -542,7 +542,7 @@ async function getPlaylists(){
         var i = p[x]
         console.log(i["displayName"])
         inhtml += `
-            <m3-list-item thingtype="playlist" thingid="${i["id"]}" text="${i["displayName"]}" endText="" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+"/placeholder"}"></m3-list-item>
+            <m3-list-item thingtype="playlist" thingid="${i["id"]}" text="${i["displayName"]}" endText="Owner: ${i["owner"]}" onclick="playlistClicked('${i["id"]}')" image="${window.prefs.getBackendUrl()+"/placeholder"}"></m3-list-item>
         `
         if(x != p.length-1){
             inhtml += `
@@ -604,11 +604,16 @@ async function settingsClick(){
         </md-list-item>
         <md-divider></md-divider>
         <md-list-item>
+            <span slot="start">Shuffle queue on loop</span>
+            <md-switch id="settings-toggle-shuffle-on-loop" class="settings-switch" ${(window.prefs.getShuffleOnLoop() ? "selected" : "")} slot="end"></md-switch>
+        </md-list-item>
+        <md-divider></md-divider>
+        <md-list-item>
             <span slot="start">Home page</span>
             <md-tabs slot="end">
                 <md-primary-tab class="settings-homepage-artists">Artists</md-primary-tab>
-                <md-primary-tab class="settings-homepage-albums">Albums</md-primary-tab>
-                <md-primary-tab class="settings-homepage-songs">Songs (not recommended)</md-primary-tab>
+                <md-primary-tab class="settings-homepage-albums">Albums (not recommended)</md-primary-tab>
+                <md-primary-tab class="settings-homepage-songs">Songs</md-primary-tab>
             </md-tabs>
         </md-list-item>
         <md-divider></md-divider>
@@ -786,10 +791,6 @@ async function addPlaylistClick(doNext){
                 <div>
                     <label for="playlist-public-switch">Public</label>
                     <md-switch id="playlist-public-switch">Public</md-switch>
-                </div>
-                <div>
-                    <label for="playlist-sync-switch">Sync playlist</label>
-                    <md-switch id="playlist-sync-switch"></md-switch>
                 </div>
             </form>
             <div slot="actions">

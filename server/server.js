@@ -462,12 +462,20 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
         res.send({"error": "Not authorized", "authed": false})
         return
     }
-    var u = getUser(req.body.authtoken);
-    if(u["loginName"] != req.params.id){
-        res.send({"error": "Not authorized", "success": false})
-        return
-    }
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
+    var gData = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
+    gData = JSON.parse(gData);
+    var fToCheck = ""
+    for(var x = 0; x < gData["playlists"].length; x++){
+        if(gData["playlists"][x]["id"] == req.params.playlist){
+            if(gData["playlists"][x]["owner"] != req.params.id){
+                res.send({"error": "Not authorized", "success": false})
+                return
+            }else{
+                fToCheck = gData["playlists"][x]["owner"]
+            }
+        }
+    }    
+    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
     data = JSON.parse(data);
     console.log("Attempting to modify playlist "+req.params.playlist)
     var d = [];
@@ -804,13 +812,14 @@ async function updatePlaylists(hashFunc, all){
             try{
                 var d = fs.readFileSync(path.join(__dirname, "config", "playlists", file), 'utf-8');
                 d = JSON.parse(d);
-                for(const x of d["playlists"]){
-                    if(JSON.parse(x.public) == true){
+                for(var x = 0; x < d["playlists"].length; x++){
+                    if(JSON.parse(d["playlists"][x].public) == true){
                         var uname = file.split("_")[1].substring(0,file.split("_")[1].length-5)
-                        x["owner"] = uname
-                        p.push(x)
+                        d["playlists"][x]["owner"] = uname
+                        p.push(d["playlists"][x])
                     }
                 }
+                fs.writeFileSync(path.join(__dirname, "config", "playlists", file), JSON.stringify(d, null, 4));
             }catch(err){
                 console.log(err)
                 continue

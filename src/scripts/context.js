@@ -163,10 +163,8 @@ async function contextMenu(event){
             case "delete":
                 if(thingtype == "playlist"){
                     window.prefs.removePlaylist(thingid)
-                    showSnackbar("Playlist deleted")
                 }else if(thingtype == "song"){
                     window.prefs.removeFromPlaylistIndex(window.navigationInfo.get()["id"], thingindex)
-                    showSnackbar("Song removed from playlist")
                 }
                 break;
         }
@@ -207,10 +205,38 @@ async function contextMenu(event){
     var inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`;
     var cnt = await (async ()=>{
         try{
-            var p = await window.prefs.getPlaylists();
+            var p = await window.prefs.getUserPlaylists();
             if(p.length == 0){
                 inHtml = `<li value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
-                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtml
+                customContextMenu.querySelector("#addplaylist-popout-menu").innerHTML = inHtmlpm.querySelectorAll("li").forEach(element => {
+                    element.addEventListener("click", function(e){
+                        console.log("Playlist click")
+                        var el = e.target
+                        if(el.getAttribute("value") == "addplaylist" && el.getAttribute("vvalue") != undefined){
+                            switch(thingtype){
+                                case "album":
+                                    console.log("album")
+                                    window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                                    break;
+                                case "artist":
+                                    console.log("artist")
+                                    window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                                    break;
+                                case "playlist":
+                                    console.log("playlist")
+                                    break;
+                                case "song":
+                                    console.log("song")
+                                    window.prefs.addToPlaylist(el.getAttribute("vvalue"), thingid)
+                                    break;
+                            }
+                            customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
+                        }else if (el.getAttribute("value") == "createPlaylist"){
+                            console.log("create playlist")
+                            createPlaylistDialog(thingtype, thingid)
+                        }
+                    })
+                })
                 return 1
             }
             var cntr = 0
@@ -219,6 +245,35 @@ async function contextMenu(event){
                 inHtml += `<li value="addplaylist" vvalue="${p[x]["id"]}"><span class="oneline">${p[x]["displayName"]}</span></li>`
             }
             inHtml += `<li value="more"><md-icon>more_horiz</md-icon>More</li>`
+            pm.querySelectorAll("li").forEach(element => {
+                element.addEventListener("click", function(e){
+                    console.log("Playlist click")
+                    var el = e.target
+                    if(el.getAttribute("value") == "addplaylist" && el.getAttribute("vvalue") != undefined){
+                        switch(thingtype){
+                            case "album":
+                                console.log("album")
+                                window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
+                                break;
+                            case "artist":
+                                console.log("artist")
+                                window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
+                                break;
+                            case "playlist":
+                                console.log("playlist")
+                                break;
+                            case "song":
+                                console.log("song")
+                                window.prefs.addToPlaylist(el.getAttribute("vvalue"), thingid)
+                                break;
+                        }
+                        customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
+                    }else if (el.getAttribute("value") == "createPlaylist"){
+                        console.log("create playlist")
+                        createPlaylistDialog(thingtype, thingid)
+                    }
+                })
+            })
             return 1+cntr
         }catch(e){
             console.log(e)
@@ -249,35 +304,7 @@ async function contextMenu(event){
     pm.style.marginTop = topPos
     // pm.style.right = rightPos
     
-    pm.querySelectorAll("li").forEach(element => {
-        element.addEventListener("click", function(e){
-            console.log("Playlist click")
-            var el = e.target
-            if(el.getAttribute("value") == "addplaylist" && el.getAttribute("vvalue") != undefined){
-                switch(thingtype){
-                    case "album":
-                        console.log("album")
-                        window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByAlbum(thingid).map(entry => entry.id))
-                        break;
-                    case "artist":
-                        console.log("artist")
-                        window.prefs.addListToPlaylist(el.getAttribute("vvalue"), window.fetchedData.getSongsByArtist(thingid).map(entry => entry.id))
-                        break;
-                    case "playlist":
-                        console.log("playlist")
-                        break;
-                    case "song":
-                        console.log("song")
-                        window.prefs.addToPlaylist(el.getAttribute("vvalue"), thingid)
-                        break;
-                }
-                customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "none"
-            }else if (el.getAttribute("value") == "createPlaylist"){
-                console.log("create playlist")
-                createPlaylistDialog(thingtype, thingid)
-            }
-        })
-    })
+    
     customContextMenu.querySelector("#addplaylist-popout").addEventListener("mouseover", function(){
         customContextMenu.querySelector("#addplaylist-popout-menu").style.display = "flex";
         customContextMenu.querySelector("#addplaylist-popout-menu").addEventListener("mouseout", function(){
