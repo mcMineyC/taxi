@@ -148,11 +148,10 @@ class FetchedData {
         this.all = []
         console.log("Initializing fetched data with backend url "+window.prefs.getBackendUrl())
         var t = this
-        var authParams = new URLSearchParams(
-            {
-                "authtoken": window.authSettings.getAuthToken()
-            }
-        )
+        var authParams = 
+        {
+            "authtoken": window.authSettings.getAuthToken()
+        }
         axios.post(window.prefs.getBackendUrl()+'/info/artists', authParams)
         .then(function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
@@ -365,21 +364,67 @@ class FetchedData {
         }
         return songs
     }
-    getUserPlaylists(){
-        return this.userPlaylists
+    async getPlaylists(){
+        var authParams = 
+            {
+                "authtoken": window.authSettings.getAuthToken()
+            }
+        
+        var d = await axios.post(window.prefs.getBackendUrl()+"/playlists", authParams)
+        return d
     }
-    getPlaylists(){
-        return this.playlists
+    async getUserPlaylists(){
+        var authParams = 
+            {
+                "authtoken": window.authSettings.getAuthToken()
+            }
+        
+        var du = await axios.post(window.prefs.getBackendUrl()+"/playlists/user/"+window.authSettings.getUsername(), authParams)
+        return du
     }
-    modUserPlaylist(playlist){
-        var usp = new URLSearchParams({
+    async modUserPlaylist(playlist){
+        console.log(typeof(playlist.songs))
+        var usp = {
             "id": playlist["id"],
             "name": playlist["displayName"],
             "public": playlist["public"],
-            "description": playlist["description"],
-            "songs": JSON.stringify(playlist["songs"])
-        })
-        axios.post(window.prefs.getBackendUrl()+'/playlists/user/'+window.authSettings.getUsername()+"/"+playlist["id"], usp).then(function (response) {
+            "description": (typeof(playlist["description"]) == "undefined" ? "" : playlist["description"]),
+            "authtoken": window.authSettings.getAuthToken(),
+            "songs": []
+        }
+        for(var ss in playlist["songs"]){
+            if(playlist.songs[ss] == null) continue;
+            console.log({"playlist.songs[ss]": playlist.songs[ss],"type": typeof(playlist.songs[ss])})
+            usp["songs"].push(playlist.songs[ss])
+        }
+        console.log({"usp.songs": playlist.songs,"type": typeof(playlist.songs)})
+        var response = await axios.post(window.prefs.getBackendUrl()+'/playlists/user/'+window.authSettings.getUsername()+"/modify/"+playlist["id"], usp)
+        if (response.error != undefined){
+            if(response.error.code == "ERR_NETWORK"){
+                window.location = window.authSettings.getAuthPageUrl()
+                return
+            }else{
+                console.log(error)
+            }
+        }
+        console.log({"response": response.data})
+        var data = response.data;
+        if(data["authorized"] == false){
+            window.location = window.authSettings.getAuthPageUrl()
+            return
+        }
+        if(data == undefined){
+            window.location = window.authSettings.getAuthPageUrl()
+            return
+        }
+        console.log({"data": data})
+        await window.prefs.getPlaylists()
+    }
+    removeUserPlaylist(playlist){
+        var usp = {
+            "authtoken": window.authSettings.getAuthToken()
+        }
+        axios.post(window.prefs.getBackendUrl()+'/playlists/user/'+window.authSettings.getUsername()+"/remove/"+playlist, usp).then(async function (response) {
             var data = JSON.parse(JSON.stringify(response.data));
             if(data["authorized"] == false){
                 window.location = window.authSettings.getAuthPageUrl()
@@ -389,7 +434,13 @@ class FetchedData {
                 window.location = window.authSettings.getAuthPageUrl()
                 return
             }
-            console.log(data)
+            if(data["success"] == true){
+                console.log("Removed playlist " + playlist["displayName"])
+                await window.prefs.getPlaylists()
+                if(window.navigationInfo.get()["location"].substring(0, 9) == "playlist"){
+                    // getPlaylists()
+                }
+            }
         }).catch(function (error) {
             if(error.code == "ERR_NETWORK"){
                 window.location = window.authSettings.getAuthPageUrl()
@@ -473,7 +524,7 @@ async function getPlaylists(){
     reset()
     var d = document.getElementById("content")
     console.log("Getting playlists...")
-    var p = window.prefs.getPlaylists()
+    var p = await window.prefs.getPlaylists()
     console.log("Playlists: " + p.length)
     console.log(p)
     d.innerHTML = `
@@ -481,7 +532,7 @@ async function getPlaylists(){
     `
     if(p.length == 0){
         d.innerHTML = `
-            <h1 class="loading-text-placeholder">No playlists...</h1>
+            <h1 class="loading-text-placeholder">Much emptiness!</h1>
         `
         return
     }
@@ -666,14 +717,13 @@ async function createPlaylistDialog(type, id){
 }
 
 async function saveQueueToPlaylistDialog(){
-    
     var listHtml = ``
     listHtml += `
     <div class="add-playlist-choose-item">
         <md-radio id="createPlaylist" name="addplaylist" value="new" checked></md-radio>
         <label for="createPlaylist">New</label>
     </div>`
-    var p = window.prefs.getPlaylists();
+    var p = await window.prefs.getPlaylists();
     if(p.length > 0){
         //listHtml = `<md-list-item value="createPlaylist"><md-icon>playlist_add</md-icon>Create playlist</li>`
         for (var x = 0; x < (p.length < 25 ? p.length : 25); x++) {
@@ -770,7 +820,7 @@ async function addPlaylistClick(doNext){
         }
         console.log(data)
         d.close(data)
-        window.prefs.addPlaylist(data)
+        await window.prefs.addPlaylist(data)
         if(doNext != undefined){
             doNext(data)
         }
