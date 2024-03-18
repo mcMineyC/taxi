@@ -497,7 +497,10 @@ app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
                 fToCheck = gData["playlists"][x]["owner"]
             }
         }
-    }    
+    }
+    if(fToCheck == ""){
+        fToCheck = req.params.id
+    }
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
     data = JSON.parse(data);
     console.log("Attempting to modify playlist "+req.params.playlist)
