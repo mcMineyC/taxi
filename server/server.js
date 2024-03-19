@@ -583,6 +583,10 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
         }
     }    
 
+    if(fToCheck == ""){
+        fToCheck = req.params.id
+    }
+
     var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
     data = JSON.parse(data);
 
@@ -850,9 +854,9 @@ async function updatePlaylists(hashFunc, all){
                 var d = fs.readFileSync(path.join(__dirname, "config", "playlists", file), 'utf-8');
                 d = JSON.parse(d);
                 for(var x = 0; x < d["playlists"].length; x++){
+                    var uname = file.split("_")[1].substring(0,file.split("_")[1].length-5)
+                    d["playlists"][x]["owner"] = uname
                     if(JSON.parse(d["playlists"][x].public) == true){
-                        var uname = file.split("_")[1].substring(0,file.split("_")[1].length-5)
-                        d["playlists"][x]["owner"] = uname
                         p.push(d["playlists"][x])
                     }
                 }
