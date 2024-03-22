@@ -115,3 +115,8 @@ md-dialog{
 .tippy-box[data-placement^='bottom'] > .tippy-arrow::before {
   border-bottom-color: #00000000;
 }
+
+md-outlined-select::part(menu) {
+    --md-menu-container-color: var(--md-sys-color-surface-variant);
+    --md-menu-container-shape: 0px;
+}

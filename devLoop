@@ -1,0 +1,9 @@
+while :
+do
+cd ~/Documents/Coding/m3-music-player
+npx webpack serve
+sleep 2
+npm run publish
+clear
+done
+

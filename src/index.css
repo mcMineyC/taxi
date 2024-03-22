@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined:wght@200,opsz,FILL,GRAD@20");
 @import url("styles/theme.css");
+@import url("../node_modules/@xterm/xterm/css/xterm.css");
 
 @import url("styles/snackbar.css");
 @import url("styles/playlists.css");
@@ -13,6 +14,8 @@
 @import url("styles/queue.css");
 @import url("styles/list-item.css");
 @import url("styles/login.css");
+@import url("styles/download.css");
+
 
 
 #content{

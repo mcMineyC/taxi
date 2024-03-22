@@ -20,6 +20,11 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
+      filename: "dex.html",
+      // favicon: "favicon.ico",
+      template: "src/dex.html",
+    }),
+    new HtmlWebpackPlugin({
       filename: "index.html",
       // favicon: "favicon.ico",
       template: "src/index.html",

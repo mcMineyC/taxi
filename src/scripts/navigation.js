@@ -49,9 +49,14 @@ class Location {
                     this.setHeader("Songs")
                 }
                 break;
-        
+            case "downloader":
+                var c = document.querySelector("#content")
+                c.classList.add("nopadding")
             default:
                 break;
+        }
+        if(((v.substring(v.length-2, v.length) == "ID") ? v.substring(0, v.length - 2) : v) != "downloader"){
+            document.getElementById("content").classList.remove("nopadding")
         }
         this.addTooltips()
     }
@@ -422,6 +427,9 @@ class FetchedData {
             console.log("Modified playlist " + playlist["displayName"])
             */
         }else{
+            if(data["error"] == undefined){
+                return
+            }
             showSnackbar("Couldn't modify playlist.<br>Reason: " + data["error"])
         }
         await window.prefs.getPlaylists()
@@ -489,6 +497,33 @@ class VisibleContent{
         this.bottomOfPage = c
     }
     
+}
+
+class Downloader{
+    constructor(){
+        this.downloading = false
+    }
+    init(){
+        this.downloading = true
+        window.xterm.open(document.getElementById("download-console"))
+        window.xfit.fit()
+        window.xfit.fit()
+        window.xfit.fit()
+        window.xfit.fit()
+        setInterval(() => {
+            window.xfit.fit()
+            window.xfit.fit()
+        }, 100)
+    }
+    connect(){
+        console.log()
+    }
+    search(source, query){
+        window.xterm.writeln("Searching " + source + "...")
+    }
+    download(source, url){
+        window.xterm.writeln("Downloading from " + source)
+    }
 }
 
 async function getQueue(currPlaying, end){
@@ -675,6 +710,65 @@ async function queueClick(){
 
 async function downloadClick(){
     showSnackbar("Download not yet implemented")
+    console.log("Opening downloads");
+    reset()
+    var content = document.getElementById("content")
+    content.innerHTML = `
+    <div class="panes">
+        <div class="pane">
+            <md-list id="download-form">
+                <md-list-item class="download-form-type">
+                    <md-tabs id="download-form-type-tabs">
+                        <md-primary-tab class="download-form-type">Link</md-primary-tab>
+                        <md-primary-tab class="download-form-type">Search</md-primary-tab>
+                    </md-tabs>
+                </md-list-item>
+                <md-list-item class="download-form-source">
+                    <md-tabs id="download-form-source-tabs">
+                        <md-primary-tab class="download-form-source">Spotify</md-primary-tab>
+                        <md-primary-tab class="download-form-source">YouTube</md-primary-tab>
+                    </md-tabs>
+                </md-list-item>
+                <md-list-item id="download-form-box">
+                    <div id="download-form-box-form">
+                        <md-list>
+                            <md-list-item>
+                                <span slot="start">Link</span>
+                                <md-outlined-text-field id="download-form-box-url" label="" slot="end"></md-outlined-text-field>
+                            </md-list-item>
+                            <md-list-item>
+                                <span slot="start">Private</span>
+                                <md-checkbox id="download-private" slot="end"></md-checkbox>
+                            </md-list-item>
+                            <md-list-item id="download-form-box-form-private-cookies" class="download-form-button" style="display: none;">
+                                <div class="download-form-button">
+                                    <md-filled-button id="download-form-box-form-private-cookies-button">Upload cookies</md-filled-button>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </md-list-item>
+                <md-list-item>
+                    <div class="download-form-button">
+                        <md-filled-button id="download-form-submit">Download</md-filled-button>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <div id="download-console"></div>
+        </div>
+        <div class="pane">
+            <div id="results-list"></div>
+        </div>
+    </div>
+    `
+    window.navigationInfo.setHeader("Downloader")
+    window.navigationInfo.addHist(window.navigationInfo.get()["location"])
+    window.navigationInfo.set({
+        "prev": window.navigationInfo.getHist(),
+        "location": "downloader",
+        "id": window.navigationInfo.get()["id"],
+    })
+    connectDownloadStuff()
 }
 
 async function searchClick(){
@@ -843,8 +937,137 @@ async function addPlaylistClick(doNext){
     // console.log("Dialog result: " + t)
 }
 
+async function showDialog(title, text, handler, wait = false){
+    let inHtml = `
+        <md-dialog id="dialogger">
+            <div slot="headline">
+              ${title}
+            </div>
+            <div slot="content" class="dialog-form">
+                <p>${text}</p>
+            </div>
+            <div slot="actions">
+              <md-text-button onclick="closeDialog()">OK</md-text-button>
+            </div>
+        </md-dialog>
+    `
+    let d = document.querySelector("#dialog-box")
+    d.innerHTML = inHtml
+    try{
+        document.querySelector("#dialogger").show()
+    }catch(e){
+        console.log({"dumberror": e})
+    }
+    
+    document.querySelector("#dialogger").addEventListener("cancel", ()=>{
+        document.querySelector("#dialogger").removeEventListener("closed", handler)
+    })
+    document.querySelector("#dialogger").addEventListener("closed", handler)
+    if(wait == true){
+        await getPromiseFromEvent(document.querySelector("#dialogger"), "closed")
+    }
+}
+
 function closeDialog(){
     document.querySelector("#dialogger").close()
+}
+
+async function connectDownloadStuff(){
+    var downloader = new Downloader()
+    window.downloader = downloader
+    downloader.init()
+    downloader.connect()
+    privateClickAdder = () => {
+        if(document.querySelector("#download-private") == undefined || document.querySelector("#download-private")== null){
+            return
+        }
+        document.querySelector("#download-private").addEventListener("click", (e)=>{
+            console.log({"private": !document.querySelector("#download-private").checked})
+            document.querySelector("#download-form-box-form-private-cookies").style.display = !document.querySelector("#download-private").checked ? "block" : "none"
+        })
+    }
+    privateClickAdder()
+    document.querySelector("#download-form-type-tabs").addEventListener("change", (e)=>{
+        var index = document.querySelector("#download-form-type-tabs").activeTabIndex
+        setTimeout(() => {
+            console.log({"index": document.querySelector("#download-form-type-tabs").activeTab})
+        }, 100);
+        var html = ""
+        console.log({"index": index})
+        switch (index) {
+            case 0:
+                html += `
+                <md-list-item>
+                    <span slot="start">Link</span>
+                    <md-outlined-text-field id="download-form-box-url" slot="end"></md-filled-text-field>
+                </md-list-item>
+                `
+                break;
+            case 1:
+                html += `
+                <md-list-item>
+                    <span slot="start">Query</span>
+                    <md-outlined-text-field id="download-form-query" slot="end"></md-filled-text-field>
+                </md-list-item>
+                <md-list-item>
+                    <span slot="start">Type</span>
+                    <md-outlined-select  id="download-form-mediatype" required slot="end">
+                        <md-select-option selected value="all">
+                            <div slot="headline">Any</div>
+                        </md-select-option>
+                        <md-select-option value="playlist">
+                            <div slot="headline">Playlist</div>
+                        </md-select-option>
+                        <md-select-option value="artist">
+                            <div slot="headline">Artist</div>
+                        </md-select-option>
+                        <md-select-option value="album">
+                            <div slot="headline">Album</div>
+                        </md-select-option>
+                        <md-select-option value="song">
+                            <div slot="headline">Song</div>
+                        </md-select-option>
+                    </md-outlined-select>
+                </md-list-item>
+                `
+                break;
+        }
+        html += `
+            <md-list-item>
+                <span slot="start">Private</span>
+                <md-checkbox id="download-private" slot="end"></md-checkbox>
+            </md-list-item>
+            <md-list-item id="download-form-box-form-private-cookies" class="download-form-button" style="display: none;">
+                <div class="download-form-button">
+                    <md-filled-button id="download-form-box-form-private-cookies-button">Upload cookies</md-filled-button>
+                </div>
+            </md-list-item>
+        `
+        document.querySelector("#download-form-box-form > md-list").innerHTML = html
+        privateClickAdder()
+    })
+    document.querySelector("#download-form-submit").addEventListener("click", (e)=>{
+        // showDialog("Download", "Not yet implemented", ()=>{})
+        var source = document.querySelector("#download-form-source-tabs").activeTabIndex
+        var sources = ["spotify", "youtube"]
+        var type = document.querySelector("#download-form-type-tabs").activeTabIndex
+        if(type == 0){
+            var url = document.querySelector("#download-form-box-url").value
+            if(url == "" || url == null){
+                showDialog("Error", "Please enter a link", ()=>{})
+                return
+            }
+            downloader.download(sources[source], url)
+        }else if(type == 1){
+            var query = document.querySelector("#download-form-query").value
+            var mediatype = document.querySelector("#download-form-mediatype").value
+            if(query == "" || query == null){
+                showDialog("Error", "Please enter a query", ()=>{})
+                return
+            }
+            downloader.search(sources[source], query, mediatype)
+        }
+    })
 }
 
 async function getHome(place) {
