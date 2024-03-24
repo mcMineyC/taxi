@@ -517,6 +517,14 @@ class Downloader{
     }
     connect(){
         console.log()
+        var sock = io(window.prefs.getBackendUrl())
+        sock.on("authprompt", (msg) =>{
+            
+        })
+        sock.on("message", (msg) =>{
+            console.log(msg)
+            window.xterm.writeln
+        })
     }
     search(source, query){
         window.xterm.writeln("Searching " + source + "...")

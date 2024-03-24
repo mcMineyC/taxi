@@ -12,9 +12,17 @@ const ffmpeg = require('fluent-ffmpeg');
 const { type } = require('os');
 const { ChildProcess } = require('child_process');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
+const http = require('http');
+const { Server } = require("socket.io");
 
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    }
+});
 const port = 3000;
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
@@ -607,10 +615,44 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
     res.send(p)
 })
 
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.emit("authprompt", "3141592653589793238464")
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+    var authed = false
+    socket.on('message', (msg) => {
+        var type = msg.type
+        switch (type){
+            case "auth":
+                var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
+                authdata = JSON.parse(authdata);
+                for(var x = 0; x < authdata["users"].length; x++){
+                    if(authdata["users"][x]["authtoken"] == msg.authtoken){
+                        authed = true
+                    }
+                }
+                authed = true
+                if(!authed){
+                    socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+                    socket.close()
+                }
+                break;
+            case "download":
+                if(!authed){
+                    socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+                    socket.close()
+                }
+
+        }
+    })
+})
+
 async function main(){
     await checkup()
     console.log("Checked and ready to start")
-    app.listen(port, () => {
+    server.listen(port, () => {
         console.log(`App listening on port ${port}`)
     })
 }

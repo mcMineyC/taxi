@@ -17,6 +17,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "jsmediatags": "^3.9.7",
     "qs": "^6.11.2",
+    "socket.io": "^4.7.5",
     "spotify-web-api-node": "^5.0.2"
   }
 }
