@@ -30,7 +30,7 @@
     margin-bottom: 16px;
 }
 
-#content-container{
+#content-container, .content-container{
     height: calc(100vh - 64px - 96px);
     overflow: scroll;
 }

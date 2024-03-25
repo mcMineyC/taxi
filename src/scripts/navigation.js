@@ -516,18 +516,52 @@ class Downloader{
         }, 100)
     }
     connect(){
-        console.log()
         var sock = io(window.prefs.getBackendUrl())
+        sock.on("connect", () =>{
+            console.log("Connected")
+            window.xterm.writeln("Connected to backend")
+        })
         sock.on("authprompt", (msg) =>{
-            
+            sock.emit("auth", {"type": "auth", "authtoken": window.authSettings.getAuthToken()})
         })
         sock.on("message", (msg) =>{
             console.log(msg)
-            window.xterm.writeln
+            window.xterm.writeln(JSON.stringify(msg))
         })
+        sock.on("progress", (msg) =>{
+            console.log(msg)
+            window.xterm.writeln(msg+"%")
+        })
+        sock.on("searchresults", async (msg) =>{
+            console.log({"searchresults": msg})
+            var inhtml = ``
+            for(var x = 0; x < msg.length; x++){
+                if(msg[x].explicit == false || msg[x].explicit == undefined){
+                    switch(msg[x].type){
+                        case "track":
+                            window.xterm.writeln(msg[x].type + ":" + msg[x].name + " - " + msg[x].artists[0].name + ": " + msg[x].album.name)
+                            inhtml += `<m3-list-item text="${msg[x].name + " - " + msg[x].artists[0].name + ": " + msg[x].album.name}" endText="${msg[x].type}" image="${msg[x].album.images[0].url}"></m3-list-item>`
+                            break;
+                        case "album":
+                            window.xterm.writeln(msg[x].type + ":" + msg[x].name + " - " + msg[x].artists[0].name)
+                            break;
+                        case "artist":
+                            window.xterm.writeln(msg[x].type + ":" + msg[x].name)
+                            break;
+                        case "playlist":
+                            window.xterm.writeln(msg[x].type + ":" + msg[x].name)
+                            break;
+                    }
+                }
+            }
+            document.querySelector("#search-results").innerHTML = inhtml
+        })
+        window.sock = sock
+        this.sock = sock
     }
-    search(source, query){
+    search(source, query, type = "track"){
         window.xterm.writeln("Searching " + source + "...")
+        this.sock.emit("search", {"source": source, "query": query, "mediaType": type})
     }
     download(source, url){
         window.xterm.writeln("Downloading from " + source)
@@ -765,7 +799,9 @@ async function downloadClick(){
             <div id="download-console"></div>
         </div>
         <div class="pane">
-            <div id="results-list"></div>
+            <div id="results-list" class="content-container">
+                <md-list id="search-results" class="list"></md-list>
+            </div>
         </div>
     </div>
     `
@@ -1032,7 +1068,7 @@ async function connectDownloadStuff(){
                         <md-select-option value="album">
                             <div slot="headline">Album</div>
                         </md-select-option>
-                        <md-select-option value="song">
+                        <md-select-option value="track">
                             <div slot="headline">Song</div>
                         </md-select-option>
                     </md-outlined-select>
@@ -1095,6 +1131,8 @@ async function getHome(place) {
         "location": "home",
         "id": "MURP"
     })
+    downloadClick()
+    return
     switch (homeScreen) {
         case "artists":
             await getArtists()

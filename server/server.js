@@ -14,6 +14,9 @@ const { ChildProcess } = require('child_process');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 const http = require('http');
 const { Server } = require("socket.io");
+const { SpotifyApi } = require("@spotify/web-api-ts-sdk");
+const clientID = "0a65ebdec6ec4983870a7d2f51af2aa1";
+const secretKey = "22714014e04f46cebad7e03764beeac8";
 
 
 const app = express();
@@ -622,29 +625,59 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
     var authed = false
-    socket.on('message', (msg) => {
-        var type = msg.type
-        switch (type){
-            case "auth":
-                var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-                authdata = JSON.parse(authdata);
-                for(var x = 0; x < authdata["users"].length; x++){
-                    if(authdata["users"][x]["authtoken"] == msg.authtoken){
-                        authed = true
-                    }
-                }
+    socket.on("auth", (msg) => {
+        var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
+        authdata = JSON.parse(authdata);
+        for(var x = 0; x < authdata["users"].length; x++){
+            if(authdata["users"][x]["authtoken"] == msg.authtoken){
                 authed = true
-                if(!authed){
-                    socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
-                    socket.close()
-                }
-                break;
-            case "download":
-                if(!authed){
-                    socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
-                    socket.close()
-                }
-
+            }
+        }
+        authed = true
+        if(!authed){
+            socket.emit("authresult", {"success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        socket.emit("authresult", {"success": true, "authorized": true})
+    })
+    socket.on("search", async (msg) => {
+        if(!authed){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        if(msg.source == "spotify"){
+            const api = SpotifyApi.withClientCredentials(
+                clientID,
+                secretKey
+            );
+            var page = 0
+            if(typeof(msg.page) == "number"){
+                page = msg.page
+            }
+            var items = []
+            if(msg.mediaType == "all"){
+                const trackItems = await api.search(msg.query, "track", undefined, 50, page);
+                const albumItems = await api.search(msg.query, "album", undefined, 50, page);
+                const artistItems = await api.search(msg.query, "artist", undefined, 50, page);
+                const playlistItems = await api.search(msg.query, "playlist", undefined, 50, page);
+                items = trackItems.tracks.items.concat(albumItems.albums.items).concat(artistItems.artists.items).concat(playlistItems.playlists.items)
+            }else{
+                items = await api.search(msg.query, msg.mediaType, undefined, 50, page);
+                items = items[msg.mediaType+"s"].items
+            }
+            
+            console.table(items.map((item) => ({
+                name: item.name,
+                type: item.type,
+                popularity: item.popularity,
+                id: item.id
+            })));
+            
+            socket.emit("searchresults", items)
+        }else if (msg.source == "youtube"){
+            socket.emit("searchresults", [])
         }
     })
 })
