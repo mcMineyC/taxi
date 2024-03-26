@@ -11,6 +11,7 @@ const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const { type } = require('os');
 const { ChildProcess } = require('child_process');
+const SpottyDL = require('spottydl-better');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 const http = require('http');
 const { Server } = require("socket.io");
@@ -667,7 +668,6 @@ io.on('connection', (socket) => {
                 items = await api.search(msg.query, msg.mediaType, undefined, 50, page);
                 items = items[msg.mediaType+"s"].items
             }
-            
             console.table(items.map((item) => ({
                 name: item.name,
                 type: item.type,
@@ -678,6 +678,85 @@ io.on('connection', (socket) => {
             socket.emit("searchresults", items)
         }else if (msg.source == "youtube"){
             socket.emit("searchresults", [])
+        }
+    })
+    socket.on("download", async (msg) => {
+        if(!authed){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        if(msg.source == "spotify"){
+            var results = ""
+
+            console.log("Starting download")
+            socket.emit("downloadmessage", {"type": "status", "message": "Starting download", "percent": 0, "name": ""})
+            if(msg.url.includes("track")){
+                results = await SpottyDL.getTrack(msg.url)
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading track: " + results.title, "percent": 0, "name": results.title})
+                var track = await SpottyDL.downloadTrack(results, "unsorted")
+                if(track[0].status == "Success"){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading track: " + results.title})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + results.title})
+                }
+            }else if(msg.url.includes("album")){
+                results = await SpottyDL.getAlbum(msg.url)
+                var total = results.tracks.length
+                var done = 0
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading album: " + results.name, "percent": 0, "name": results.name})
+                var album = await SpottyDL.downloadAlbum(results, "unsorted", true, (stuff) => {
+                    if(stuff.success){
+                        done++
+                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
+                    }else{
+                        done++;
+                        socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + stuff.name})
+                    }
+                })
+                var success = true
+                for (var x = 0; x < album.length; x++){
+                    if(album[x].status != "Success"){
+                        success = false
+                    }
+                }
+                if(success){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
+                }
+            }else if(msg.url.includes("artist")){
+                socket.emit("downloadmessage", {"type": "error", "message": "Not implemented", "percent": 0, "name": ""})
+                return
+                results = await SpottyDL.getArtist(msg.url)
+            }else if(msg.url.includes("playlist")){
+                results = await SpottyDL.getPlaylist(msg.url)
+                var done = 0
+                var total = results.tracks.length
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading playlist:", "percent": Math.floor((done/total)*100), "name": results.name})
+                var list = await SpottyDL.downloadPlaylist(results, "unsorted", (stuff) => {
+                    if(stuff.success == true){
+                        done++
+                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
+                    }
+                })
+                var success = true
+                for (var x = 0; x < list.length; x++){
+                    if(list[x].status != "Success"){
+                        success = false
+                    }
+                }
+                if(success){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
+                }
+            }
+        }
+        else if(msg.source == "youtube"){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
         }
     })
 })

@@ -515,7 +515,7 @@ class Downloader{
             window.xfit.fit()
         }, 100)
     }
-    connect(){
+    connect(resultsDisplayedCallback = ()=>{}){
         var sock = io(window.prefs.getBackendUrl())
         sock.on("connect", () =>{
             console.log("Connected")
@@ -537,24 +537,68 @@ class Downloader{
             var inhtml = ``
             for(var x = 0; x < msg.length; x++){
                 if(msg[x].explicit == false || msg[x].explicit == undefined){
+                    var url = ""
+                    console.log("Working on: "+x)
+                    console.log(msg[x])
+                    if((msg[x].type == "playlist" || msg[x].type == "artist" || msg[x].type == "album") && msg[x].images.length < 1){
+                        console.log("no image")
+                        url = window.prefs.getBackendUrl()+"/placeholder"
+                    }else if(msg[x].type == "track" && msg[x].album.images.length < 1){
+                        console.log("no image")
+                        url = window.prefs.getBackendUrl()+"/placeholder"
+                    }else if(msg[x].type == "track"){
+                        url = msg[x].album.images[0].url
+                    }else{
+                        url = msg[x].images[0].url
+                    }
                     switch(msg[x].type){
                         case "track":
-                            window.xterm.writeln(msg[x].type + ":" + msg[x].name + " - " + msg[x].artists[0].name + ": " + msg[x].album.name)
-                            inhtml += `<m3-list-item text="${msg[x].name + " - " + msg[x].artists[0].name + ": " + msg[x].album.name}" endText="${msg[x].type}" image="${msg[x].album.images[0].url}"></m3-list-item>`
+                            window.xterm.writeln(safetyCheck(msg[x].type) + ":" + safetyCheck(msg[x].name) + " - " + safetyCheck(msg[x].artists[0].name) + ": " + safetyCheck(msg[x].album.name))
+                            inhtml += `<m3-download-list-item source="spotify" url="${msg[x].external_urls.spotify}" type="track" text="${safetyCheck(msg[x].name) + " - " + safetyCheck(msg[x].artists[0].name) + ": " + safetyCheck(msg[x].album.name)}" endText="${msg[x].type}" image="${url}" previewUrl="${msg[x].preview_url}"></m3-download-list-item>`
                             break;
                         case "album":
-                            window.xterm.writeln(msg[x].type + ":" + msg[x].name + " - " + msg[x].artists[0].name)
+                            window.xterm.writeln(safetyCheck(msg[x].type) + ":" + safetyCheck(msg[x].name) + " - " + safetyCheck(msg[x].artists[0].name))
+                            inhtml += `<m3-download-list-item source="spotify" url="${msg[x].external_urls.spotify}" type="album" text="${safetyCheck(msg[x].name) + " - " + safetyCheck(msg[x].artists[0].name)}" endText="${msg[x].type}" image="${url}"></m3-download-list-item>`
                             break;
                         case "artist":
-                            window.xterm.writeln(msg[x].type + ":" + msg[x].name)
+                            window.xterm.writeln(safetyCheck(msg[x].type) + ":" + safetyCheck(msg[x].name))
+                            inhtml += `<m3-download-list-item source="spotify" url="${msg[x].external_urls.spotify}" type="artist" text="${safetyCheck(msg[x].name)}" endText="${msg[x].type}" image="${url}"></m3-download-list-item>`
                             break;
                         case "playlist":
-                            window.xterm.writeln(msg[x].type + ":" + msg[x].name)
+                            window.xterm.writeln(safetyCheck(msg[x].type) + ":" + safetyCheck(msg[x].name))
+                            inhtml += `<m3-download-list-item source="spotify" url="${msg[x].external_urls.spotify}" type="playlist" text="${safetyCheck(msg[x].name)}" endText="${msg[x].type}" image="${url}"></m3-download-list-item>`
                             break;
                     }
+                }else{
+                    console.log("Explicit " + msg[x].type + ":" + msg[x].name)
                 }
             }
             document.querySelector("#search-results").innerHTML = inhtml
+            resultsDisplayedCallback()
+        })
+        sock.on("downloadmessage", (msg) =>{
+            console.log(msg)
+            switch(msg.type){
+                case "status":
+                    showSnackbar(msg.message);
+                    break;
+                case "progress":
+                    if(msg.message == "Starting download"){
+                        window.xterm.writeln(msg.message)
+                        return
+                    }
+                    window.xterm.writeln(msg.message + " " + msg.name + ", " + msg.percent + "%")
+                    break;
+                case "error":
+                    showDialog("Error", msg.message, () => {}, false)
+                    break;
+                case "success":
+                    showDialog("Success", msg.message, () => {}, false)
+                    break;
+                default:
+                    window.xterm.writeln(msg)
+                    break;
+            }
         })
         window.sock = sock
         this.sock = sock
@@ -565,6 +609,15 @@ class Downloader{
     }
     download(source, url){
         window.xterm.writeln("Downloading from " + source)
+        this.sock.emit("download", {"source": source, "url": url})
+    }
+    remove(){
+        if(typeof(this.sock) != "undefined"){
+            this.sock.disconnect()
+            this.sock = undefined
+            window.sock = undefined
+        }
+        window.xterm.dispose()
     }
 }
 
@@ -1020,7 +1073,7 @@ async function connectDownloadStuff(){
     var downloader = new Downloader()
     window.downloader = downloader
     downloader.init()
-    downloader.connect()
+    downloader.connect(downloadNextStepSearch)
     privateClickAdder = () => {
         if(document.querySelector("#download-private") == undefined || document.querySelector("#download-private")== null){
             return
@@ -1046,6 +1099,7 @@ async function connectDownloadStuff(){
                     <md-outlined-text-field id="download-form-box-url" slot="end"></md-filled-text-field>
                 </md-list-item>
                 `
+                document.querySelector("#download-form-submit").innerHTML = "Download"
                 break;
             case 1:
                 html += `
@@ -1074,6 +1128,7 @@ async function connectDownloadStuff(){
                     </md-outlined-select>
                 </md-list-item>
                 `
+                document.querySelector("#download-form-submit").innerHTML = "Search"
                 break;
         }
         html += `
@@ -1114,6 +1169,47 @@ async function connectDownloadStuff(){
     })
 }
 
+async function downloadNextStepSearch(){
+    document.querySelector("#download-form").innerHTML = `
+        <md-list-item id="download-form-back">
+            <div class="download-form-button">
+                <md-filled-button id="download-form-back-button">Back</md-filled-button>
+            </div>
+        </md-list-item>
+        <md-list-item id="download-form-search-step2">
+            <div id="download-form-count">Selected: 0</div>
+        </md-list-item>
+        <md-list-item>
+            <div class="download-form-button">
+                <md-filled-button id="download-form-submit">Download</md-filled-button>
+            </div>
+        </md-list-item>
+    `
+    document.querySelector("#download-form-back-button").addEventListener("click", (e)=>{
+        reset()
+        downloadClick()
+    })
+    document.querySelector("#download-form-submit").addEventListener("click", (e)=>{
+        var res = document.querySelector("m3-download-list-item[selected]")
+        if(res == null){
+            showDialog("Error", "Nothing selected, select at least one thing", ()=>{})
+            return
+        }
+        var urls = []
+        var elems = document.querySelectorAll("m3-download-list-item[selected=true]")
+        elems.forEach(x => {
+            var source = x.getAttribute("source")
+            var url = x.getAttribute("url")
+            window.downloader.download(source, url)         
+        })
+    })
+}
+
+async function updateDownloadFormCount(){
+    var count = document.querySelectorAll("m3-download-list-item[selected=true]").length
+    document.querySelector("#download-form-count").innerHTML = "Selected: " + count
+}
+
 async function getHome(place) {
     reset()
     sPlace = localStorage.getItem("configuredHomeScreen")
@@ -1131,8 +1227,6 @@ async function getHome(place) {
         "location": "home",
         "id": "MURP"
     })
-    downloadClick()
-    return
     switch (homeScreen) {
         case "artists":
             await getArtists()
@@ -1221,4 +1315,41 @@ async function hash(string) {
       .map((bytes) => bytes.toString(16).padStart(2, '0'))
       .join('');
     return hashHex;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Keep this closed at all times!!!!!!!
+// Contains a list of words to check for
+// (Note: they're all very, very, very bad!!!!!!!)
+function safetyCheck(str){
+    if(str == null || str == undefined){
+        return ""
+    }
+    badWords = ["shit","fuck","damn","bitch","whore","sex","sexual","anal","ass","porn","pornhub","pornhub.com","pussy","vagina","dick","penis"]
+    for(word in badWords){
+        str = str.replace(RegExp(badWords[word], 'gi'), "****")
+    }
+    return str
 }
