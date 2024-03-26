@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.2.0",
     "axios": "^1.6.7",
     "combyne": "^2.0.0",
     "cors": "^2.8.5",
@@ -16,7 +17,12 @@
     "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
     "jsmediatags": "^3.9.7",
+    "python-shell": "^5.0.0",
     "qs": "^6.11.2",
-    "spotify-web-api-node": "^5.0.2"
+    "socket.io": "^4.7.5",
+    "spotify-metadata-search": "^0.0.8",
+    "spotify-search": "^0.0.3",
+    "spotify-web-api-node": "^5.0.2",
+    "spottydl-better": "^0.3.121"
   }
 }

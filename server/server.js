@@ -10,10 +10,22 @@ const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const { type } = require('os');
+const SpottyDL = require('spottydl-better');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
+const http = require('http');
+const { Server } = require("socket.io");
+const { SpotifyApi } = require("@spotify/web-api-ts-sdk");
+const clientID = "0a65ebdec6ec4983870a7d2f51af2aa1";
+const secretKey = "22714014e04f46cebad7e03764beeac8";
 
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    }
+});
 const port = 3000;
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
@@ -606,10 +618,152 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
     res.send(p)
 })
 
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.emit("authprompt", "3141592653589793238464")
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+    var authed = false
+    socket.on("auth", (msg) => {
+        var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
+        authdata = JSON.parse(authdata);
+        for(var x = 0; x < authdata["users"].length; x++){
+            if(authdata["users"][x]["authtoken"] == msg.authtoken){
+                authed = true
+            }
+        }
+        authed = true
+        if(!authed){
+            socket.emit("authresult", {"success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        socket.emit("authresult", {"success": true, "authorized": true})
+    })
+    socket.on("search", async (msg) => {
+        if(!authed){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        if(msg.source == "spotify"){
+            const api = SpotifyApi.withClientCredentials(
+                clientID,
+                secretKey
+            );
+            var page = 0
+            if(typeof(msg.page) == "number"){
+                page = msg.page
+            }
+            var items = []
+            if(msg.mediaType == "all"){
+                const trackItems = await api.search(msg.query, "track", undefined, 50, page);
+                const albumItems = await api.search(msg.query, "album", undefined, 50, page);
+                const artistItems = await api.search(msg.query, "artist", undefined, 50, page);
+                const playlistItems = await api.search(msg.query, "playlist", undefined, 50, page);
+                items = trackItems.tracks.items.concat(albumItems.albums.items).concat(artistItems.artists.items).concat(playlistItems.playlists.items)
+            }else{
+                items = await api.search(msg.query, msg.mediaType, undefined, 50, page);
+                items = items[msg.mediaType+"s"].items
+            }
+            console.table(items.map((item) => ({
+                name: item.name,
+                type: item.type,
+                popularity: item.popularity,
+                id: item.id
+            })));
+            
+            socket.emit("searchresults", items)
+        }else if (msg.source == "youtube"){
+            socket.emit("searchresults", [])
+        }
+    })
+    socket.on("download", async (msg) => {
+        if(!authed){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+        if(msg.source == "spotify"){
+            var results = ""
+
+            console.log("Starting download")
+            socket.emit("downloadmessage", {"type": "status", "message": "Starting download", "percent": 0, "name": ""})
+            if(msg.url.includes("track")){
+                results = await SpottyDL.getTrack(msg.url)
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading track: " + results.title, "percent": 0, "name": results.title})
+                var track = await SpottyDL.downloadTrack(results, "unsorted")
+                if(track[0].status == "Success"){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading track: " + results.title})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + results.title})
+                }
+            }else if(msg.url.includes("album")){
+                results = await SpottyDL.getAlbum(msg.url)
+                var total = results.tracks.length
+                var done = 0
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading album: " + results.name, "percent": 0, "name": results.name})
+                var album = await SpottyDL.downloadAlbum(results, "unsorted", true, (stuff) => {
+                    if(stuff.success){
+                        done++
+                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
+                    }else{
+                        done++;
+                        socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + stuff.name})
+                    }
+                })
+                var success = true
+                for (var x = 0; x < album.length; x++){
+                    if(album[x].status != "Success"){
+                        success = false
+                    }
+                }
+                if(success){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
+                }
+            }else if(msg.url.includes("artist")){
+                socket.emit("downloadmessage", {"type": "error", "message": "Not implemented", "percent": 0, "name": ""})
+                return
+                results = await SpottyDL.getArtist(msg.url)
+            }else if(msg.url.includes("playlist")){
+                results = await SpottyDL.getPlaylist(msg.url)
+                var done = 0
+                var total = results.tracks.length
+                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading playlist:", "percent": Math.floor((done/total)*100), "name": results.name})
+                var list = await SpottyDL.downloadPlaylist(results, "unsorted", (stuff) => {
+                    if(stuff.success == true){
+                        done++
+                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
+                    }
+                })
+                var success = true
+                for (var x = 0; x < list.length; x++){
+                    if(list[x].status != "Success"){
+                        success = false
+                    }
+                }
+                if(success){
+                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
+                }else{
+                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
+                }
+            }
+        }
+        else if(msg.source == "youtube"){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            // socket.close()
+            return
+        }
+    })
+})
+
 async function main(){
     await checkup()
     console.log("Checked and ready to start")
-    app.listen(port, () => {
+    server.listen(port, () => {
         console.log(`App listening on port ${port}`)
     })
 }

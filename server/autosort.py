@@ -25,23 +25,21 @@ for file in os.listdir(directory_path):
         audiofile = eyed3.load(os.path.join(directory_path, file))
         if audiofile.tag:
             if(audiofile is None):
-                print("Skipping " + file)
+                print("Skipping " + file+" because audiofile is None")
                 continue
             if(audiofile.tag is None):
-                print("Skipping " + file)
+                print("Skipping " + file+" because audiofile.tag is None")
                 continue
             if(audiofile.tag.artist is None):
                 audiofile.tag.artist = "None"
-                print("Skipping " + file)
+                print("Skipping " + file+" because audiofile.tag.artist is None")
                 continue
             if(audiofile.tag.album is None):
                 audiofile.tag.album = "None"
-                print("Skipping " + file)
+                print("Skipping " + file+" because audiofile.tag.album is None")
                 continue
             if(audiofile.tag.title is None):
-                audiofile.tag.title = "None"
-                print("Skipping " + file)
-                continue
+                audiofile.tag.title = file.split(".mp3")[0]
             
             artist = audiofile.tag.artist.split("/")[0]
             album = audiofile.tag.album

@@ -15,3 +15,4 @@ config/*.json
 config/images/artists/*
 config/images/albums/*
 config/images/songs/*
+spottydl

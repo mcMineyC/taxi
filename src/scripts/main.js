@@ -10,7 +10,7 @@ class Position {
         return this.pos
     }
 }
-
+/*
 class Playlists {
     constructor(){
         this.playlists = []
@@ -73,6 +73,7 @@ class Playlists {
         return ret
     }
 }
+*/
 
 setInterval(function() {
     if(typeof(window.howlerInstance) == "undefined"){
@@ -181,7 +182,7 @@ class Player{
     }
     addToQueue(song){
         this.queue.push(song)
-        showSnackbar("Added " + song + " to queue")
+        showSnackbar("Added " + window.fetchedData.getSong(song)["displayName"] + " to queue")
     }
     addListToQueue(list){
         this.queue = this.queue.concat(list)
@@ -434,7 +435,6 @@ document.addEventListener('DOMContentLoaded', function(){
         window.localPlayer = new Player();
     })
     window.visibleContent = new VisibleContent();
-    window.unsyncedPlaylists = new Playlists();
 })
 
 window.addEventListener('beforeunload', function(){

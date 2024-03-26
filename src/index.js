@@ -4,6 +4,23 @@ import css from "./index.css";
 import "./components/all.js"
 import placeholder from "./placeholder.jpg";
 import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+
+var term = new Terminal({
+  options: {
+    allowTransparency: true,
+  },
+  theme: {
+    background: "#00000000",
+    foreground: "#f0f0f0",
+    cursor: "#f0f0f0",
+  }
+});
+var fit = new FitAddon();
+term.loadAddon(fit)
+window.xterm = term
+window.xfit = fit
 
 window.frontendUrl = "http://localhost:8000"
 window.backendUrl = "http://localhost:3000"
