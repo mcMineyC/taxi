@@ -182,7 +182,7 @@ class Player{
     }
     addToQueue(song){
         this.queue.push(song)
-        showSnackbar("Added " + window.fetchedData.getSong(song) + " to queue")
+        showSnackbar("Added " + window.fetchedData.getSong(song)["displayName"] + " to queue")
     }
     addListToQueue(list){
         this.queue = this.queue.concat(list)

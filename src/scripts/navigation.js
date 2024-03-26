@@ -593,7 +593,7 @@ class Downloader{
                     showDialog("Error", msg.message, () => {}, false)
                     break;
                 case "success":
-                    showDialog("Success", msg.message, () => {}, false)
+                    showDialog("Success", msg.message + "<br>Contact Jedi to get it added", () => {}, false)
                     break;
                 default:
                     window.xterm.writeln(msg)
