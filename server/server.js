@@ -10,7 +10,6 @@ const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
 const { type } = require('os');
-const { ChildProcess } = require('child_process');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 
 
@@ -27,7 +26,7 @@ app.use(express.urlencoded({
 app.use('/',express.static(path.join(__dirname, 'static')));
 
 app.post('/latestCommit', async function (req, res) {
-    ChildProcess.exec('git rev-parse HEAD', (error, stdout, stderr) => {
+    exec('git rev-parse HEAD', (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             res.send({"commit": "error"})
@@ -38,7 +37,7 @@ app.post('/latestCommit', async function (req, res) {
             res.send({"commit": "error"})
             return;
         }
-        res.send({"commit": stdout})
+        res.send({"commit": stdout.replace("\n", "")})
     })
 })
 
