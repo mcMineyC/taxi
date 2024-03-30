@@ -15,8 +15,10 @@
     "@material/web": "^1.2.0",
     "@xterm/addon-fit": "^0.9.0",
     "@xterm/xterm": "^5.4.0",
+    "fs-extra": "^11.2.0",
     "howler": "^2.2.4",
     "html-webpack-plugin": "^5.6.0",
+    "music-metadata": "^7.14.0",
     "socket.io": "^4.7.5",
     "style-loader": "^3.3.4",
     "underscore": "^1.13.6"

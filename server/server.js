@@ -30,7 +30,7 @@ const io = new Server(server, {
 const port = 3000;
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
 /*
 app.use(express.urlencoded({
     extended: true
@@ -88,6 +88,9 @@ app.post('/auth', function (req, res) {
                 break
             }
         }
+    }
+    if(authed == false){
+        console.log("Failed to authorize user "+req.body.username)
     }
     res.send({"authorized": authed, "authtoken": authtoken, "username": username})
 });
