@@ -332,11 +332,24 @@ app.get('/info/artists/:id/image', async function (req, res) {
 app.get('/info/songs/:id/audio', function (req, res) {
     var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
     data = JSON.parse(data);
+
+    var id = req.params.id
+    const now = new Date();
+    const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
+    const day = now.getDate();
+    if(month == 4 && day == 1 || true){
+        var inty = getRandomInt(0, data["songs"].length-1);
+        res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
+        if(getRandomInt(0,1) == 0){
+            console.log("No Chaoz")
+            return
+        }
+    }
     var file = "";
 
     //Find file
     for (var x = 0; x < (data["songs"].length); x++) {
-        if (data["songs"][x]["id"] == req.params.id) {
+        if (data["songs"][x]["id"] == id) {
             file = data["songs"][x]["file"];
         }
     }
@@ -967,6 +980,9 @@ async function downloadFile(fileUrl, outputLocationPath) {
     });
 }
 
+function getRandomInt(min, max) {
+    return (Math.floor(Math.pow(10,14)*Math.random()*Math.random())%(max-min+1))+min;
+}
 
 
 // Update functions
