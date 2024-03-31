@@ -701,7 +701,9 @@ io.on('connection', (socket) => {
                 }
             }else if(msg.url.includes("album")){
                 results = await SpottyDL.getAlbum(msg.url)
-                var total = results.tracks.length
+                var total = 1
+                if(results.tracks != undefined) {total = results.tracks.length;}
+                else{total = 1}
                 var done = 0
                 socket.emit("downloadmessage", {"type": "progress", "message": "Downloading album: " + results.name, "percent": 0, "name": results.name})
                 var album = await SpottyDL.downloadAlbum(results, "unsorted", true, (stuff) => {
@@ -753,7 +755,7 @@ io.on('connection', (socket) => {
             }
         }
         else if(msg.source == "youtube"){
-            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false}) // Not implemented
             // socket.close()
             return
         }
