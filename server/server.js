@@ -336,7 +336,7 @@ app.get('/info/songs/:id/audio', function (req, res) {
     const now = new Date();
     const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
     const day = now.getDate();
-    if(month == 4 && day == 1 || true){
+    if(month == 4 && day == 1){
         var inty = getRandomInt(0, data["songs"].length-1);
         res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
         if(getRandomInt(0,1) == 0){
