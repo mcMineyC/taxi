@@ -336,9 +336,15 @@ app.get('/info/songs/:id/audio', function (req, res) {
     const now = new Date();
     const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
     const day = now.getDate();
-    if(month == 4 && day == 1){
+    if(month == 4 && day == 1 && getRandomInt(0,100) > 690){
+        console.log("Making chaos")
         var inty = getRandomInt(0, data["songs"].length-1);
-        res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
+        if(data["songs"][inty]["artistId"] == "939644cef5b866870668f6cb59a0db900853c63ac1b97348e832c65e271964fd"){
+            res.sendFile(path.join(__dirname, "music/sorted/1d822fde641a597beb59ba197388b85e40eafb39d007be53f1c1da9b36d6a8df/00879b25b7e52685100c540611c16c5974b224ef79c692a9f58e43764532064d/Never Gonna Give You Up.mp3"))
+        }else{
+            res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
+            console.log(data["songs"][inty]["file"])
+        }
         if(getRandomInt(0,1) == 0){
             console.log("No Chaoz")
             return
@@ -922,7 +928,7 @@ async function withTimeout(promise, timeoutMs) {
 function checkAuth(req, res){
     if(typeof(req.body.authtoken) == "undefined"){
         res.send({"error": "No authtoken provided"})
-        return
+        return false
     }else{
         var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
         authdata = JSON.parse(authdata);

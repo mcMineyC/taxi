@@ -71,6 +71,35 @@ const getNewStuff = async () => {
     return tagInfo;
 }
 
+const mergeEntries = (existingEntries, newEntries) => {
+  const merged = [...existingEntries]; // Copy
+  // Iterate over each new entry
+  for (const newEntry of Object.keys(newEntries)) {
+    const existingEntry = merged.find(e => e.id === newEntries[newEntry].id);
+    if (!existingEntry) {
+      merged[newEntry] = newEntries[newEntry];
+      continue;
+    }
+    for(const album of Object.keys(newEntries[newEntry].albums)) {
+        const existingAlbum = Object.keys(existingEntry.albums).find(e => e.id === newEntries[newEntry].albums[album].id);
+        console.log(existingAlbum)
+        if(existingAlbum) {
+            for(const song of newEntries[newEntry].albums[album].songs) {
+              if(!existingAlbum.songs.find(e => e.id === song.id)) {
+                existingAlbum.songs.push(song);
+              } else {
+                existingAlbum.songs[song.id] = song
+              }
+            }
+        }else{
+            existingEntry.albums[album] = newEntries[newEntry].albums[album]
+        }
+    }
+  }
+
+  return merged;
+};
+
 const sortFiles = async () => {
   const tagInfo = await getNewStuff();
 
@@ -86,9 +115,8 @@ const sortFiles = async () => {
 
     console.log('all.json exists');
     const data = await fs.readJson(allJsonPath);
-    const merged = [...data.entries, ...Object.values(tagInfo)];
-
-    await fs.writeJson(allJsonPath, { entries: merged }, { spaces: 4 });
+    const merged = mergeEntries(data.entries, tagInfo);
+    // await fs.writeJson(allJsonPath, { entries: merged }, { spaces: 4 });
   } else {
     if (count < 1) {
       console.log('Nothing new, skipping');
@@ -101,6 +129,6 @@ const sortFiles = async () => {
 
   console.log('Saved info to all.json');
 }
-
+exports.mergeEntries = mergeEntries;
 exports.sortFiles = sortFiles;
 exports.getNewStuff = getNewStuff
