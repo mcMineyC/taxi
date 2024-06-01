@@ -9,7 +9,6 @@ const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
 const crypto = require('crypto');
 const ffmpeg = require('fluent-ffmpeg');
-const { type } = require('os');
 const SpottyDL = require('spottydl-better');
 const ffprobe = util.promisify(ffmpeg.ffprobe);
 const http = require('http');
@@ -358,6 +357,10 @@ app.get('/info/songs/:id/audio', function (req, res) {
             file = data["songs"][x]["file"];
         }
     }
+    if(typeof(req.query.uname) != "undefined"){
+        console.log("Adding "+id+" to recently played for "+req.query.uname);
+        addToRecentlyPlayed(req.query.uname, id);
+    }
     console.log(path.join(__dirname, file))
     if(fs.existsSync(path.join(__dirname, file))){
         res.sendFile(path.join(__dirname, file));
@@ -638,6 +641,24 @@ app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
     
     await updatePlaylists(hash, data)
     res.send(p)
+})
+
+app.post('/recently-played/:user', async function(req, res){
+    if(checkAuth(req, res) == false){
+        // res.send({"error": "Not authorized", "authed": false})
+        return
+    }
+    var u = getUser(req.body.authtoken);
+    var user = req.params.user;
+    if(user != u["loginName"]){
+        res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
+        return
+    }
+    var played = fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8');
+    played = JSON.parse(played);
+    played = played["recently-played"][user]
+    played["success"] = true
+    res.send(played)
 })
 
 io.on('connection', (socket) => {
@@ -954,6 +975,21 @@ function getUser(authtoken){
             return authdata["users"][x]
         }
     }
+}
+async function addToRecentlyPlayed(user, songId){
+    if(!fs.existsSync(path.join(__dirname, "config", "recently-played.json"))){
+        fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(
+            {
+                "recently-played":{}
+            } ,null,4));
+    }
+    var recent = JSON.parse(fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8'));
+    recent["recently-played"][user] = recent["recently-played"][user] || []
+    if(recent["recently-played"][user].length >= 10){
+        recent["recently-played"][user].splice(0,1)
+    }
+    recent["recently-played"][user].push(songId)
+    fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(recent,null,4));
 }
 
 async function downloadFile(fileUrl, outputLocationPath) {
