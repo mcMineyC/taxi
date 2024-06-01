@@ -654,10 +654,15 @@ app.post('/recently-played/:user', async function(req, res){
         res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
         return
     }
+    if(!fs.existsSync(path.join(__dirname, "config", "recently-played.json"))){
+        fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(
+            {
+                "recently-played":{}
+            } ,null,4));
+    }
     var played = fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8');
     played = JSON.parse(played);
     played = played["recently-played"][user]
-    played["success"] = true
     res.send(played)
 })
 
