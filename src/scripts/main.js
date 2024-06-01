@@ -384,7 +384,7 @@ class Player{
             console.log("No howler playing");
         }
         var song = new Howl({
-            src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio'],
+            src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio?uname='+window.authSettings.getUsername()],
             html5: true
         })
         var i = song.play();

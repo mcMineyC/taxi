@@ -161,7 +161,7 @@ app.post('/info/albums', async function (req, res) {
 
 app.post('/info/artists', function (req, res) {
     if(checkAuth(req, res) == false){
-        res.send({"error": "No authtoken provided", "authorized": false})
+        // res.send({"error": "No authtoken provided", "authorized": false})
         return
     }
     
@@ -202,6 +202,36 @@ app.post('/info/songs', async function (req, res) {
     res.send(data);
 });
 
+app.post('/info/songs/:id', async function (req, res) {
+    if(checkAuth(req, res) == false){
+        return
+    }
+
+    //Read data
+    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
+    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
+    data = JSON.parse(data);
+    all = JSON.parse(all);
+
+    //This is only needed if the file changed
+    if((data["last_updated"] != hash(JSON.stringify(all)))){
+        await updateSongs(hash,all,data)
+        data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8'));
+    }
+    var found = false;
+    data["songs"].forEach(e => {
+        if(e["id"] == req.params.id && !found){
+            found = true;
+            res.send(e)
+        }
+    });
+
+    //Send data
+    if(!found){
+        res.send({})
+    }
+});
+
 app.get('/info/songs/:id/image', async function (req, res) {
     //Read data
     var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
@@ -217,26 +247,27 @@ app.get('/info/songs/:id/image', async function (req, res) {
         data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
         data = JSON.parse(data);
     }
-
-    //Find file
-    for (var x = 0; x < (data["songs"].length); x++) {
-        if (data["songs"][x]["id"] == req.params.id) {
-            file = data["songs"][x]["file"];
+    if(!fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png"))){
+        //Find file
+        for (var x = 0; x < (data["songs"].length); x++) {
+            if (data["songs"][x]["id"] == req.params.id) {
+                file = data["songs"][x]["file"];
+            }
         }
-    }
 
-    //Check if file was found
-    if(file == ""){
-        console.log("No file associated with "+req.params.id)
-        res.sendFile(path.join(__dirname, "config", "images", "placeholder.jpg"));
-        return
-    }
+        //Check if file was found
+        if(file == ""){
+            console.log("No file associated with "+req.params.id)
+            res.sendFile(path.join(__dirname, "config", "images", "placeholder.jpg"));
+            return
+        }
 
     //Extract image
-    await extractSongImage(file, path.join(__dirname, "config", "images", "songs", req.params.id+".png"));
-    if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png")))){
-        console.log("File still doesn't exist, trying to infer based on other songs in album...");
-        await inferSongImage(file, req.params.id, data);
+        await extractSongImage(file, path.join(__dirname, "config", "images", "songs", req.params.id+".png"));
+        if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png")))){
+            console.log("File still doesn't exist, trying to infer based on other songs in album...");
+            await inferSongImage(file, req.params.id, data);
+        }
     }
 
     //Send image or placeholder if it fails
@@ -651,8 +682,8 @@ app.post('/recently-played/:user', async function(req, res){
     var u = getUser(req.body.authtoken);
     var user = req.params.user;
     if(user != u["loginName"]){
-        res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
-        return
+        // res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
+        // return
     }
     if(!fs.existsSync(path.join(__dirname, "config", "recently-played.json"))){
         fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(
@@ -663,7 +694,7 @@ app.post('/recently-played/:user', async function(req, res){
     var played = fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8');
     played = JSON.parse(played);
     played = played["recently-played"][user]
-    res.send(played)
+    res.send({"played": played})
 })
 
 io.on('connection', (socket) => {
