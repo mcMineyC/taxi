@@ -1,9 +1,18 @@
+//Just some crazy stuff I found in a Stack Overflow
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const path = require('path');
+import {fileURLToPath} from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
-const path = require('path');
 const jsmt = require('jsmediatags');
+import './schemas.js';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
@@ -17,6 +26,15 @@ const { SpotifyApi } = require("@spotify/web-api-ts-sdk");
 const clientID = "0a65ebdec6ec4983870a7d2f51af2aa1";
 const secretKey = "22714014e04f46cebad7e03764beeac8";
 
+const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
+const { createRxDatabase, addRxPlugin } = require('rxdb');
+const { getRxStorageFoundationDB } = require('rxdb/plugins/storage-foundationdb');
+const { getRxStorageDexie } = require('rxdb/plugins/storage-dexie');
+
+const db = await createRxDatabase({
+  name: 'taxi',
+  storage: getRxStorageDexie(),
+});
 
 const app = express();
 const server = http.createServer(app);
@@ -28,11 +46,6 @@ const io = new Server(server, {
 const port = 3000;
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
-// app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
-/*
-app.use(express.urlencoded({
-    extended: true
-}))*/
 
 app.use('/',express.static(path.join(__dirname, 'static')));
 
@@ -836,7 +849,7 @@ async function extractSongImage(file, dest){
     if(!(fs.existsSync(dest))){
         console.log("File doesn't exist, creating...");
         var v = await new Promise((resolve, reject) => {
-            new jsmt.Reader(path.join(__dirname, file))
+            new jsmediatags.Reader(path.join(__dirname, file))
               .read({
                 onSuccess: (tag) => {
                   console.log('Success!');
@@ -881,7 +894,7 @@ async function inferSongImage(file, id, data){
                 //Attempt to extract image from metadata
                 if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", id+".png")))){
                     var v = await new Promise((resolve, reject) => {
-                        new jsmt.Reader(path.join(__dirname, file))
+                        new jsmediatags.Reader(path.join(__dirname, file))
                         .read({
                             onSuccess: (tag) => {
                                 console.log('Success!');

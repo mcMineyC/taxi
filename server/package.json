@@ -2,7 +2,8 @@
   "name": "m3-music-player-server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "type": "module",
+  "exports": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,10 +22,15 @@
     "music-metadata": "^7.14.0",
     "python-shell": "^5.0.0",
     "qs": "^6.11.2",
+    "rxdb": "^15.24.0",
+    "rxjs": "^7.8.1",
     "socket.io": "^4.7.5",
     "spotify-metadata-search": "^0.0.8",
     "spotify-search": "^0.0.3",
     "spotify-web-api-node": "^5.0.2",
     "spottydl-better": "^0.3.121"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.0.0"
   }
 }
