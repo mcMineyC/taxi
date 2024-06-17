@@ -208,19 +208,7 @@ class FetchedData {
                         if(a.displayName > b.displayName) return 1
                         return 0
                     })
-                    axios.post(window.prefs.getBackendUrl()+'/info/all', authParams)
-                    .then(function (response) {
-                        var data = JSON.parse(JSON.stringify(response.data));
-                        if(data["authorized"] == false){
-                            window.location = window.authSettings.getAuthPageUrl()
-                            return
-                        }
-                        if(data == undefined){
-                            window.location = window.authSettings.getAuthPageUrl()
-                            return
-                        }
-                        console.log(data)
-                        t.all = data["entries"];
+                    
                         axios.post(window.prefs.getBackendUrl()+'/playlists', authParams)
                         .then(function (response) {
                             var data = JSON.parse(JSON.stringify(response.data));
@@ -256,14 +244,7 @@ class FetchedData {
                                     console.log(error)
                                 }
                             })
-                        }).catch(function (error) {
-                            if(error.code == "ERR_NETWORK"){
-                                window.location = window.authSettings.getAuthPageUrl()
-                                return
-                            }else{
-                                console.log(error)
-                            }
-                        })
+                        
                     }).catch(function (error) {
                         if(error.code == "ERR_NETWORK"){
                             window.location = window.authSettings.getAuthPageUrl()
@@ -298,7 +279,7 @@ class FetchedData {
         })
     }
     getAll(){
-        return this.all
+        return undefined;
     }
     onceInitalized(d){
         this.onInit = d
