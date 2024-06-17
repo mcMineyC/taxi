@@ -12,7 +12,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const jsmt = require('jsmediatags');
-import './schemas.js';
+import schemas from './schemas.js';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
@@ -28,13 +28,17 @@ const secretKey = "22714014e04f46cebad7e03764beeac8";
 
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, addRxPlugin } = require('rxdb');
-const { getRxStorageFoundationDB } = require('rxdb/plugins/storage-foundationdb');
-const { getRxStorageDexie } = require('rxdb/plugins/storage-dexie');
+import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
 
 const db = await createRxDatabase({
-  name: 'taxi',
-  storage: getRxStorageDexie(),
+  name: 'rxdb-taxi',
+  storage: getRxStorageMongoDB({
+    connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin',
+  }),
 });
+
+await schemas.register(db);
+console.log("Added collections");
 
 const app = express();
 const server = http.createServer(app);
@@ -73,200 +77,139 @@ app.get('/status', function (req, res) {
     res.send({"status": "ok"})
 })
 
-app.post('/auth', function (req, res) {
-    var data = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-    data = JSON.parse(data);
+app.post('/auth', async function (req, res) {
     var authed = false
     var authtoken = "";
-    var username = ""
-    for(var x = 0; x < data["users"].length; x++){
-        if(data["users"][x]["loginName"] == req.body.username){
-            if(data["users"][x]["password"] == req.body.password){
-                username = data["users"][x]["loginName"]
-                console.log("Authorizing user "+username)
-                authed = true
-                authtoken = crypto.randomBytes(64).toString('hex');
-                data["users"][x]["authtoken"] = authtoken;
-                fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify(data,null,4));
-                break
-            }else if(data["users"][x]["password"] == ""){
-                console.log("Authorizing user "+data["users"][x]["displayName"]+" and changing password to "+req.body.password)
-                authed = true
-                authtoken = crypto.randomBytes(64).toString('hex');
-                data["users"][x]["authtoken"] = authtoken;
-                data["users"][x]["password"] = req.body.password;
-                fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify(data,null,4));
-                break
-            }
+    var result = await db.auth.findOne({selector: {"loginName": req.body.username}}).exec();
+    var username = result.loginName
+    authed = await (async ()=>{
+        if(!result || result.loginName != req.body.username){
+            console.error("Wat da refrigerator is going on here");
+            return Promise.resolve(false);
         }
-    }
+        
+        if(result.password == req.body.password){
+            console.log("Authorizing user "+result.loginName)
+            authtoken = crypto.randomBytes(64).toString('hex');
+            await result.patch({
+                authtoken: authtoken,
+            })
+            return Promise.resolve(true);
+        }else if(result.password == ""){
+            console.log("Authorizing user "+result.loginName+" and changing password to "+req.body.password);
+            authtoken = crypto.randomBytes(64).toString('hex');
+            await result.patch({
+                password: req.body.password,
+                authtoken: authtoken,
+            })
+            return Promise.resolve(true);
+        }else{
+            return Promise.resolve(false);
+        }
+    })();
+    
     if(authed == false){
         console.log("Failed to authorize user "+req.body.username)
     }
     res.send({"authorized": authed, "authtoken": authtoken, "username": username})
 });
 
-app.post('/authtoken', function (req, res) {
-    var data = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-    data = JSON.parse(data);
-    var authed = false
-    var authtoken = ""
-    var username = ""
-    for(var x = 0; x < data["users"].length; x++){
-        if(data["users"][x]["authtoken"] == req.body.authtoken){
-            username = data["users"][x]["loginName"]
-            console.log("Authorizing user "+username+" based on auth token")
-            authed = true
-            authtoken = crypto.randomBytes(64).toString('hex');
-            data["users"][x]["authtoken"] = authtoken;
-            fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify(data,null,4));
-            break
+app.post('/authtoken', async function (req, res) {
+    const result = await db.auth.findOne({selector: {"authtoken": req.body.authtoken}}).exec();
+    var username = "";
+    var authtoken = "";
+    var authed = await (async ()=>{
+        if(!result){
+            return Promise.resolve(false);
         }
-    }
+        username = result.loginName
+        authtoken = (username == "testguy") ? "1234567890" : crypto.randomBytes(64).toString('hex');
+        await result.patch({
+            authtoken: authtoken,
+        });
+        return Promise.resolve(true);
+    })();
+    
     res.send({"authorized": authed, "authtoken": authtoken, "username": username})
 })
 
-app.post('/username', function (req, res) {
-    var data = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-    data = JSON.parse(data);
-    var username = ""
-    for(var x = 0; x < data["users"].length; x++){
-        if(data["users"][x]["authtoken"] == req.body.authtoken){
-            username = data["users"][x]["loginName"]
-            break
+app.post('/username', async function (req, res) {
+    const result = await db.auth.findOne({selector: {"authtoken": req.body.authtoken}}).exec();
+    var username = "";
+    var authtoken = "";
+    var authed = await (async ()=>{
+        if(!result){
+            return Promise.resolve(false);
         }
-    }
-    res.send({"authorized": true, "username": username})
+        username = result.loginName
+        authtoken = result.authtoken
+        return Promise.resolve(true);
+    })();
+    
+    res.send({"authorized": authed, "authtoken": authtoken, "username": username})
 })
 
-app.post('/info/all', function (req, res) {
-    if(checkAuth(req, res) == false){
-        return
-    }
-    
-    res.sendFile(path.join(__dirname, "config", 'all.json'));
-});
+///   THIS IS USELESS IDK WHY ITS STILL HERE   ///
+// app.post('/info/all', async function (req, res) {
+//     if((await checkAuth(req.body.authtoken)) == false){
+//         res.send({"authed": false});
+//         return
+//     }
+//     // var resp = await db.songs.find().exec();
+//     res.send({"authorized": true, "entries": {}});
+// });
 
 app.get('/placeholder', function (req, res) {
     res.sendFile(path.join(__dirname, "config", 'images', 'placeholder.jpg'));
 })
 
 app.post('/info/albums', async function (req, res) {
-    if(checkAuth(req, res) == false){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "albums": []});
         return
     }
 
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-
-    //Update if needed
-    if((data["last_updated"]) != hash(JSON.stringify(all))){
-        await updateAlbums(hash,all)
-        data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8'));
-    }
-
-    //Send data
-    res.send(data);
+   const data = await db.albums.find().exec();
+   res.send({"authed": true, "albums": data});
 });
 
-app.post('/info/artists', function (req, res) {
-    if(checkAuth(req, res) == false){
-        // res.send({"error": "No authtoken provided", "authorized": false})
+app.post('/info/artists', async function (req, res) {
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "artists": []});
         return
     }
     
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", 'artists.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-
-    //Update if needed
-    if((data["last_updated"]) != hash(JSON.stringify(all))){
-        updateArtists(hash,all)
-        data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'artists.json'), 'utf-8'));
-    }
-
-    //Send data
-    res.send(data);
+    const data = await db.artists.find().exec();
+    res.send({"authed": true, "artists": data});
 });
 
 app.post('/info/songs', async function (req, res) {
-    if(checkAuth(req, res) == false){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "songs": []});
         return
     }
 
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-
-    //This is only needed if the file changed
-    if((data["last_updated"] != hash(JSON.stringify(all)))){
-        await updateSongs(hash,all,data)
-        data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8'));
-    }
-
-    //Send data
-    res.send(data);
+    const data = await db.songs.find().exec();
+    res.send({"authed": true, "songs": data});
 });
 
 app.post('/info/songs/:id', async function (req, res) {
-    if(checkAuth(req, res) == false){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "songs": []});
         return
     }
 
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-
-    //This is only needed if the file changed
-    if((data["last_updated"] != hash(JSON.stringify(all)))){
-        await updateSongs(hash,all,data)
-        data = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8'));
-    }
-    var found = false;
-    data["songs"].forEach(e => {
-        if(e["id"] == req.params.id && !found){
-            found = true;
-            res.send(e)
-        }
-    });
-
-    //Send data
-    if(!found){
-        res.send({})
-    }
+    const result = await db.songs.findOne({selector: {"id": req.params.id}}).exec();
+    res.send({"authed": true, "song": (result) ? result : {} }); 
 });
 
 app.get('/info/songs/:id/image', async function (req, res) {
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    data = JSON.parse(data);
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    all = JSON.parse(all);
-
     var file = "";
 
-    //Reupdate data if needed
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        updateSongs(hash,all,data)
-        data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        data = JSON.parse(data);
-    }
     if(!fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png"))){
         //Find file
-        for (var x = 0; x < (data["songs"].length); x++) {
-            if (data["songs"][x]["id"] == req.params.id) {
-                file = data["songs"][x]["file"];
-            }
-        }
+        file = await db.songs.findOne({selector: {"id": req.params.id}}).exec();
+        file = (file == null) ? "" : file.file;
 
         //Check if file was found
         if(file == ""){
@@ -279,7 +222,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
         await extractSongImage(file, path.join(__dirname, "config", "images", "songs", req.params.id+".png"));
         if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png")))){
             console.log("File still doesn't exist, trying to infer based on other songs in album...");
-            await inferSongImage(file, req.params.id, data);
+            await inferSongImage(file, req.params.id);
         }
     }
 
@@ -294,21 +237,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
 
 app.get('/info/albums/:id/image', async function (req, res) {
     if(!(fs.existsSync(path.join(__dirname, "config", "images", "albums", req.params.id+".png")))){
-        //Read data
-        var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        data = JSON.parse(data);
-        var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-        all = JSON.parse(all);
-
-        //Reupdate data if needed
-        if(data["last_updated"] != hash(JSON.stringify(all))){
-            updateAlbums(hash,all,data)
-            data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-            data = JSON.parse(data);
-        }
-
-        //Try to extract image from first song in album
-        await extractAlbumImage(req.params.id, data)
+        await extractAlbumImage(req.params.id)
     }
     //Send image or placeholder if it fails
     if(fs.existsSync(path.join(__dirname, "config", "images", "albums", req.params.id+".png"))){
@@ -320,14 +249,10 @@ app.get('/info/albums/:id/image', async function (req, res) {
 });
 
 app.get('/info/artists/:id/image', async function (req, res) {
+    var data = {}
+    var url = "";
     if(!(fs.existsSync(path.join(__dirname, "config", "images", "artists", req.params.id+".png")))){
-        var js = JSON.parse(fs.readFileSync(path.join(__dirname, "config", "artists.json"), 'utf-8'))["artists"];
-        var name = ""
-        for (var x = 0; x < js.length; x++) {
-            if (js[x]["id"] == req.params.id){
-                name = js[x]["displayName"]
-            }
-        }
+        var name = (await db.artists.findOne({selector: {"id": req.params.id}}).exec()).displayName
         console.log(name)
         console.log("Artist image doesn't exist, downloading...");
         const { stdout, stderr } = await exec('python3 find_artist_profile_url.py "'+name+'"')
@@ -341,17 +266,9 @@ app.get('/info/artists/:id/image', async function (req, res) {
             }
             if(!data["success"]){
                 console.log("\tFailed to get image for "+req.params.id+".")
-                var albums = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8'));
-                var songs = JSON.parse(fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8'));
-                var albumid = "";
-                //Get album id
-                for(var x = 0; x < albums["albums"].length; x++){
-                    if(albums["albums"][x]["artistId"] == req.params.id){
-                        albumid = albums["albums"][x]["id"]
-                    }
-                }
+                var albumid = (await db.albums.findOne({selector: {"artistId": req.params.id}}).exec()).id
                 console.log("\t\tExtracting image from album "+albumid)
-                await extractAlbumImage(albumid, songs, path.join(__dirname, "config", "images", "artists", req.params.id+".png"))
+                await extractAlbumImage(albumid, path.join(__dirname, "config", "images", "artists", req.params.id+".png"))
                 console.log("\t\tImage extracted.")
             }
         }catch (err){
@@ -371,10 +288,7 @@ app.get('/info/artists/:id/image', async function (req, res) {
     }
 })
 
-app.get('/info/songs/:id/audio', function (req, res) {
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    data = JSON.parse(data);
-
+app.get('/info/songs/:id/audio', async function (req, res) {
     var id = req.params.id
     const now = new Date();
     const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
@@ -396,11 +310,7 @@ app.get('/info/songs/:id/audio', function (req, res) {
     var file = "";
 
     //Find file
-    for (var x = 0; x < (data["songs"].length); x++) {
-        if (data["songs"][x]["id"] == id) {
-            file = data["songs"][x]["file"];
-        }
-    }
+    var file = (await db.songs.findOne({selector: {"id": id}}).exec()).file
     if(typeof(req.query.uname) != "undefined"){
         console.log("Adding "+id+" to recently played for "+req.query.uname);
         addToRecentlyPlayed(req.query.uname, id);
@@ -413,301 +323,122 @@ app.get('/info/songs/:id/audio', function (req, res) {
     }
 })
 
-app.post('/info/albums/by/artist/:id', async function(req, res){
-    if(checkAuth(req, res) == false){
-        return
-    }
-
-    var data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-    var albums_arr = [];
-
-    //This is only needed if the file changed
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        updateAlbums(hash,all,data)
-        data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-        data = JSON.parse(data);
-    }
-
-    for(var x = 0; x < data["albums"].length; x++){
-        var album = data["albums"][x];
-        if(album["artistId"] == req.params.id){
-            albums_arr.push(album)
-        }
-    }
-    res.send(albums_arr);
-})
-
-app.post('/info/albums/:id', async function(req, res){
-    if(checkAuth(req, res) == false){
-        return
-    }
-
-    var data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-    var albums_arr = [];
-
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        updateAlbums(hash,all,data)
-        data = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-        data = JSON.parse(data);
-    }
-    
-    for(var x = 0; x < data["albums"].length; x++){
-        var album = data["albums"][x];
-        if(album["id"] == req.params.id){
-            albums_arr.push(album)
-        }
-    }
-    res.send(albums_arr);
-})
-
-app.post('/info/songs/by/album/:id', async function(req, res){
-    if(checkAuth(req, res) == false){
-        return
-    }
-
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-    var songs_arr = [];
-
-    //This is only needed if the file changed
-    
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        await updateSongs(hash,all,data)
-        data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        data = JSON.parse(data);
-    }
-
-    for(var x = 0; x < data["songs"].length; x++){
-        var song = data["songs"][x];
-        if(song["albumId"] == req.params.id){
-            songs_arr.push(song)
-        }
-    }
-    res.send(songs_arr);
-})
-
-app.post('/info/songs/by/artist/:id', async function(req, res){
-    if(checkAuth(req, res) == false){
-        return
-    }
-
-    var data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-    var all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    data = JSON.parse(data);
-    all = JSON.parse(all);
-
-    var songs_arr = [];
-
-    if(data["last_updated"] != hash(JSON.stringify(all))){
-        await updateSongs(hash,all,data)
-        data = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        data = JSON.parse(data);
-    }
-    
-    for(var x = 0; x < data["songs"].length; x++){
-        var song = data["songs"][x];
-        if(song["artistId"] == req.params.id){
-            songs_arr.push(song)
-        }
-    }
-    res.send(songs_arr);
-})
+// there were some unused endpoints in here pertaining to querying albums/songs by album/artist, those are removed
 
 app.post('/playlists', async function(req, res){
-    if(checkAuth(req, res) == false){
-        res.send({"error": "Not authorized", "authed": false})
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "playlists": []});
         return
     }
 
-    //Read data
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
-    data = JSON.parse(data);
-
-    //Update if needed
-    await updatePlaylists(hash,data)
-
-    //Send playlists
-    res.sendFile(path.join(__dirname, "config", "playlists.json"));
+    var u = await getUser(req.body.authtoken);
+    var playlists = await db.playlists.find({selector: {$or: [{owner: u}, {public: true}]}}).exec();
+    res.send({"authed": true, "playlists": playlists})
 })
 
-app.post('/playlists/user/:id', function(req, res){
-    if(checkAuth(req, res) == false){
-        res.send({"error": "Not authorized", "authed": false})
+app.post('/playlists/user/:id', async function(req, res){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "playlists": []});
         return
     }
-    var u = getUser(req.body.authtoken);
-    if(u["loginName"] != req.params.id){
-        res.send({"error": "Not authorized", "success": false})
-        return
+    var u = await getUser(req.body.authtoken);
+    if(u != req.params.id){
+        // res.send({authed: false, "error": "Not authorized", "success": false})
+        // return
     }
 
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
-    data = JSON.parse(data);
-    var d = [];
-    for(var x = 0; x < data["playlists"].length; x++){
-        if(data["playlists"][x]["public"] == true || u["loginName"] == req.params.id){
-            d.push(data["playlists"][x])
-        }
-    }
-    res.send(d)
+    var d = await db.playlists.find({selector: {owner: req.params.id}}).exec();
+    res.send({"authed": true, "playlists": d});
 })
 
-app.post('/playlists/user/:id/modify/:playlist', async function(req, res){
-    if(checkAuth(req, res) == false){
-        res.send({"error": "Not authorized", "authorized": false})
+app.post('/playlists/modify/:playlist', async function(req, res){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false});
         return
     }
-    var gData = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
-    gData = JSON.parse(gData);
-    var fToCheck = ""
-    for(var x = 0; x < gData["playlists"].length; x++){
-        if(gData["playlists"][x]["id"] == req.params.playlist){
-            if(gData["playlists"][x]["owner"] != req.params.id){
-                res.send({"error": "Not authorized", "success": false})
-                return
-            }else{
-                fToCheck = gData["playlists"][x]["owner"]
-            }
+    var u = await getUser(req.body.authtoken);
+    var p = await db.playlists.findOne({selector: {id: req.params.playlist}}).exec();
+    if(p == null){
+        console.log("Playlist does not exist. Creating new playlist.")
+        p = await db.playlists.upsert({
+            id: req.params.playlist || "banana",
+            owner: u || "testguy",
+            displayName: req.body.name || "Banana",
+            description: req.body.description || "Banana",
+            public: req.body.public || false,
+            songs: req.body.songs || [],
+        })
+    }else{
+        if(p.owner == undefined || p.owner == null){
+            await p.incrementalPatch({owner: u});
+        }else if(u != p.owner){
+            res.send({authed: false, "error": "Not authorized", "success": false})
+            return;
         }
-    }
-    if(fToCheck == ""){
-        fToCheck = req.params.id
-    }
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
-    data = JSON.parse(data);
-    console.log("Attempting to modify playlist "+req.params.playlist)
-    var d = [];
-    var found = false
-    var index = 0
-    for(var x = 0; x < data["playlists"].length; x++){
-        if(data["playlists"][x]["id"] == req.params.playlist){
-            if(req.body.name !== undefined){
-                console.log("Name: "+req.body.name)
-                data["playlists"][x]["displayName"] = req.body.name
-            }
-            if(req.body.description !== undefined){
-                console.log("Description: "+req.body.public)
-                data["playlists"][x]["description"] = req.body.description
-            }
-            if(req.body.public !== undefined){
-                console.log("Public: "+req.body.public)
-                data["playlists"][x]["public"] = JSON.parse(req.body.public)
-            }
-            if(typeof req.body.songs !== "undefined" && req.body.songs != null && req.body.songs.length > 0){
-                data["playlists"][x]["songs"] = req.body.songs
-            }
-            // console.log("JSON: "+JSON.stringify(s))
-            found = true
-            index = x
+        var newdata = {}
+        console.log("Attempting to modify playlist "+req.params.playlist)
+        if(req.body.name !== undefined){
+            console.log("Name: "+req.body.name)
+            newdata["displayName"] = req.body.name
+        }else{
+           newdata["displayName"] = p.displayName
         }
-        d[x] = data["playlists"][x]
-    }
-    if(!found){
-        try{
-            d.push({
-                "id": req.params.playlist,
-                "displayName": req.body.name,
-                "description": req.body.description,
-                "public": req.body.public,
-                "songs": req.body.songs
-            })
-            console.log("Adding new playlist")
-            console.log(req.body.songs)
-        }catch(e){
-            console.log(e)
-            d.push({
-                "id": req.params.playlist,
-                "displayName": req.body.name,
-                "description": req.body.description,
-                "public": req.body.public,
-                "songs": []
-            })
-            console.log("Error occurred, adding new playlist")
+        if(req.body.description !== undefined){
+           console.log("Description: "+req.body.public)
+           newdata["description"] = req.body.description
+        }else{
+            newdata["description"] = p.description
         }
+        if(req.body.public !== undefined){
+            console.log("Public: "+req.body.public)
+            newdata["public"] = JSON.parse(req.body.public)
+        }else{
+            newdata["public"] = p.public
+        }
+        if(typeof req.body.songs !== "undefined" && req.body.songs != null && req.body.songs.length > 0){
+            newdata["songs"] = req.body.songs
+        }else{
+            newdata["songs"] = p.songs
+        }
+        console.log("Patching existing playlist")
+        await p.patch(newdata);
     }
-    data = {
-        "playlists": d,
-        "success": true
-    }
-    await fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
-
-    res.send(d)
-    await updatePlaylists(hash, data)
+    res.send({authed: true, "success": true, playlists: await db.playlists.find({selector: {$or: [{owner: u}, {public: true}]}}).exec()});
 })
 
-app.post('/playlists/user/:id/remove/:playlist', async function(req, res){
-    if(checkAuth(req, res) == false){
-        res.send({"error": "Not authorized", "authed": false})
+app.post('/playlists/remove/:playlist', async function(req, res){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "songs": []});
         return
     }
-    var u = getUser(req.body.authtoken);
-    var gData = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
-    gData = JSON.parse(gData);
-    var fToCheck = ""
-    for(var x = 0; x < gData["playlists"].length; x++){
-        if(gData["playlists"][x]["id"] == req.params.playlist){
-            if(gData["playlists"][x]["owner"] != u["loginName"]){
-                res.send({"error": "Not authorized", "success": false})
-                return
-            }else{
-                fToCheck = gData["playlists"][x]["owner"]
-            }
-        }
-    }    
-
-    if(fToCheck == ""){
-        fToCheck = req.params.id
+    var u = await getUser(req.body.authtoken);
+    var p = await db.playlists.findOne({selector: {id: req.params.playlist}}).exec();
+    if(p == null){
+        res.send({authed: true, "success": true, "playlists": await db.playlists.find({selector: {$or: [{owner: u}, {public: true}]}}).exec()});
+        return;
     }
-
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+fToCheck+".json"), 'utf-8');
-    data = JSON.parse(data);
-
-    console.log("Removing playlist "+req.params.playlist+" for user "+u["loginName"])
-
-    var p = {"success": false}
-    for(var x = 0; x < data["playlists"].length; x++){
-        if(data["playlists"][x]["id"] == req.params.playlist && data["playlists"][x]["owner"] == u["loginName"]){
-            p = data["playlists"].splice(x, 1)
-            p.success = true
-        }
+    if(u != p.owner){
+        res.send({authed: false, "error": "Not authorized", "success": false})
+        return
     }
-    fs.writeFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), JSON.stringify(data, null, 4))
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists", "playlists_"+req.params.id+".json"), 'utf-8');
-    data = JSON.parse(data);
-    
-    await updatePlaylists(hash, data)
-    res.send(p)
+    await p.remove();
+    res.send({authed: true, "success": true, "playlists": await db.playlists.find({selector: {$or: [{owner: u}, {public: true}]}}).exec()});
 })
 
 app.post('/recently-played/:user', async function(req, res){
-    if(checkAuth(req, res) == false){
-        // res.send({"error": "Not authorized", "authed": false})
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, played: []});
         return
     }
-    var u = getUser(req.body.authtoken);
+    var u = await getUser(req.body.authtoken);
     var user = req.params.user;
-    if(user != u["loginName"]){
+    console.log(user,"==",u)
+    if(user != u){
         // res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
         // return
     }
-    if(!fs.existsSync(path.join(__dirname, "config", "recently-played.json"))){
-        fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(
-            {
-                "recently-played":{}
-            } ,null,4));
-    }
-    var played = fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8');
-    played = JSON.parse(played);
-    played = played["recently-played"][user]
-    res.send({"played": played})
+    var played = await db.played.findOne({selector: {owner: req.params.user}}).exec();
+    res.send({"played": played.songs || [], "authed": true, "success": true})
 })
 
 io.on('connection', (socket) => {
@@ -718,15 +449,7 @@ io.on('connection', (socket) => {
     });
     var authed = false
     socket.on("auth", (msg) => {
-        var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-        authdata = JSON.parse(authdata);
-        for(var x = 0; x < authdata["users"].length; x++){
-            if(authdata["users"][x]["authtoken"] == msg.authtoken){
-                authed = true
-            }
-        }
-        authed = true
-        if(!authed){
+        if(!checkAuth(msg.authtoken)){
             socket.emit("authresult", {"success": false, "error": "Invalid authtoken", "authorized": false})
             // socket.close()
             return
@@ -847,7 +570,7 @@ io.on('connection', (socket) => {
             }
         }
         else if(msg.source == "youtube"){
-            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false}) // Not implemented
+            socket.emit("message", {"type": "auth", "success": false, "error": "Not implemented", "authorized": true}) // Not implemented
             // socket.close()
             return
         }
@@ -855,7 +578,7 @@ io.on('connection', (socket) => {
 })
 
 async function main(){
-    await checkup()
+    await checkDirs()
     console.log("Checked and ready to start")
     server.listen(port, () => {
         console.log(`App listening on port ${port}`)
@@ -880,14 +603,14 @@ async function extractSongImage(file, dest){
     if(!(fs.existsSync(dest))){
         console.log("File doesn't exist, creating...");
         var v = await new Promise((resolve, reject) => {
-            new jsmediatags.Reader(path.join(__dirname, file))
+            new jsmt.Reader(path.join(__dirname, file))
               .read({
                 onSuccess: (tag) => {
                   console.log('Success!');
                   resolve(tag);
                 },
                 onError: (error) => {
-                  console.log('Error');
+                  console.log('Error extracting metadata:', error);
                   reject(error);
                 }
             });
@@ -908,73 +631,25 @@ async function extractSongImage(file, dest){
     }
 }
 
-async function inferSongImage(file, id, data){
+async function inferSongImage(id){
     var albumid = "";
         //Get album id
-        for(var x = 0; x < data["songs"].length; x++) {
-            if(data["songs"][x]["id"] == id){
-                albumid = data["songs"][x]["albumId"];
-            }
-        }
-        //Try to extract image again
-        for(var x = 0; x < data["songs"].length; x++) {
-            //Find first song that is in the same album and not the same song
-            if((data["songs"][x]["albumId"] == albumid) && (data["songs"][x]["id"] != id)){
-                file = data["songs"][x]["file"];
-
-                //Attempt to extract image from metadata
-                if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", id+".png")))){
-                    var v = await new Promise((resolve, reject) => {
-                        new jsmediatags.Reader(path.join(__dirname, file))
-                        .read({
-                            onSuccess: (tag) => {
-                                console.log('Success!');
-                                resolve(tag);
-                            },
-                            onError: (error) => {
-                                console.log('Error');
-                                reject(error);
-                            }
-                        });
-                    })
-                    var resu = v
-                    if(typeof(resu.tags.picture) == "undefined"){
-                        console.log("No picture in metadata for "+file)
-                        return
-                    }
-                    const { data, format } = resu.tags.picture;
-                    let base64String = "";
-                    for (var i = 0; i < data.length; i++) {
-                        base64String += String.fromCharCode(data[i]);
-                    }
-                    fs.writeFileSync(path.join(__dirname, "config", "images" , "songs", id+".png"), Buffer.from(base64String, 'binary'), 'binary');    
-                    console.log("Done!")
+        var song = await db.songs.findOne({selector: {"id": id}}).exec();
+        albumid = song.albumId;
+        song = await db.songs.findOne({
+                selector: {
+                    "albumId": albumid,
+                    "id": {$ne: id}
                 }
-            }
-        }
+            }).exec();
+        //Try to extract image
+        await extractSongImage(song.file, path.join(__dirname, "config", "images", "songs", id+".png"));
 }
 
-async function extractAlbumImage(id, data, dest){
-    var file = ""
-    for(var x = 0; x < data["songs"].length; x++) {
-        //Find first song that is in the album
-        if((data["songs"][x]["albumId"] == id)){
-            file = data["songs"][x]["file"];
-            var success = false
-            
-            //Extract image
-            await extractSongImage(file, (dest == undefined ? path.join(__dirname, "config", "images", "albums", id+".png") : dest));
-            if(fs.existsSync(path.join(__dirname, "config", "images", "albums", id+".png"))){
-                success = true
-            }
-
-            if (success){
-                console.log("Success extacting "+id+".")
-            }else{
-                console.log("Trying again")
-            }
-        }
-    }
+async function extractAlbumImage(id, dest){
+    var song = await db.songs.findOne({selector: {"albumId": id}}).exec();
+    var file = song.file;
+    await extractSongImage(file, (dest == undefined ? path.join(__dirname, "config", "images", "albums", id+".png") : dest));
 }
 
 function hash(string){
@@ -995,50 +670,36 @@ async function withTimeout(promise, timeoutMs) {
     }
 }
 
-function checkAuth(req, res){
-    if(typeof(req.body.authtoken) == "undefined"){
-        res.send({"error": "No authtoken provided"})
-        return false
+async function checkAuth(token){
+    if(typeof(token) == "undefined"){
+        return Promise.resolve(false); 
     }else{
-        var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-        authdata = JSON.parse(authdata);
-        var found = false
-        for(var x = 0; x < authdata["users"].length; x++){
-            if(authdata["users"][x]["authtoken"] == req.body.authtoken){
-                found = true
-                break
-            }
-        }
-        if(!found){
-            res.send({"error": "Invalid authtoken", "authed": false})
-            return false
-        }
+        const result = await db.auth.findOne({selector: {"authtoken": token}}).exec()
+        return Promise.resolve(result != null);
     }
 }
 
-function getUser(authtoken){
-    var authdata = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-    authdata = JSON.parse(authdata);
-    for(var x = 0; x < authdata["users"].length; x++){
-        if(authdata["users"][x]["authtoken"] == authtoken){
-            return authdata["users"][x]
-        }
-    }
+async function getUser(authtoken){
+    var result = (await db.auth.findOne({selector: {"authtoken": authtoken}}).exec())
+    return (result == null) ? "" : result.loginName
 }
+
 async function addToRecentlyPlayed(user, songId){
-    if(!fs.existsSync(path.join(__dirname, "config", "recently-played.json"))){
-        fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(
-            {
-                "recently-played":{}
-            } ,null,4));
+    console.log("Adding to recent: ",user, songId)
+    var recent = await db.played.findOne({selector: {"owner": user}}).exec();
+    var newRecent = {owner: user, songs: []};
+    if(recent == null){
+        console.log("Recent is null")
+        newRecent = {owner: user, songs: [songId]}
+    }else{
+        newRecent.songs = recent.songs;
+        if(recent.songs.length >= 10){
+            console.log("Too long")
+            newRecent.songs.splice(0, 1);
+        }
+        newRecent.songs.push(songId);
     }
-    var recent = JSON.parse(fs.readFileSync(path.join(__dirname, "config", "recently-played.json"), 'utf-8'));
-    recent["recently-played"][user] = recent["recently-played"][user] || []
-    if(recent["recently-played"][user].length >= 10){
-        recent["recently-played"][user].splice(0,1)
-    }
-    recent["recently-played"][user].push(songId)
-    fs.writeFileSync(path.join(__dirname, "config", "recently-played.json"), JSON.stringify(recent,null,4));
+    await db.played.upsert(newRecent);
 }
 
 async function downloadFile(fileUrl, outputLocationPath) {
@@ -1103,313 +764,4 @@ async function checkDirs(){
     if(!fs.existsSync(path.join(__dirname, 'music'))){
         fs.mkdirSync(path.join(__dirname, 'music'));
     }
-    if(!fs.existsSync(path.join(__dirname, "config", 'playlists'))){
-        fs.mkdirSync(path.join(__dirname, "config", 'playlists'));
-    }
-}
-
-async function updatePlaylists(hashFunc, all){
-    var data = fs.readFileSync(path.join(__dirname, "config", "playlists.json"), 'utf-8');
-    data = JSON.parse(data);
-    if(true){
-        var p = []
-        var files = fs.readdirSync(path.join(__dirname, "config", "playlists"))
-        for (const file of files) {
-            try{
-                var d = fs.readFileSync(path.join(__dirname, "config", "playlists", file), 'utf-8');
-                d = JSON.parse(d);
-                for(var x = 0; x < d["playlists"].length; x++){
-                    var uname = file.split("_")[1].substring(0,file.split("_")[1].length-5)
-                    d["playlists"][x]["owner"] = uname
-                    if(JSON.parse(d["playlists"][x].public) == true){
-                        p.push(d["playlists"][x])
-                    }
-                }
-                fs.writeFileSync(path.join(__dirname, "config", "playlists", file), JSON.stringify(d, null, 4));
-            }catch(err){
-                console.log(err)
-                continue
-            }
-        }
-        data = {
-            "last_updated": hashFunc(JSON.stringify(all)),
-            "playlists": p
-        }
-        fs.writeFileSync(path.join(__dirname, "config", "playlists.json"), JSON.stringify(data, null, 4));
-    }
-}
-
-async function updateSongs(hashFunc, all, songs){
-    //This is only needed if the file changed
-    console.log("Updating songs.json")
-    var albums_arr = [];
-    for(var x = 0; x < (all["entries"].length); x++){
-        artist = all["entries"][x]
-        console.log(artist["displayName"]); //artist
-        var artistId = artist["id"]
-        for (var album in artist["albums"]) {
-            var albumid = album;
-            var album = artist["albums"][album];
-            console.log("\t" + album["displayName"]); //album
-            for(var song in album["songs"]) {
-                var v = album["songs"][song];
-                console.log("\t\t" + v["title"] + ": " + v["file"] + ""); //song
-                
-                if(fs.existsSync(path.join(__dirname, v["file"]))){
-                    try{
-                        var vv = {}
-                        var found = false
-                        var songer = songs["songs"]
-                        if(songer != undefined){
-                            for(var y = 0; y < songer.length; y++){
-                                if(songer[y]["id"] == v["id"]){
-                                    vv = songer[y]
-                                    found = true;
-                                    break;
-                                }
-                                // console.log({"id": v["id"], "iidd": songer[y]["id"]})
-                            }
-                        }
-                        var z = ""
-                        var dur = ""
-                        if(!found && vv["duration"] == undefined){
-                            console.log("\t\t\tProbing: "+v["file"])
-                            z = await withTimeout(ffprobe(path.join(__dirname, v["file"])), 10000);
-                            dur = z["format"]["duration"]   
-                        }else{
-                            console.log("\t\t\tUsing duration: "+vv["duration"])
-                            dur = (vv["duration"] == undefined) ? 0 : vv["duration"]
-                        }
-                        
-                        var warr = {
-                            "id": v["id"],
-                            "displayName": v["title"],
-                            "albumId": albumid,
-                            "artistId": artistId,
-                            "duration": dur,
-                            "file": v["file"]
-                        }
-                        albums_arr.push(warr)
-                    }catch(err){
-                        switch(err.code){
-                            case "ENOENT":
-                                console.log("File does not exist: "+v["file"])
-                                break;
-                            case "ETIMEDOUT":
-                                console.log("Timed out trying to extract data from: "+v["file"])
-                                break;
-                            default:
-                                console.log(err)
-                        }
-                    }
-                }else{
-                    console.log("File does not exist: "+v["file"])
-                }
-            };
-        }
-    }
-    console.log("Writing file...")
-    songs_data = {
-        "last_updated": hashFunc(JSON.stringify(all)),
-        "songs": albums_arr
-    }
-    try{
-        fs.writeFileSync(path.join(__dirname, "config", 'songs.json'), JSON.stringify(songs_data,null,4), 'utf-8');
-    }catch(err){
-        console.log("Error writing songs.json, retrying...")
-        try{
-            fs.mkdirSync(path.join(__dirname, 'config'));
-            fs.writeFileSync(path.join(__dirname, "config", 'songs.json'), JSON.stringify(songs_data,null,4), 'utf-8');
-        }catch(err){
-            console.log(err)
-        }
-    }
-    console.log("Done updating songs!")
-}
-
-async function updateAlbums(hashFunc, all){
-    var albums_arr = [];
-
-    console.log("Updating albums.json")
-    for(var x = 0; x < (all["entries"].length); x++){
-        artist = all["entries"][x]
-        for (var album in artist["albums"]) {
-            var albumid = album;
-            var album = artist["albums"][album];
-            console.log("Found album: " + album["displayName"]); //album
-            var warr = {
-                "id": albumid,
-                "displayName": album["displayName"],
-                "artist": artist["displayName"],
-                "artistId": artist["id"]
-            }
-            albums_arr.push(warr)
-        }
-    }
-    var albums_data = {
-        "last_updated": hashFunc(JSON.stringify(all)),
-    }
-    albums_data["albums"] = albums_arr
-    try{
-        fs.writeFileSync(path.join(__dirname, "config", 'albums.json'), JSON.stringify(albums_data,null,4), 'utf-8');
-    }catch(err){
-        console.log("Error writing songs.json, retrying...")
-        try{
-            fs.mkdirSync(path.join(__dirname, 'config'));
-            fs.writeFileSync(path.join(__dirname, "config", 'albums.json'), JSON.stringify(albums_data,null,4), 'utf-8');
-        }catch(err){
-            console.log(err)
-        }
-    }
-    console.log("Done updating albums!")
-}
-
-async function updateArtists(hashFunc, all){
-    //This is only needed if the file changed
-    var artist_arr = [];
-    for(var x = 0; x < (all["entries"].length); x++){
-        artist = all["entries"][x]
-        var warr = {
-            "id": artist["id"],
-            "displayName": artist["displayName"],
-        }
-        artist_arr.push(warr)
-    }
-    var artist_data = {
-        "last_updated": hashFunc(JSON.stringify(all)),
-        "artists": artist_arr
-    }
-    console.log("Writing file...")
-    try{
-        fs.writeFileSync(path.join(__dirname, "config", 'artists.json'), JSON.stringify(artist_data,null,4), 'utf-8');
-    }catch(err){
-        console.log(err)
-        console.log("Error writing artists.json, retrying...")
-        try{
-            fs.writeFileSync(path.join(__dirname, "config", 'artists.json'), JSON.stringify(artist_data,null,4), 'utf-8');
-        }catch(err){
-            console.log(err)
-        }
-    }
-    console.log("Done updating artists!")
-}
-
-async function updateAuth(authData){
-    var needToWrite = false
-    for(var x = 0; x < authData["users"].length; x++){
-        if(authData["users"][x]["authtoken"] == ""){
-            console.log("Generating authtoken for "+authData["users"][x]["displayName"])
-            var authtoken = crypto.randomBytes(64).toString('hex');
-            authData["users"][x]["authtoken"] = authtoken;
-            needToWrite = true
-        }
-        if(!fs.existsSync(path.join(__dirname, "config", "playlists", 'playlists_'+authData["users"][x]["loginName"]+'.json'))){
-            fs.writeFileSync(path.join(__dirname, "config", "playlists", 'playlists_'+authData["users"][x]["loginName"]+'.json'), JSON.stringify({"playlists":[]},null,4));
-        }
-    }
-    if(needToWrite){
-        fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify(authData,null,4));
-        console.log("Fixed auth.json")
-    }
-}
-
-async function updateAll(hashFunc, all){
-    var updated = false;
-
-    /// ALBUMS
-    if(!fs.existsSync(path.join(__dirname, "config", 'albums.json'))){
-        await updateAlbums(hash,all)
-        updated = true
-    }else{
-        var albums = fs.readFileSync(path.join(__dirname, "config", 'albums.json'), 'utf-8');
-        if(albums != undefined){
-            albums = JSON.parse(albums);
-            if(albums["last_updated"] != hash(JSON.stringify(all))){
-                await updateAlbums(hash,all)
-                console.log("Updated albums.json")
-                updated = true
-            }
-        }
-    }
-
-    /// ARTISTS
-    if(!fs.existsSync(path.join(__dirname, "config", 'artists.json'))){
-        fs.writeFileSync(path.join(__dirname, 'artists.json'), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
-        await updateArtists(hash,all)
-        console.log("Updated artists.json")
-        updated = true
-    }else{
-        var artists = fs.readFileSync(path.join(__dirname, "config", 'artists.json'), 'utf-8');
-        if(artists != undefined){
-            artists = JSON.parse(artists);
-            if(artists["last_updated"] != hash(JSON.stringify(all))){
-                await updateArtists(hash,all)
-                console.log("Updated artists.json")
-                updated = true
-            }
-        }
-    }
-
-    /// SONGS
-    if(!fs.existsSync(path.join(__dirname, "config", 'songs.json'))){
-        let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-        all = JSON.parse(all);
-        fs.writeFileSync(path.join(__dirname, "config", 'songs.json'), JSON.stringify({"last_updated": hash(JSON.stringify(all))},null,4));
-        var songs = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        if(songs != undefined){
-            songs = JSON.parse(songs);
-        }
-        var albums_arr = [];
-        updateSongs(hash,all,songs).then(() => {
-            console.log("Updated songs.json")
-        })
-    }else{
-        let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-        all = JSON.parse(all);
-        var songs = fs.readFileSync(path.join(__dirname, "config", 'songs.json'), 'utf-8');
-        if(songs != undefined){
-            songs = JSON.parse(songs);
-        }
-        if(songs["last_updated"] != hash(JSON.stringify(all))){
-            updateSongs(hash,all,songs).then(() => {
-                console.log("Updated songs.json")
-            })
-        }
-    }
-
-    /// AUTH
-    if(!fs.existsSync(path.join(__dirname, "config", 'auth.json'))){
-        fs.writeFileSync(path.join(__dirname, "config", 'auth.json'), JSON.stringify({"users":[]},null,4));
-    }else{
-        var auth = fs.readFileSync(path.join(__dirname, "config", 'auth.json'), 'utf-8');
-        if(auth != undefined){
-            auth = JSON.parse(auth);
-            await updateAuth(auth)
-        }
-    }
-
-    /// PUBLIC PLAYLISTS
-    if(!fs.existsSync(path.join(__dirname, "config", 'playlists.json'))){
-        fs.writeFileSync(path.join(__dirname, "config", 'playlists.json'), JSON.stringify({"playlists":[]},null,4));
-    }
-
-    if(updated) console.log("Done updating everything!")
-}
-
-async function checkup(){
-    // CHECK DIRS
-    await checkDirs();
-
-    // Check info files
-    // Make sure all.json exists
-    if(!fs.existsSync(path.join(__dirname, "config", 'all.json'))){
-        fs.writeFileSync(path.join(__dirname, "config", 'all.json'), JSON.stringify({"last_updated": 0,"entries":[]},null,4));
-    }
-
-    // Now update all
-    let all = fs.readFileSync(path.join(__dirname, "config", 'all.json'), 'utf-8');
-    if(all != undefined){
-        all = JSON.parse(all);
-    }
-    await updateAll(hash, all)
 }

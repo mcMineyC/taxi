@@ -9,18 +9,19 @@ const __dirname = path.dirname(__filename);
 const fs = require('fs');
 import schemas from './schemas.js';
 
-import "fake-indexeddb/auto";
-
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
-const { createRxDatabase, addRxPlugin } = require('rxdb');
-const { getRxStorageFoundationDB } = require('rxdb/plugins/storage-foundationdb');
-const { getRxStorageDexie } = require('rxdb/plugins/storage-dexie');
+const { createRxDatabase, removeRxDatabase, addRxPlugin } = require('rxdb');
+import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
 addRxPlugin(RxDBJsonDumpPlugin);
 
+// console.log("Removed database");  await removeRxDatabase('rxdb-taxi', getRxStorageMongoDB({connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin'}));
+
 const db = await createRxDatabase({
-  name: 'taxi',
-  storage: getRxStorageDexie(),
+  name: 'rxdb-taxi',
+  storage: getRxStorageMongoDB({
+    connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin',
+  }),
 });
 
 await db.addCollections({
@@ -112,20 +113,22 @@ console.log("Database migrated");
 //   return doc;
 // });
 
-console.log("Dumping for diagnostic purposes");
-var dSongs = await db.songs.exportJSON();
-var dAlbums = await db.albums.exportJSON();
-var dArtists = await db.artists.exportJSON();
-var dPlaylists = await db.playlists.exportJSON();
-var dAuth = await db.auth.exportJSON();
-var dPlayed = await db.played.exportJSON();
-var dFavorites = await db.favorites.exportJSON();
-fs.writeFileSync(path.join(__dirname, 'dump', 'songs.json'), JSON.stringify(dSongs,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'albums.json'), JSON.stringify(dAlbums,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'artists.json'), JSON.stringify(dArtists,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'playlists.json'), JSON.stringify(dPlaylists,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'auth.json'), JSON.stringify(dAuth,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'played.json'), JSON.stringify(dPlayed,null,2));
-fs.writeFileSync(path.join(__dirname, 'dump', 'favorites.json'), JSON.stringify(dFavorites,null,2));
+// console.log("Dumping for diagnostic purposes");
+// var dSongs = await db.songs.exportJSON();
+// var dAlbums = await db.albums.exportJSON();
+// var dArtists = await db.artists.exportJSON();
+// var dPlaylists = await db.playlists.exportJSON();
+// var dAuth = await db.auth.exportJSON();
+// var dPlayed = await db.played.exportJSON();
+// var dFavorites = await db.favorites.exportJSON();
+// fs.writeFileSync(path.join(__dirname, 'dump', 'songs.json'), JSON.stringify(dSongs,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'albums.json'), JSON.stringify(dAlbums,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'artists.json'), JSON.stringify(dArtists,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'playlists.json'), JSON.stringify(dPlaylists,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'auth.json'), JSON.stringify(dAuth,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'played.json'), JSON.stringify(dPlayed,null,2));
+// fs.writeFileSync(path.join(__dirname, 'dump', 'favorites.json'), JSON.stringify(dFavorites,null,2));
+//
+// console.log("Dumped");
 
-console.log("Dumped");
+await db.destroy();

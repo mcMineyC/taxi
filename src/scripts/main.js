@@ -385,6 +385,7 @@ class Player{
         }
         var song = new Howl({
             src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio?uname='+window.authSettings.getUsername()],
+            // src: [window.prefs.getBackendUrl() + '/info/songs/' + id + '/audio'],
             html5: true
         })
         var i = song.play();

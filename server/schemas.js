@@ -66,7 +66,7 @@ const playedSchema = {
   type: 'object',
   properties: {
     owner: {type: 'string', maxLength: 16},
-    songs: {type: 'array', items: 'string', maxLength: 10},
+    songs: {type: 'array', items: 'string'},
   }
 }
 
@@ -88,4 +88,32 @@ export default {
   authSchema: authSchema,
   playedSchema: playedSchema,
   favoriteSchema: favoriteSchema,
+  register: (db) => {
+    if(!db){
+      return Promise.reject('db is not defined');
+    }
+    return db.addCollections({
+      songs: {
+        schema: songSchema
+      },
+      albums: {
+        schema: albumSchema
+      },
+      artists: {
+        schema: artistSchema,
+      },
+      playlists: {
+        schema: playlistSchema,
+      },
+      auth: {
+        schema: authSchema,
+      },
+      played: {
+        schema: playedSchema,
+      },
+      favorites: {
+        schema: favoriteSchema
+      }
+    });
+  }
 }
