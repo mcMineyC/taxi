@@ -193,6 +193,21 @@ app.post('/info/songs', async function (req, res) {
     res.send({"authed": true, "songs": data});
 });
 
+app.post('/info/batch/songs', async function (req, res) {
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "results": {}});
+        return;
+    }
+    
+    var ids = req.body.ids
+    console.log("Batch request: ", ids)
+    var results = {}
+    for(var i = 0; i < ids.length; i++){
+        results[ids[i]] = await db.songs.findOne({selector: {"id": ids[i]}}).exec();
+    }
+    res.send({"authed": true, "results": results});
+});
+
 app.post('/info/songs/:id', async function (req, res) {
     if((await checkAuth(req.body.authtoken)) == false){
         res.send({"authed": false, "songs": []});
