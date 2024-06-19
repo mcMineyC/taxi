@@ -29,7 +29,8 @@ const secretKey = "22714014e04f46cebad7e03764beeac8";
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, addRxPlugin } = require('rxdb');
 import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
-
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
+addRxPlugin(RxDBMigrationSchemaPlugin);
 const db = await createRxDatabase({
   name: 'rxdb-taxi',
   storage: getRxStorageMongoDB({
@@ -37,7 +38,7 @@ const db = await createRxDatabase({
   }),
 });
 
-await schemas.register(db);
+await schemas.register(db, 1);
 console.log("Added collections");
 
 const app = express();

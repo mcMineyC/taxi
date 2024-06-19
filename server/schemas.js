@@ -1,103 +1,187 @@
-const songSchema = {
-  version: 0,
-  primaryKey: 'id',
-  type: 'object',
-  properties: {
-    id: {type: 'string', maxLength: 256},
-    albumId: 'string',
-    artistId: 'string',
-    displayName: 'string',
-    // albumDisplayName: 'string',
-    // artistDisplayName: 'string',
-    duration: 'double',
-    file: 'string',
-  }
-}
-
-const albumSchema = {
-  version: 0,
-  primaryKey: 'id',
-  type: 'object',
-  properties: {
-    id: {type: 'string', maxLength: 256},
-    artistId: 'string',
-    displayName: 'string',
-    // artistDisplayName: 'string',
-    // songCount: 'int',
-  }
-}
-
-const artistSchema = {
-  version: 0,
-  primaryKey: 'id',
-  type: 'object',
-  properties: {
-    id: {type: 'string', maxLength: 256},
-    displayName: 'string',
-    // albumCount: 'int',
-    // songCount: 'int',
-  }
-}
-
-const playlistSchema = {
-  version: 0,
-  primaryKey: 'id',
-  type: 'object',
-  properties: {
-    id: {type: 'string', maxLength: 256},
-    owner: 'string',
-    displayName: 'string',
-    public: 'boolean',
-    songs: {
-      type: 'array',
-      items: 'string',
+const scheme = {
+  "0": {
+    songSchema: {
+      version: 0,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        albumId: 'string',
+        artistId: 'string',
+        displayName: 'string',
+        duration: 'double',
+        file: 'string',
+      }
     },
-    // songCount: 'int',
-  }
-}
-
-const authSchema = {
-  version: 0,
-  primaryKey: 'loginName',
-  type: 'object',
-  properties: {
-    loginName: {type: 'string', maxLength: 16},
-    displayName: 'string',
-    password: 'string',
-    authtoken: 'string',
-  }
-}
-
-const playedSchema = {
-  version: 0,
-  primaryKey: 'owner',
-  type: 'object',
-  properties: {
-    owner: {type: 'string', maxLength: 16},
-    songs: {type: 'array', items: 'string'},
-  }
-}
-
-const favoriteSchema = {
-  version: 0,
-  primaryKey: 'owner',
-  type: 'object',
-  properties: {
-    owner: {type: 'string', maxLength: 16},
-    songs: {type: 'array', items: {type: 'string'}},
-    // count: 'int',
+    albumSchema: {
+      version: 0,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        displayName: 'string',
+      }
+    },
+    artistSchema: {
+      version: 0,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        displayName: 'string',
+      }
+    },
+    playlistSchema: {
+      version: 0,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        owner: 'string',
+        displayName: 'string',
+        public: 'boolean',
+        songs: {
+          type: 'array',
+          items: 'string',
+        },
+      }
+    },
+    authSchema: {
+      version: 0,
+      primaryKey: 'loginName',
+      type: 'object',
+      properties: {
+        loginName: {type: 'string', maxLength: 16},
+        displayName: 'string',
+        password: 'string',
+        authtoken: 'string',
+      }
+    },
+    playedSchema: {
+      version: 0,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: 'string'},
+      }
+    },
+    favoriteSchema: {
+      version: 0,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: {type: 'string'}},
+      }
+    }
+  },
+  "1": {
+    songSchema: {
+      version: 1,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        albumId: 'string',
+        artistId: 'string',
+        displayName: 'string',
+        albumDisplayName: 'string',
+        artistDisplayName: 'string',
+        duration: 'double',
+        file: 'string',
+        added: 'int',
+      }
+    },
+    albumSchema: {
+      version: 1,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        artistId: 'string',
+        displayName: 'string',
+        artistDisplayName: 'string',
+        songCount: 'int',
+        added: 'int',
+      }
+    },
+    artistSchema: {
+      version: 1,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        displayName: 'string',
+        albumCount: 'int',
+        songCount: 'int',
+      }
+    },
+    playlistSchema: {
+      version: 1,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        owner: 'string',
+        displayName: 'string',
+        public: 'boolean',
+        songs: {
+          type: 'array',
+          items: 'string',
+        },
+        songCount: 'int',
+        added: 'int',
+      }
+    },
+    authSchema: {
+      version: 1,
+      primaryKey: 'loginName',
+      type: 'object',
+      properties: {
+        loginName: {type: 'string', maxLength: 16},
+        displayName: 'string',
+        password: 'string',
+        authtoken: 'string',
+      }
+    },
+    playedSchema: {
+      version: 1,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: 'string'},
+      }
+    },
+    favoriteSchema: {
+      version: 1,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: {type: 'string'}},
+        count: 'int',
+      }
+    }
   }
 }
 
 export default {
-  songSchema: songSchema,
-  albumSchema: albumSchema,
-  artistSchema: artistSchema,
-  playlistSchema: playlistSchema,
-  authSchema: authSchema,
-  playedSchema: playedSchema,
-  favoriteSchema: favoriteSchema,
-  register: (db) => {
+  // version: version,
+  // songSchema: songSchema,
+  // albumSchema: albumSchema,
+  // artistSchema: artistSchema,
+  // playlistSchema: playlistSchema,
+  // authSchema: authSchema,
+  // playedSchema: playedSchema,
+  // favoriteSchema: favoriteSchema,
+  register: (db, version) => {
+    if(typeof version == 'undefined'){
+      console.log('version is not defined:',version);
+      return Promise.reject('version is not defined');
+    }
+    var scam = scheme[version.toString()];
     if(!db){
       return Promise.reject('db is not defined');
     }
@@ -105,48 +189,58 @@ export default {
       songs: {
         migrationStrategies:{
           1: (doc) => {
-            doc.albumDisplayName = doc.albumId;
-            doc.artistDisplayName = doc.artistId;
+            doc.albumDisplayName = "IGOTTAFIXTHISASAP";
+            doc.artistDisplayName = "IGOTTAFIXTHISASAP";
+            doc.added = Date.now();
             return doc;
           }
         },
-        schema: songSchema
+        schema: scam.songSchema
       },
       albums: {
         migrationStrategies:{
           1: (doc) => {
-            doc.artistDisplayName = doc.artistId;
+            doc.artistDisplayName = "IGOTTAFIXTHISASAP";
             doc.songCount = 0;
+            doc.added = Date.now();
             return doc;
           }
         },
-        schema: albumSchema
+        schema: scam.albumSchema
       },
       artists: {
         migrationStrategies:{
           1: (doc) => {
             doc.albumCount = 0;
             doc.songCount = 0;
+            doc.added = Date.now();
             return doc;
           }
         },
-        schema: artistSchema,
+        schema: scam.artistSchema,
       },
       playlists: {
         migrationStrategies:{
           1: (doc) => {
             // doc.songCount = 0;
             doc.songCount = doc.songs.length;
+            doc.added = Date.now();
             return doc;
           }
         },
-        schema: playlistSchema,
+        schema: scam.playlistSchema,
       },
       auth: {
-        schema: authSchema,
+        migrationStrategies:{
+          1: (doc) => {return doc;}
+        },
+        schema: scam.authSchema,
       },
       played: {
-        schema: playedSchema,
+        migrationStrategies:{
+          1: (doc) => {return doc;}
+        },
+        schema: scam.playedSchema,
       },
       favorites: {
         migrationStrategies: {
@@ -156,7 +250,7 @@ export default {
             return doc;
           },
         },
-        schema: favoriteSchema
+        schema: scam.favoriteSchema
       }
     });
   }
