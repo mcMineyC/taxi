@@ -13,40 +13,22 @@ const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, removeRxDatabase, addRxPlugin } = require('rxdb');
 import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
 import { RxDBJsonDumpPlugin } from 'rxdb/plugins/json-dump';
+import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
+addRxPlugin(RxDBMigrationSchemaPlugin);
 addRxPlugin(RxDBJsonDumpPlugin);
 
-// console.log("Removed database");  await removeRxDatabase('rxdb-taxi', getRxStorageMongoDB({connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin'}));
+var dbName = "rxdb-taxi-dev";
+
+// await removeRxDatabase(dbName, getRxStorageMongoDB({connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin'}));  console.log("Removed database");
 
 const db = await createRxDatabase({
-  name: 'rxdb-taxi',
+  name: dbName,
   storage: getRxStorageMongoDB({
-    connection: 'mongodb://rxdb-taxi:dexiewasbad@192.168.30.36:27017/?authSource=admin',
+    connection: 'mongodb://admin:supersecure123@192.168.30.36:27017/?authSource=admin',
   }),
 });
 
-await db.addCollections({
-  songs: {
-    schema: schemas.songSchema
-  },
-  albums: {
-    schema: schemas.albumSchema
-  },
-  artists: {
-    schema: schemas.artistSchema,
-  },
-  playlists: {
-    schema: schemas.playlistSchema,
-  },
-  auth: {
-    schema: schemas.authSchema,
-  },
-  played: {
-    schema: schemas.playedSchema,
-  },
-  favorites: {
-    schema: schemas.favoriteSchema
-  }
-});
+await schemas.register(db);
 console.log("Added collections");
 
 var playlists = [];

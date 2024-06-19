@@ -193,7 +193,7 @@ app.post('/info/songs', async function (req, res) {
     res.send({"authed": true, "songs": data});
 });
 
-app.post('/info/batch/songs', async function (req, res) {
+app.post('/info/songs/batch', async function (req, res) {
     if((await checkAuth(req.body.authtoken)) == false){
         res.send({"authed": false, "results": {}});
         return;

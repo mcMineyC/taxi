@@ -7,6 +7,8 @@ const songSchema = {
     albumId: 'string',
     artistId: 'string',
     displayName: 'string',
+    // albumDisplayName: 'string',
+    // artistDisplayName: 'string',
     duration: 'double',
     file: 'string',
   }
@@ -18,7 +20,10 @@ const albumSchema = {
   type: 'object',
   properties: {
     id: {type: 'string', maxLength: 256},
+    artistId: 'string',
     displayName: 'string',
+    // artistDisplayName: 'string',
+    // songCount: 'int',
   }
 }
 
@@ -29,6 +34,8 @@ const artistSchema = {
   properties: {
     id: {type: 'string', maxLength: 256},
     displayName: 'string',
+    // albumCount: 'int',
+    // songCount: 'int',
   }
 }
 
@@ -45,6 +52,7 @@ const playlistSchema = {
       type: 'array',
       items: 'string',
     },
+    // songCount: 'int',
   }
 }
 
@@ -77,6 +85,7 @@ const favoriteSchema = {
   properties: {
     owner: {type: 'string', maxLength: 16},
     songs: {type: 'array', items: {type: 'string'}},
+    // count: 'int',
   }
 }
 
@@ -94,15 +103,43 @@ export default {
     }
     return db.addCollections({
       songs: {
+        migrationStrategies:{
+          1: (doc) => {
+            doc.albumDisplayName = doc.albumId;
+            doc.artistDisplayName = doc.artistId;
+            return doc;
+          }
+        },
         schema: songSchema
       },
       albums: {
+        migrationStrategies:{
+          1: (doc) => {
+            doc.artistDisplayName = doc.artistId;
+            doc.songCount = 0;
+            return doc;
+          }
+        },
         schema: albumSchema
       },
       artists: {
+        migrationStrategies:{
+          1: (doc) => {
+            doc.albumCount = 0;
+            doc.songCount = 0;
+            return doc;
+          }
+        },
         schema: artistSchema,
       },
       playlists: {
+        migrationStrategies:{
+          1: (doc) => {
+            // doc.songCount = 0;
+            doc.songCount = doc.songs.length;
+            return doc;
+          }
+        },
         schema: playlistSchema,
       },
       auth: {
@@ -112,6 +149,13 @@ export default {
         schema: playedSchema,
       },
       favorites: {
+        migrationStrategies: {
+          1: (doc) => {
+            // doc.count = 0;
+            doc.count = doc.songs.length;
+            return doc;
+          },
+        },
         schema: favoriteSchema
       }
     });
