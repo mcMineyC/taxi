@@ -455,6 +455,22 @@ app.post('/recently-played/:user', async function(req, res){
     }
     var played = await db.played.findOne({selector: {owner: req.params.user}}).exec();
     res.send({"played": played.songs || [], "authed": true, "success": true})
+});
+
+app.post('/favorites/:user', async function(req, res){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, songs: []});
+        return
+    }
+    var u = await getUser(req.body.authtoken);
+    var user = req.params.user;
+    console.log(user,"==",u)
+    if(user != u){
+        // res.send({"error": "Not authorized", "authed": false, "success": false, "songs": []})
+        // return
+    }
+    var favorite = await db.favorites.findOne({selector: {owner: req.params.user}}).exec();
+    res.send({"songs": favorite.songs || [], "count": favorite.songs.length, "authed": true, "success": true})
 })
 
 io.on('connection', (socket) => {
