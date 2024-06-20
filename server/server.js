@@ -30,8 +30,10 @@ const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, addRxPlugin } = require('rxdb');
 import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
-import { count } from "console";
+import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
 addRxPlugin(RxDBMigrationSchemaPlugin);
+addRxPlugin(RxDBQueryBuilderPlugin);
+
 const db = await createRxDatabase({
   name: 'rxdb-taxi',
   storage: getRxStorageMongoDB({
@@ -171,7 +173,7 @@ app.post('/info/albums', async function (req, res) {
         return
     }
 
-   const data = await db.albums.find().exec();
+    const data = await db.albums.find({sort: [{artistId: "asc"}, {added: "asc"}]}).exec();
    res.send({"authed": true, "albums": data});
 });
 
@@ -181,7 +183,11 @@ app.post('/info/artists', async function (req, res) {
         return
     }
     
-    const data = await db.artists.find().exec();
+    const data = await db.artists.find({
+        sort: [
+            {displayName: "asc"}
+        ]
+    }).exec();
     res.send({"authed": true, "artists": data});
 });
 
@@ -191,7 +197,7 @@ app.post('/info/songs', async function (req, res) {
         return
     }
 
-    const data = await db.songs.find().exec();
+    const data = await db.songs.find({sort: [{"artistId": "asc"}, {"albumId": "asc"}]}).exec();
     res.send({"authed": true, "songs": data});
 });
 
@@ -202,7 +208,6 @@ app.post('/info/songs/batch', async function (req, res) {
     }
     
     var ids = req.body.ids
-    console.log("Batch request: ", ids)
     var results = {}
     for(var i = 0; i < ids.length; i++){
         results[ids[i]] = await db.songs.findOne({selector: {"id": ids[i]}}).exec();
@@ -235,7 +240,7 @@ app.get('/info/songs/:id/image', async function (req, res) {
             return
         }
 
-    //Extract image
+        //Extract image
         await extractSongImage(file, path.join(__dirname, "config", "images", "songs", req.params.id+".png"));
         if(!(fs.existsSync(path.join(__dirname, "config", "images", "songs", req.params.id+".png")))){
             console.log("File still doesn't exist, trying to infer based on other songs in album...");
