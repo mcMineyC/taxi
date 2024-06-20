@@ -30,6 +30,7 @@ const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, addRxPlugin } = require('rxdb');
 import { getRxStorageMongoDB } from 'rxdb/plugins/storage-mongodb';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
+import { count } from "console";
 addRxPlugin(RxDBMigrationSchemaPlugin);
 const db = await createRxDatabase({
   name: 'rxdb-taxi',
@@ -448,7 +449,7 @@ app.post('/recently-played/:user', async function(req, res){
     }
     var u = await getUser(req.body.authtoken);
     var user = req.params.user;
-    console.log(user,"==",u)
+    console.log(user, "r==a" ,u)
     if(user != u){
         // res.send({"error": "Not authorized", "authed": false, "success": false, "played": []})
         // return
@@ -464,12 +465,16 @@ app.post('/favorites/:user', async function(req, res){
     }
     var u = await getUser(req.body.authtoken);
     var user = req.params.user;
-    console.log(user,"==",u)
+    console.log(user,"r==a",u)
     if(user != u){
         // res.send({"error": "Not authorized", "authed": false, "success": false, "songs": []})
         // return
     }
-    var favorite = await db.favorites.findOne({selector: {owner: req.params.user}}).exec();
+    var favorite = await db.favorites.findOne({selector: {owner: user}}).exec();
+    if(favorite == null){
+        favorite = {owner: user, songs: [], count: 0}
+        await db.favorites.upsert(favorite)
+    }
     res.send({"songs": favorite.songs || [], "count": favorite.songs.length, "authed": true, "success": true})
 })
 
@@ -712,8 +717,8 @@ async function checkAuth(token){
 }
 
 async function getUser(authtoken){
-    var result = (await db.auth.findOne({selector: {"authtoken": authtoken}}).exec())
-    return (result == null) ? "" : result.loginName
+    var result = await db.auth.findOne({selector: {"authtoken": authtoken}}).exec()
+    return (result == 0) ? "" : result.loginName
 }
 
 async function addToRecentlyPlayed(user, songId){
