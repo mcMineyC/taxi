@@ -467,6 +467,22 @@ app.post('/playlists/remove/:playlist', async function(req, res){
     res.send({authed: true, "success": true, "playlists": await db.playlists.find({selector: {$or: [{owner: u}, {public: true}]}}).exec()});
 })
 
+app.post('/recently-played/:user/add', async function(req, res){
+    if((await checkAuth(req.body.authtoken)) == false){
+        res.send({"authed": false, "success": false})
+        return
+    }
+    var u = await getUser(req.body.authtoken);
+    var user = req.params.user;
+    console.log(user, "r==a", u);
+    if(user != u){
+        res.send({"error": "Unauthorized", "authed": true, "success": false})
+        return
+    }
+    await addToRecentlyPlayed(user, req.body.id);
+    res.send({"authed": true, "success": true})
+})
+
 app.post('/recently-played/:user', async function(req, res){
     if((await checkAuth(req.body.authtoken)) == false){
         res.send({"authed": false, played: []});
@@ -480,7 +496,7 @@ app.post('/recently-played/:user', async function(req, res){
         // return
     }
     var played = await db.played.findOne({selector: {owner: req.params.user}}).exec();
-    res.send({"played": played.songs || [], "authed": true, "success": true})
+    res.send({"played": played.songs.filter(n => n).filter(n => n != "idklol") || [], "authed": true, "success": true})
 });
 
 app.post('/favorites/:user', async function(req, res){
