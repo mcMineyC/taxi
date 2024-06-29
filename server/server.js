@@ -41,7 +41,7 @@ const db = await createRxDatabase({
   }),
 });
 
-await schemas.register(db, 1);
+await schemas.register(db, 2);
 console.log("Added collections");
 
 const app = express();
@@ -85,7 +85,7 @@ app.post('/auth', async function (req, res) {
     var authed = false
     var authtoken = "";
     var result = await db.auth.findOne({selector: {"loginName": req.body.username}}).exec();
-    var username = result.loginName
+    var username = result == null ? "" : result.loginName
     authed = await (async ()=>{
         if(!result || result.loginName != req.body.username){
             console.error("Wat da refrigerator is going on here");
@@ -330,40 +330,40 @@ app.get('/info/artists/:id/image', async function (req, res) {
     }
 })
 
-app.get('/info/songs/:id/audio', async function (req, res) {
-    var id = req.params.id
-    const now = new Date();
-    const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
-    const day = now.getDate();
-    if(month == 4 && day == 1 && getRandomInt(0,100) > 690){
-        console.log("Making chaos")
-        var inty = getRandomInt(0, data["songs"].length-1);
-        if(data["songs"][inty]["artistId"] == "939644cef5b866870668f6cb59a0db900853c63ac1b97348e832c65e271964fd"){
-            res.sendFile(path.join(__dirname, "music/sorted/1d822fde641a597beb59ba197388b85e40eafb39d007be53f1c1da9b36d6a8df/00879b25b7e52685100c540611c16c5974b224ef79c692a9f58e43764532064d/Never Gonna Give You Up.mp3"))
-        }else{
-            res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
-            console.log(data["songs"][inty]["file"])
-        }
-        if(getRandomInt(0,1) == 0){
-            console.log("No Chaoz")
-            return
-        }
-    }
-    var file = "";
-
-    //Find file
-    var file = (await db.songs.findOne({selector: {"id": id}}).exec()).file
-    if(typeof(req.query.uname) != "undefined"){
-        console.log("Adding "+id+" to recently played for "+req.query.uname);
-        addToRecentlyPlayed(req.query.uname, id);
-    }
-    console.log(path.join(__dirname, file))
-    if(fs.existsSync(path.join(__dirname, file))){
-        res.sendFile(path.join(__dirname, file));
-    } else{
-        res.send("error");
-    }
-})
+// app.get('/info/songs/:id/audio', async function (req, res) {
+//     var id = req.params.id
+//     const now = new Date();
+//     const month = now.getMonth() + 1; // getMonth() returns a zero-based index, so add 1
+//     const day = now.getDate();
+//     if(month == 4 && day == 1 && getRandomInt(0,100) > 690){
+//         console.log("Making chaos")
+//         var inty = getRandomInt(0, data["songs"].length-1);
+//         if(data["songs"][inty]["artistId"] == "939644cef5b866870668f6cb59a0db900853c63ac1b97348e832c65e271964fd"){
+//             res.sendFile(path.join(__dirname, "music/sorted/1d822fde641a597beb59ba197388b85e40eafb39d007be53f1c1da9b36d6a8df/00879b25b7e52685100c540611c16c5974b224ef79c692a9f58e43764532064d/Never Gonna Give You Up.mp3"))
+//         }else{
+//             res.sendFile(path.join(__dirname, data["songs"][inty]["file"])); // data["songs"][inty]["file"]
+//             console.log(data["songs"][inty]["file"])
+//         }
+//         if(getRandomInt(0,1) == 0){
+//             console.log("No Chaoz")
+//             return
+//         }
+//     }
+//     var file = "";
+//
+//     //Find file
+//     var file = (await db.songs.findOne({selector: {"id": id}}).exec()).file
+//     if(typeof(req.query.uname) != "undefined"){
+//         console.log("Adding "+id+" to recently played for "+req.query.uname);
+//         addToRecentlyPlayed(req.query.uname, id);
+//     }
+//     console.log(path.join(__dirname, file))
+//     if(fs.existsSync(path.join(__dirname, file))){
+//         res.sendFile(path.join(__dirname, file));
+//     } else{
+//         res.send("error");
+//     }
+// })
 
 // there were some unused endpoints in here pertaining to querying albums/songs by album/artist, those are removed
 
@@ -526,19 +526,28 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
     var authed = false
-    socket.on("auth", (msg) => {
-        if(!checkAuth(msg.authtoken)){
+    socket.on("auth", async (msg) => {
+        if(typeof(msg) == "string"){
+            msg = JSON.parse(msg);
+        }
+        var aut = await checkAuth(msg.authtoken);
+        console.log(aut, msg.authtoken, typeof(msg));
+        if(!aut){
             socket.emit("authresult", {"success": false, "error": "Invalid authtoken", "authorized": false})
             // socket.close()
             return
         }
         socket.emit("authresult", {"success": true, "authorized": true})
+        authed = true;
     })
     socket.on("search", async (msg) => {
         if(!authed){
             socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
             // socket.close()
             return
+        }
+        if(typeof(msg) == "string"){
+            msg = JSON.parse(msg);
         }
         if(msg.source == "spotify"){
             const api = SpotifyApi.withClientCredentials(
@@ -552,22 +561,48 @@ io.on('connection', (socket) => {
             var items = []
             if(msg.mediaType == "all"){
                 const trackItems = await api.search(msg.query, "track", undefined, 50, page);
-                const albumItems = await api.search(msg.query, "album", undefined, 50, page);
-                const artistItems = await api.search(msg.query, "artist", undefined, 50, page);
-                const playlistItems = await api.search(msg.query, "playlist", undefined, 50, page);
-                items = trackItems.tracks.items.concat(albumItems.albums.items).concat(artistItems.artists.items).concat(playlistItems.playlists.items)
+                // const albumItems = await api.search(msg.query, "album", undefined, 50, page);
+                // const artistItems = await api.search(msg.query, "artist", undefined, 50, page);
+                // const playlistItems = await api.search(msg.query, "playlist", undefined, 50, page);
+                // items = trackItems.tracks.items.concat(albumItems.albums.items).concat(artistItems.artists.items).concat(playlistItems.playlists.items)
+                items = trackItems.tracks.items
             }else{
                 items = await api.search(msg.query, msg.mediaType, undefined, 50, page);
                 items = items[msg.mediaType+"s"].items
             }
+            // items.sort((a, b) => ((b.type == "track") ? b.popularity : 0) - ((b.type == "track") ? a.popularity : 0))
             console.table(items.map((item) => ({
                 name: item.name,
                 type: item.type,
                 popularity: item.popularity,
                 id: item.id
             })));
-            
-            socket.emit("searchresults", items)
+            console.log(items[0])
+
+            items = items.map((item) => item.type == "track" ? ({
+                id: typeof(item.id) == "string" ? item.id : "",
+                // previewUrl: typeof(item.preview_url) == "string" ? item.preview_url : "",
+                name: typeof(item.name) == "string" ? item.name : "",
+                artist: typeof(item.artists) == "object" && typeof(item.artists[0].name) == "string" ? item.artists[0].name : "",
+                album: typeof(item.album) == "object" && typeof(item.album.name) == "string" ? item.album.name : "",
+                imageUrl: typeof(item.album) == "object" && item.album.images[0] ? (item.album.images.sort((a, b) => b.width - a.width)[0].url) : "",
+                type: "song",
+            }) : (item.type == "album" ? ({
+                id: typeof(item.id) == "string" ? item.id : "",
+                name: typeof(item.name) == "string" ? item.name : "",
+                album: "",
+                artist: typeof(item.artists) == "object" && typeof(item.artists[0].name) == "string" ? item.artists[0].name : "",
+                imageUrl: typeof(item.images) == "object" && item.images[0] ? item.images[0].url : "",
+                type: "album"
+            }) : (item.type == "artist" ? ({
+                id: typeof(item.id) == "string" ? item.id : "",
+                name: typeof(item.name) == "string" ? item.name : "",
+                album: "",
+                artist: "",
+                imageUrl: typeof(item.images) == "object" && item.images[0] ? item.images[0].url : "",
+                type: "artist",
+            }) : item)));
+            socket.emit("searchresults", {"type": msg.mediaType, "results": items})
         }else if (msg.source == "youtube"){
             socket.emit("searchresults", [])
         }
@@ -578,6 +613,9 @@ io.on('connection', (socket) => {
             // socket.close()
             return
         }
+        if(typeof(msg) == "string"){
+            msg = JSON.parse(msg);
+        }
         if(msg.source == "spotify"){
             var results = ""
 
@@ -585,13 +623,13 @@ io.on('connection', (socket) => {
             socket.emit("downloadmessage", {"type": "status", "message": "Starting download", "percent": 0, "name": ""})
             if(msg.url.includes("track")){
                 results = await SpottyDL.getTrack(msg.url)
-                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading track: " + results.title, "percent": 0, "name": results.title})
-                var track = await SpottyDL.downloadTrack(results, "unsorted")
-                if(track[0].status == "Success"){
-                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading track: " + results.title})
-                }else{
-                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + results.title})
-                }
+                socket.emit("downloadmessage", {"type": "check", "id": results.id})
+                // var track = await SpottyDL.downloadTrack(results, "unsorted")
+                // if(track[0].status == "Success"){
+                //     socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading track: " + results.title})
+                // }else{
+                //     socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + results.title})
+                // }
             }else if(msg.url.includes("album")){
                 results = await SpottyDL.getAlbum(msg.url)
                 var total = 1

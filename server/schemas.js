@@ -164,6 +164,95 @@ const scheme = {
         count: 'int',
       }
     }
+  },
+  "2": {
+    songSchema: {
+      version: 2,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        albumId: 'string',
+        artistId: 'string',
+        displayName: 'string',
+        albumDisplayName: 'string',
+        artistDisplayName: 'string',
+        duration: 'double',
+        youtubeId: 'string',
+        added: 'int',
+      }
+    },
+    albumSchema: {
+      version: 2,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        artistId: 'string',
+        displayName: 'string',
+        artistDisplayName: 'string',
+        songCount: 'int',
+        added: 'int',
+      }
+    },
+    artistSchema: {
+      version: 2,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        displayName: 'string',
+        albumCount: 'int',
+        songCount: 'int',
+      }
+    },
+    playlistSchema: {
+      version: 2,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        owner: 'string',
+        displayName: 'string',
+        public: 'boolean',
+        songs: {
+          type: 'array',
+          items: 'string',
+        },
+        songCount: 'int',
+        added: 'int',
+      }
+    },
+    authSchema: {
+      version: 2,
+      primaryKey: 'loginName',
+      type: 'object',
+      properties: {
+        loginName: {type: 'string', maxLength: 16},
+        displayName: 'string',
+        password: 'string',
+        authtoken: 'string',
+      }
+    },
+    playedSchema: {
+      version: 2,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: 'string'},
+      }
+    },
+    favoriteSchema: {
+      version: 2,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: {type: 'string'}},
+        count: 'int',
+      }
+    }
   }
 }
 
@@ -193,6 +282,10 @@ export default {
             doc.artistDisplayName = "IGOTTAFIXTHISASAP";
             doc.added = Date.now();
             return doc;
+          },
+          2: (doc) => {
+            doc.youtubeId = 'SHRUG';
+            return doc;
           }
         },
         schema: scam.songSchema
@@ -204,7 +297,8 @@ export default {
             doc.songCount = 0;
             doc.added = Date.now();
             return doc;
-          }
+          },
+          2: (doc) => doc,
         },
         schema: scam.albumSchema
       },
@@ -215,7 +309,8 @@ export default {
             doc.songCount = 0;
             doc.added = Date.now();
             return doc;
-          }
+          },
+          2: (doc) => doc,
         },
         schema: scam.artistSchema,
       },
@@ -226,19 +321,22 @@ export default {
             doc.songCount = doc.songs.length;
             doc.added = Date.now();
             return doc;
-          }
+          },
+          2: (doc) => doc,
         },
         schema: scam.playlistSchema,
       },
       auth: {
         migrationStrategies:{
-          1: (doc) => {return doc;}
+          1: (doc) => doc,
+          2: (doc) => doc,
         },
         schema: scam.authSchema,
       },
       played: {
         migrationStrategies:{
-          1: (doc) => {return doc;}
+          1: (doc) => doc,
+          2: (doc) => doc,
         },
         schema: scam.playedSchema,
       },
@@ -249,6 +347,7 @@ export default {
             doc.count = doc.songs.length;
             return doc;
           },
+          2: (doc) => doc,
         },
         schema: scam.favoriteSchema
       }

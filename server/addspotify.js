@@ -30,10 +30,5 @@ const db = await createRxDatabase({
 
 await schemas.register(db, 2);
 console.log("Added collections");
-var artists = await db.artists.find().exec();
-for (const artist of artists){
-    console.log("Artist:", artist.id);
-    var cnt = await db.songs.count({selector: {artistId: artist.id}}).exec();
-    console.log(artist.displayName, "has", cnt, "songs");
-}
+
 await db.destroy();
