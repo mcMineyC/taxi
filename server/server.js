@@ -17,14 +17,13 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const axios = require('axios');
 const crypto = require('crypto');
-const ffmpeg = require('fluent-ffmpeg');
 const SpottyDL = require('spottydl-better');
-const ffprobe = util.promisify(ffmpeg.ffprobe);
 const http = require('http');
 const { Server } = require("socket.io");
 const { SpotifyApi } = require("@spotify/web-api-ts-sdk");
 const clientID = "0a65ebdec6ec4983870a7d2f51af2aa1";
 const secretKey = "22714014e04f46cebad7e03764beeac8";
+const { waitUntil } = require('async-wait-until');
 
 const { RxDBDevModePlugin } = require('rxdb/plugins/dev-mode');
 const { createRxDatabase, addRxPlugin } = require('rxdb');
@@ -41,7 +40,7 @@ const db = await createRxDatabase({
   }),
 });
 
-await schemas.register(db, 2);
+await schemas.register(db, 3);
 console.log("Added collections");
 
 const app = express();
@@ -534,7 +533,6 @@ io.on('connection', (socket) => {
         console.log(aut, msg.authtoken, typeof(msg));
         if(!aut){
             socket.emit("authresult", {"success": false, "error": "Invalid authtoken", "authorized": false})
-            // socket.close()
             return
         }
         socket.emit("authresult", {"success": true, "authorized": true})
@@ -543,13 +541,16 @@ io.on('connection', (socket) => {
     socket.on("search", async (msg) => {
         if(!authed){
             socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
-            // socket.close()
             return
         }
         if(typeof(msg) == "string"){
             msg = JSON.parse(msg);
         }
         if(msg.source == "spotify"){
+            if(msg.query == ""){
+                socket.emit("message", {"type": "error", "success": false, "error": "No query provided", "authorized": true})
+                return
+            }
             const api = SpotifyApi.withClientCredentials(
                 clientID,
                 secretKey
@@ -561,27 +562,14 @@ io.on('connection', (socket) => {
             var items = []
             if(msg.mediaType == "all"){
                 const trackItems = await api.search(msg.query, "track", undefined, 50, page);
-                // const albumItems = await api.search(msg.query, "album", undefined, 50, page);
-                // const artistItems = await api.search(msg.query, "artist", undefined, 50, page);
-                // const playlistItems = await api.search(msg.query, "playlist", undefined, 50, page);
-                // items = trackItems.tracks.items.concat(albumItems.albums.items).concat(artistItems.artists.items).concat(playlistItems.playlists.items)
                 items = trackItems.tracks.items
             }else{
                 items = await api.search(msg.query, msg.mediaType, undefined, 50, page);
                 items = items[msg.mediaType+"s"].items
             }
-            // items.sort((a, b) => ((b.type == "track") ? b.popularity : 0) - ((b.type == "track") ? a.popularity : 0))
-            console.table(items.map((item) => ({
-                name: item.name,
-                type: item.type,
-                popularity: item.popularity,
-                id: item.id
-            })));
-            console.log(items[0])
 
             items = items.map((item) => item.type == "track" ? ({
                 id: typeof(item.id) == "string" ? item.id : "",
-                // previewUrl: typeof(item.preview_url) == "string" ? item.preview_url : "",
                 name: typeof(item.name) == "string" ? item.name : "",
                 artist: typeof(item.artists) == "object" && typeof(item.artists[0].name) == "string" ? item.artists[0].name : "",
                 album: typeof(item.album) == "object" && typeof(item.album.name) == "string" ? item.album.name : "",
@@ -607,90 +595,205 @@ io.on('connection', (socket) => {
             socket.emit("searchresults", [])
         }
     })
-    socket.on("download", async (msg) => {
+    socket.on("find", async (msg) => {
         if(!authed){
             socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
-            // socket.close()
             return
         }
         if(typeof(msg) == "string"){
             msg = JSON.parse(msg);
         }
         if(msg.source == "spotify"){
-            var results = ""
-
-            console.log("Starting download")
-            socket.emit("downloadmessage", {"type": "status", "message": "Starting download", "percent": 0, "name": ""})
-            if(msg.url.includes("track")){
-                results = await SpottyDL.getTrack(msg.url)
-                socket.emit("downloadmessage", {"type": "check", "id": results.id})
-                // var track = await SpottyDL.downloadTrack(results, "unsorted")
-                // if(track[0].status == "Success"){
-                //     socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading track: " + results.title})
-                // }else{
-                //     socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + results.title})
-                // }
-            }else if(msg.url.includes("album")){
-                results = await SpottyDL.getAlbum(msg.url)
-                var total = 1
-                if(results.tracks != undefined) {total = results.tracks.length;}
-                else{total = 1}
-                var done = 0
-                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading album: " + results.name, "percent": 0, "name": results.name})
-                var album = await SpottyDL.downloadAlbum(results, "unsorted", true, (stuff) => {
-                    if(stuff.success){
-                        done++
-                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
-                    }else{
-                        done++;
-                        socket.emit("downloadmessage", {"type": "error", "message": "Failed to download track: " + stuff.name})
-                    }
-                })
-                var success = true
-                for (var x = 0; x < album.length; x++){
-                    if(album[x].status != "Success"){
-                        success = false
-                    }
-                }
-                if(success){
-                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
-                }else{
-                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
-                }
-            }else if(msg.url.includes("artist")){
-                socket.emit("downloadmessage", {"type": "error", "message": "Not implemented", "percent": 0, "name": ""})
-                return
-                results = await SpottyDL.getArtist(msg.url)
-            }else if(msg.url.includes("playlist")){
-                results = await SpottyDL.getPlaylist(msg.url)
-                var done = 0
-                var total = results.tracks.length
-                socket.emit("downloadmessage", {"type": "progress", "message": "Downloading playlist:", "percent": Math.floor((done/total)*100), "name": results.name})
-                var list = await SpottyDL.downloadPlaylist(results, "unsorted", (stuff) => {
-                    if(stuff.success == true){
-                        done++
-                        socket.emit("downloadmessage", {"type": "progress", "message": "Downloaded", "percent": Math.floor((done/total)*100), "name": stuff.name})
-                    }
-                })
-                var success = true
-                for (var x = 0; x < list.length; x++){
-                    if(list[x].status != "Success"){
-                        success = false
-                    }
-                }
-                if(success){
-                    socket.emit("downloadmessage", {"type": "success", "message": "Finished downloading playlist: " + results.name})
-                }else{
-                    socket.emit("downloadmessage", {"type": "error", "message": "Failed to download playlist: " + results.name})
-                }
-            }
+            var found = [];
+            msg.selected.forEach(async (x) => {
+              console.log(`Found: ${x.type} ${x.id}`);
+              var result = {};
+              var url = `https://open.spotify.com/${(x.type == "song") ? "track" : x.type}/${x.id}`;
+              switch(x.type){
+                case "song":
+                  console.log("Getting song: "+url);
+                  var track = await SpottyDL.getTrack(url);
+                  result = {
+                    title: track.album,
+                    album: track.album,
+                    artist: track.artist,
+                    albumCoverURL: track.albumCoverURL,
+                    songs: [{
+                      title: track.title,
+                      id: track.id,
+                      trackNumber: track.trackNumber
+                    }],
+                  }
+                  result.type = "song";
+                  break;
+                case "album":
+                  console.log("Getting album: "+url);
+                  result = await SpottyDL.getAlbum(url);
+                  // if(typeof(result.playlistVideoRenderer) != "undefined") delete result.playlistVideoRenderer  //doesn't seem to do anything, probably a bug in the library
+                  result.type = "album";
+                  result.songs = result.tracks;
+                  delete result.tracks
+                  break;
+                case "playlist":
+                  result = await SpottyDL.getPlaylist(url);
+                  result.type = "playlist";
+                  result.songs = result.tracks;
+                  delete result.tracks;
+                  break;
+                default:
+                  console.log(`${x.type} Not implemented`);
+              }
+              found.push(result);
+            });
+            await waitUntil(() => {return found.length == msg.selected.length}, {timeout: Number.POSITIVE_INFINITY});
+            found = found.map((x) => ({
+              name: typeof(x.title) == "string" ? x.title : typeof(x.name) == "string" ? x.name : "",
+              album: typeof(x.album) == "string" ? x.album : "",
+              artist: typeof(x.artist) == "string" ? x.artist : "",
+              imageUrl: typeof(x.albumCoverURL) == "string" ? x.albumCoverURL : typeof(x.playlistCoverURL) == "string" ? x.playlistCoverURL : "",
+              type: x.type,
+              songs: x.songs
+            }));
+            console.log(`Sending ${found.length} results.`);
+            socket.emit("findresults", {"results": found});
         }
         else if(msg.source == "youtube"){
             socket.emit("message", {"type": "auth", "success": false, "error": "Not implemented", "authorized": true}) // Not implemented
-            // socket.close()
             return
         }
-    })
+    });
+    
+    socket.on("add", async (msg) => {
+        if(!authed){
+            socket.emit("message", {"type": "auth", "success": false, "error": "Invalid authtoken", "authorized": false})
+            return
+        }
+        if(typeof(msg) == "string"){
+            msg = JSON.parse(msg);
+        }
+        var artists = [];
+        var artistKeys = [];
+        var albums = [];
+        var albumKeys = [];
+        var songs = [];
+        var iterated = 0;
+        msg.items.forEach(async (x) => {
+          console.log("artist: "+JSON.stringify(artistKeys, null, 2));
+          console.log("album: "+JSON.stringify(albumKeys, null, 2));
+          console.log("");
+          switch(x.type){
+            case "song":
+              var artistKey = hash(x.artist);
+              var albumKey = artistKey + "_" + hash(x.name);
+              songs.push({
+                id: albumKey + "_" + hash(x.songs[0].id),
+                albumId: albumKey,
+                artist: artistKey,
+                displayName: x.songs[0].name,
+                albumDisplayName: x.name,
+                artistDisplayName: x.artist,
+                duration: 0,
+                youtubeId: x.songs[0].id,
+                imageUrl: x.imageUrl,
+                added: Date.now(),
+              });
+              if(albumKeys.indexOf(albumKey) == -1){
+                albumKeys.push(albumKey);
+                albums.push({
+                  id: albumKey,
+                  artistId: artistKey,
+                  displayName: x.name,
+                  artistDisplayName: x.artist,
+                  songCount: 1,
+                  imageUrl: x.imageUrl,
+                  added: Date.now(),
+                });
+              }else{
+                albums[albumKeys.indexOf(albumKey)].songCount++;
+              }
+              if(artistKeys.indexOf(artistKey) == -1){
+                artistKeys.push(artistKey);
+                artists.push({
+                  id: artistKey,
+                  displayName: x.artist,
+                  songCount: 1,
+                  albumCount: (albumKeys.indexOf(albumKey) == -1) ? 0 : 1,
+                  imageUrl: "",
+                  added: Date.now(),
+                });
+              }else{
+                artists[artistKeys.indexOf(artistKey)].songCount++;
+                artists[artistKeys.indexOf(artistKey)].albumCount = artists[artistKeys.indexOf(artistKey)].albumCount + (albumKeys.indexOf(albumKey) == -1 ? 1 : 0);
+              }
+              break;
+            case "album":
+              var artistKey = hash(x.artist);
+              var albumKey = artistKey + "_" + hash(x.name);
+              x.songs.forEach((y) => {
+                songs.push({
+                  id: albumKey + "_" + hash(y.id),
+                  albumId: albumKey,
+                  artist: artistKey,
+                  displayName: y.title,
+                  albumDisplayName: x.name,
+                  artistDisplayName: x.artist,
+                  duration: 0,
+                  youtubeId: y.id,
+                  imageUrl: x.imageUrl,
+                  added: Date.now(),
+                });
+              });
+              if(albumKeys.indexOf(albumKey) == -1){
+                albumKeys.push(albumKey);
+                albums.push({
+                  id: albumKey,
+                  artistId: artistKey,
+                  displayName: x.name,
+                  artistDisplayName: x.artist,
+                  songCount: x.songs.length,
+                  imageUrl: x.imageUrl,
+                  added: Date.now(),
+                });
+              }else{
+                albums[albumKeys.indexOf(albumKey)].songCount += x.songs.length ;
+              }
+              if(artistKeys.indexOf(artistKey) == -1){
+                artistKeys.push(artistKey);
+                artists.push({
+                  id: artistKey,
+                  displayName: x.artist,
+                  songCount: x.songs.length,
+                  albumCount: (albumKeys.indexOf(albumKey) == -1) ? 0 : 1,
+                  imageUrl: "",
+                  added: Date.now(),
+                });
+              }else{
+                artists[artistKeys.indexOf(artistKey)].songCount += x.songs.length;
+                artists[artistKeys.indexOf(artistKey)].albumCount = artists[artistKeys.indexOf(artistKey)].albumCount + (albumKeys.indexOf(albumKey) == -1 ? 1 : 0);
+              }
+              break;
+          }
+          console.log("artist "+x.artist+": "+JSON.stringify(artistKeys, null, 2));
+          console.log("album: "+JSON.stringify(albumKeys, null, 2));
+          console.log("____________________________");
+          iterated++;
+        });
+        await waitUntil(() => {return iterated == artists.length}, {timeout: Number.POSITIVE_INFINITY});
+        console.log(`Adding ${songs.length} songs, ${albums.length} albums and ${artists.length} artists.`);
+        iterated = 0;
+        artists.forEach(async (x) => {
+          if(x.imageUrl == ""){
+            x.imageUrl = await getArtistImageUrl(x.displayName, "https://commons.wikimedia.org/wiki/File:Apple_Music_Icon.svg");
+          }
+          iterated++;
+        });
+        await waitUntil(() => {return iterated == artists.length}, {timeout: Number.POSITIVE_INFINITY});
+        await db.artists.bulkInsert(artists);
+        await db.albums.bulkInsert(albums);
+        await db.songs.bulkInsert(songs);
+        console.log("Finished adding songs, albums and artists.");
+        socket.emit("addresult", {"success": true, "count": {"artists": artists.length, "albums": albums.length, "songs": songs.length}});
+    });
 })
 
 async function main(){
@@ -714,6 +817,26 @@ try{
 // yet because modules and requiring
 // is annoying so I probably
 // won't move them anytime soon
+
+async function getArtistImageUrl(name, backupImageUrl){
+  console.log("Getting image for "+name)
+  const { stdout, stderr } = await exec('python3 find_artist_profile_url.py "'+name+'"')
+  var data = {}
+  console.log(stdout)
+  try{
+    data = JSON.parse(stdout)
+            
+    if(data["success"]){
+      return data["url"];
+    }
+    if(!data["success"]){
+      return backupImageUrl
+    }
+  }catch (err){
+    console.log(err)
+    return backupImageUrl
+  }
+}
 
 async function extractSongImage(file, dest){
     if(!(fs.existsSync(dest))){

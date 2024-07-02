@@ -253,6 +253,99 @@ const scheme = {
         count: 'int',
       }
     }
+  },
+  "3": {
+    songSchema: {
+      version: 3,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        albumId: 'string',
+        artistId: 'string',
+        displayName: 'string',
+        albumDisplayName: 'string',
+        artistDisplayName: 'string',
+        duration: 'double',
+        youtubeId: 'string',
+        imageUrl: 'string',
+        added: 'int',
+      }
+    },
+    albumSchema: {
+      version: 3,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        artistId: 'string',
+        displayName: 'string',
+        artistDisplayName: 'string',
+        songCount: 'int',
+        imageUrl: 'string',
+        added: 'int',
+      }
+    },
+    artistSchema: {
+      version: 3,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        displayName: 'string',
+        albumCount: 'int',
+        songCount: 'int',
+        imageUrl: 'string',
+        added: 'int',
+      }
+    },
+    playlistSchema: {
+      version: 3,
+      primaryKey: 'id',
+      type: 'object',
+      properties: {
+        id: {type: 'string', maxLength: 256},
+        owner: 'string',
+        displayName: 'string',
+        public: 'boolean',
+        songs: {
+          type: 'array',
+          items: 'string',
+        },
+        songCount: 'int',
+        added: 'int',
+      }
+    },
+    authSchema: {
+      version: 3,
+      primaryKey: 'loginName',
+      type: 'object',
+      properties: {
+        loginName: {type: 'string', maxLength: 16},
+        displayName: 'string',
+        password: 'string',
+        authtoken: 'string',
+      }
+    },
+    playedSchema: {
+      version: 3,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: 'string'},
+      }
+    },
+    favoriteSchema: {
+      version: 3,
+      primaryKey: 'owner',
+      type: 'object',
+      properties: {
+        owner: {type: 'string', maxLength: 16},
+        songs: {type: 'array', items: {type: 'string'}},
+        count: 'int',
+      }
+    }
   }
 }
 
@@ -286,6 +379,10 @@ export default {
           2: (doc) => {
             doc.youtubeId = 'SHRUG';
             return doc;
+          },
+          3: (doc) => {
+            doc.imageUrl = 'https://cdn4.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/512/AppleMusic.png';
+            return doc;
           }
         },
         schema: scam.songSchema
@@ -299,6 +396,10 @@ export default {
             return doc;
           },
           2: (doc) => doc,
+          3: (doc) => {
+            doc.imageUrl = 'https://cdn4.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/512/AppleMusic.png';
+            return doc;
+          }
         },
         schema: scam.albumSchema
       },
@@ -311,6 +412,11 @@ export default {
             return doc;
           },
           2: (doc) => doc,
+          3: (doc) => {
+            doc.imageUrl = 'https://cdn4.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/512/AppleMusic.png';
+            doc.added = Date.now();
+            return doc;
+          }
         },
         schema: scam.artistSchema,
       },
@@ -323,6 +429,7 @@ export default {
             return doc;
           },
           2: (doc) => doc,
+          3: (doc) => doc,
         },
         schema: scam.playlistSchema,
       },
@@ -330,6 +437,7 @@ export default {
         migrationStrategies:{
           1: (doc) => doc,
           2: (doc) => doc,
+          3: (doc) => doc,
         },
         schema: scam.authSchema,
       },
@@ -337,6 +445,7 @@ export default {
         migrationStrategies:{
           1: (doc) => doc,
           2: (doc) => doc,
+          3: (doc) => doc,
         },
         schema: scam.playedSchema,
       },
@@ -348,6 +457,7 @@ export default {
             return doc;
           },
           2: (doc) => doc,
+          3: (doc) => doc,
         },
         schema: scam.favoriteSchema
       }

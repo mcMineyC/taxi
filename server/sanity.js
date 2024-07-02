@@ -28,7 +28,7 @@ const db = await createRxDatabase({
   }),
 });
 
-await schemas.register(db, 2);
+await schemas.register(db, 3);
 console.log("Added collections");
 var artists = await db.artists.find().exec();
 for (const artist of artists){
