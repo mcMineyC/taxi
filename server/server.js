@@ -195,8 +195,9 @@ app.post('/info/songs', async function (req, res) {
         res.send({"authed": false, "songs": []});
         return
     }
-
-    const data = await db.songs.find({sort: [{"artistId": "asc"}, {"albumId": "asc"}]}).exec();
+    
+    const data = await db.songs.find({sort: [{"added": "desc"}]}).exec();
+    console.log(data[0]);
     res.send({"authed": true, "songs": data});
 });
 
@@ -495,6 +496,10 @@ app.post('/recently-played/:user', async function(req, res){
         // return
     }
     var played = await db.played.findOne({selector: {owner: req.params.user}}).exec();
+    if(played == null){
+      res.send({"played": [], "authed": true, "success": true})
+      return
+    }
     res.send({"played": played.songs.filter(n => n).filter(n => n != "idklol") || [], "authed": true, "success": true})
 });
 
@@ -685,11 +690,12 @@ io.on('connection', (socket) => {
             case "song":
               var artistKey = hash(x.artist);
               var albumKey = artistKey + "_" + hash(x.name);
+              console.log(x.songs[0]["title"]);
               songs.push({
                 id: albumKey + "_" + hash(x.songs[0].id),
                 albumId: albumKey,
-                artist: artistKey,
-                displayName: x.songs[0].name,
+                artistId: artistKey,
+                displayName: x.songs[0].title,
                 albumDisplayName: x.name,
                 artistDisplayName: x.artist,
                 duration: 0,
@@ -733,7 +739,7 @@ io.on('connection', (socket) => {
                 songs.push({
                   id: albumKey + "_" + hash(y.id),
                   albumId: albumKey,
-                  artist: artistKey,
+                  artistId: artistKey,
                   displayName: y.title,
                   albumDisplayName: x.name,
                   artistDisplayName: x.artist,
@@ -778,12 +784,12 @@ io.on('connection', (socket) => {
           console.log("____________________________");
           iterated++;
         });
-        await waitUntil(() => {return iterated == artists.length}, {timeout: Number.POSITIVE_INFINITY});
+        await waitUntil(() => {return iterated == msg.items.length}, {timeout: Number.POSITIVE_INFINITY});
         console.log(`Adding ${songs.length} songs, ${albums.length} albums and ${artists.length} artists.`);
         iterated = 0;
         artists.forEach(async (x) => {
           if(x.imageUrl == ""){
-            x.imageUrl = await getArtistImageUrl(x.displayName, "https://commons.wikimedia.org/wiki/File:Apple_Music_Icon.svg");
+            x.imageUrl = await getArtistImageUrl(x.displayName.split(",")[0], "https://commons.wikimedia.org/wiki/File:Apple_Music_Icon.svg");
           }
           iterated++;
         });

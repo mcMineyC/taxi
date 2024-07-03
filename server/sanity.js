@@ -33,7 +33,10 @@ console.log("Added collections");
 var artists = await db.artists.find().exec();
 for (const artist of artists){
     console.log("Artist:", artist.id);
-    var cnt = await db.songs.count({selector: {artistId: artist.id}}).exec();
-    console.log(artist.displayName, "has", cnt, "songs");
+    var cnt = await db.songs.find({selector: {artistId: artist.id}}).exec();
+    console.log(artist.displayName, "has", cnt.length, "songs");
+    cnt.forEach((song) => {
+      console.log("\t", song.id, ":", song.displayName);
+    });
 }
 await db.destroy();
