@@ -1,0 +1,66 @@
+{
+    "entries": [
+        {
+            "id": "6b4c48ad68b69990d084838f3774f8d58b9ff14af63cbdb52abec3d4f393a554",
+            "displayName": "Silver Maple",
+            "albums": {
+                "6b4c48ad68b69990d084838f3774f8d58b9ff14af63cbdb52abec3d4f393a554_eb7e2d2120d635199a3333a83ea8864c5977d054b13dfa86afbdcb95bc24913e": {
+                    "displayName": "Residuum",
+                    "songs": [
+                        {
+                            "id": "6b4c48ad68b69990d084838f3774f8d58b9ff14af63cbdb52abec3d4f393a554_eb7e2d2120d635199a3333a83ea8864c5977d054b13dfa86afbdcb95bc24913e_2c91853822536c656a585d727024ecfdc80fb679c8c777a1e95e9b306a2077fa",
+                            "title": "Particle Emission",
+                            "file": "music/sorted/6b4c48ad68b69990d084838f3774f8d58b9ff14af63cbdb52abec3d4f393a554/eb7e2d2120d635199a3333a83ea8864c5977d054b13dfa86afbdcb95bc24913e/Silver Maple - Particle Emission.mp3"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea",
+            "displayName": "The Greatest Bits",
+            "albums": {
+                "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556": {
+                    "displayName": "Metroid",
+                    "songs": [
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_696774dcceb4e9196f948a6a10dfa063a5b7c6cbd1766560a0099a91219a32cf",
+                            "title": "Kraid's Lair",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Kraid's Lair.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_037c968467aa3fd7c059c7d0b57e3460aa332f30db816efcd98943724a1d8db0",
+                            "title": "Escape",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Escape.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_1e62b9f28c97604b9d4de5a0509ed27763a80ad93680ef63315476abe5260b1f",
+                            "title": "Brinstar",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Brinstar.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_82b1bd2bd2f83f254dd4b880f0f9bd81696abd2e8e82c752e28eb2f30b971f26",
+                            "title": "Metroid Ending Theme",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Metroid Ending Theme.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_b3ae5d67c08de351b6afe8b755d9772a07f9c967021e08ed79e8bc7cab2eeed0",
+                            "title": "Ridley's Lair",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Ridley's Lair.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_a15e52248912113c11cbc509df5e8a435fdcce34ea9c06b083585bc5fe0aa62a",
+                            "title": "Norfair",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Norfair.mp3"
+                        },
+                        {
+                            "id": "1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea_95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556_b8b83605cc59c711f2a8f65a8fb889be9325299c80fdf43833dd4557d6e61cfd",
+                            "title": "Metroid Title Theme",
+                            "file": "music/sorted/1f60fadb45857f3a40d5d28680360a7965a5287a839fb89edc86f0d24173e0ea/95034aa4d030210be2caff304e579ccbb55fde3b47c5ffd96cbe92f0dfb1a556/The Greatest Bits - Metroid Title Theme.mp3"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
